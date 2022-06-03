@@ -1,19 +1,19 @@
 <template>
   <div class="problem-container-outer">
     <div class="problem-titie-container">
-      <span class="problem-number">{{ problemNumber }}.</span>
+      <span class="problem-number">{{ problemNumber + 1 }}.</span>
       <el-input
         v-model="title"
         type="textarea"
+        :disabled="!showActions"
         autosize
         resize="none"
         maxlength="500"
         placeholder="请输入问题"
       />
-      <!-- resize="none" -->
     </div>
     <slot></slot>
-    <div class="problem-actions">
+    <div class="problem-actions" v-if="showActions">
       <div class="allow-repeat">
         <input type="checkbox" name="reading" checked style="margin: 0" />
         <span style="font-">不允许重复</span>
@@ -70,14 +70,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ElMessage } from 'element-plus'
-// import calcTextareaHeight from '../assets/utils/calcTextareaHeight'
 
 export default defineComponent({
   name: 'ProblemBase',
   data() {
     return {
-      textAreaHeight: '',
-      title: this.problemTitle,
+      title: this.forefatherComponent.problems[this.problemNumber].title,
       msgBoxClose: true,
     }
   },
@@ -89,23 +87,16 @@ export default defineComponent({
       console.log('设置')
     },
   },
-  emits: ['problemTitleChange'],
+  /**
+   * todo: 根据pageFrom决定ProblemBase的状态
+   * createForm： edit
+   * showForm: input
+   */
+  inject: ['forefatherComponent', 'showActions'],
   props: {
     problemNumber: {
       type: Number,
       required: true,
-    },
-    problemTitle: {
-      type: String,
-      default: '',
-    },
-    titleReadOnly: {
-      type: Boolean,
-      default: false,
-    },
-    allowActions: {
-      type: Boolean,
-      default: false,
     },
   },
   watch: {
@@ -121,8 +112,7 @@ export default defineComponent({
         this.msgBoxClose = false
         return
       }
-
-      this.$emit('problemTitleChange', newVal)
+      this.forefatherComponent.problems[this.problemNumber].title = newVal
     },
   },
 })
@@ -147,7 +137,7 @@ export default defineComponent({
 
   .problem-number {
     position: absolute;
-    top: 10px;
+    top: 8px;
     z-index: 1;
   }
 
@@ -156,6 +146,8 @@ export default defineComponent({
     font-weight: bold;
     box-shadow: none;
     text-indent: 20px;
+    line-height: inherit;
+    height: 18px;
     padding: 0;
     border-radius: 0;
     overflow-y: hidden;
@@ -164,6 +156,12 @@ export default defineComponent({
     &:focus {
       border-bottom: 1px solid #1488ed;
     }
+  }
+
+  :deep(.is-disabled .el-textarea__inner) {
+    color: #3d4757;
+    background-color: transparent;
+    cursor: unset;
   }
 }
 

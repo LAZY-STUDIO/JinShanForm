@@ -69,9 +69,9 @@
             <input-problem
               v-for="(item, index) in problems"
               :key="item"
-              :problemNumber="index + 1"
-              :problemTitle="item.title"
-              @problemTitleChange="item.title = $event"
+              @resultValueInput="item.result.value = $event"
+              :resultValue="item.result.value"
+              :problemNumber="index"
             ></input-problem>
           </div>
         </div>
@@ -102,6 +102,12 @@ export default defineComponent({
     ProblemList,
     InputProblem,
   },
+  provide() {
+    return {
+      forefatherComponent: this,
+      showActions: this.showActions,
+    }
+  },
   data() {
     return {
       tmpList: [],
@@ -109,16 +115,29 @@ export default defineComponent({
       msgBoxClose: true,
       subTitleFocus: false,
       subTitleCenter: true,
+      showActions: true,
       problemTypeList: [] as IProblemType[],
       problemBasicList: [] as IProblem[],
       title: '',
       subTitle: '',
       problems: [
         {
-          title: '',
+          title: '问题1',
           type: ProblemType.input,
           isNew: true,
           required: false,
+          result: {
+            value: '',
+          },
+        },
+        {
+          title: '问题2',
+          type: ProblemType.input,
+          isNew: true,
+          required: false,
+          result: {
+            value: '',
+          },
         },
       ] as IProblem[],
     }
