@@ -17,7 +17,7 @@ export interface IProblemType {
 // 题目
 export interface IProblem extends IProblemType {
   required: boolean
-  isNew: boolean
+  isNew?: boolean
   id?: string
   setting?: {
     options: {

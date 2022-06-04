@@ -38,7 +38,7 @@
         <div @click="copy" class="copy-button">复制</div>
         <div class="split-div"></div>
         <div class="must-select">
-          <el-checkbox label="必填" name="type" />
+          <el-checkbox label="必填" name="type" v-model="required" />
           <el-tooltip
             popper-class="tooltip-box"
             effect="light"
@@ -46,7 +46,7 @@
           >
             <template #content
               ><div class="action-must-select" @click="mustSelect">
-                设置所有题目为必填
+                {{ mustSelectText }}
               </div></template
             >
             <i class="iconfont icon-angle-down"></i>
@@ -59,7 +59,11 @@
           effect="light"
           placement="bottom"
         >
-          <img src="../assets/imgs/trash.svg" />
+          <img
+            src="../assets/imgs/trash.svg"
+            @click="trash"
+            style="cursor: pointer"
+          />
         </el-tooltip>
         <img src="../assets/imgs/operation.svg" class="operation-icon" />
       </div>
@@ -72,19 +76,39 @@ import { defineComponent } from 'vue'
 import { ElMessage } from 'element-plus'
 
 export default defineComponent({
+  // export default {
   name: 'ProblemBase',
   data() {
     return {
       title: this.forefatherComponent.problems[this.problemNumber].title,
+      required: this.forefatherComponent.problems[this.problemNumber].required,
       msgBoxClose: true,
     }
   },
+  computed: {
+    showActions() {
+      return this.options.showActions
+    },
+    mustSelectText() {
+      return '设置所有题目为' + (this.required ? '必填' : '非必填') + '项'
+    },
+  },
   methods: {
     copy() {
-      console.log('复制')
+      const problem = this.forefatherComponent.problems[this.problemNumber]
+      this.forefatherComponent.problems.push(problem)
     },
+    trash() {
+      this.forefatherComponent.problems.splice(this.problemNumber, 1)
+    },
+    // 设置所有题目的required
     mustSelect() {
-      console.log('设置')
+      this.forefatherComponent.problems = this.forefatherComponent.problems.map(
+        (problem) => ({
+          ...problem,
+          required: this.required,
+        })
+      )
     },
   },
   /**
@@ -92,7 +116,7 @@ export default defineComponent({
    * createForm： edit
    * showForm: input
    */
-  inject: ['forefatherComponent', 'showActions'],
+  inject: ['forefatherComponent', 'options'],
   props: {
     problemNumber: {
       type: Number,
@@ -100,7 +124,8 @@ export default defineComponent({
     },
   },
   watch: {
-    title(newVal: string, oldVal: string) {
+    // title(newVal: string, oldVal: string) {
+    title(newVal: string) {
       if (newVal.length >= 500 && this.msgBoxClose) {
         ElMessage({
           message: '最多输入500个字',
@@ -114,7 +139,11 @@ export default defineComponent({
       }
       this.forefatherComponent.problems[this.problemNumber].title = newVal
     },
+    required(newVal: boolean) {
+      this.forefatherComponent.problems[this.problemNumber].required = newVal
+    },
   },
+  // }
 })
 </script>
 

@@ -9,7 +9,11 @@
   </div>
   <slot v-if="dataList.length === 0"></slot>
   <div class="data-list" v-show="showList">
-    <div v-for="data in dataList" :key="data">
+    <div
+      v-for="data in dataList"
+      :key="data"
+      @click="$emit('addProblem', data)"
+    >
       <img :src="'../imgs/' + data.type + '.svg'" v-if="allowIcon" />
       {{ data.title }}
     </div>
@@ -21,6 +25,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ProblemList',
+  emits: ['addProblem'],
   data() {
     return {
       showList: true as boolean,

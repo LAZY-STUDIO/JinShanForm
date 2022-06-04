@@ -18,6 +18,12 @@ interface ProblemBasicListRes extends BaseRes {
   }
 }
 
+interface CreateFormRes extends BaseRes {
+  data: {
+    id: string
+  }
+}
+
 /**
  * 用户登录
  * @param account 用户名
@@ -40,4 +46,23 @@ export function getProblemTypeList() {
  */
 export function getProblemBasicList() {
   return request.get<ProblemBasicListRes>('/api/problem/listBasic')
+}
+
+/**
+ * 创建表单
+ * @param title
+ * @param subTitle
+ * @param problems
+ * @returns
+ */
+export function createForm(
+  title: string,
+  subTitle: string,
+  problems: IProblem[]
+) {
+  return request.post<CreateFormRes>('/api/form/create', {
+    title,
+    subTitle,
+    problems,
+  })
 }

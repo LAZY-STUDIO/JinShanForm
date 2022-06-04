@@ -2,16 +2,18 @@
   <div class="create-form-outer" @click="itemBlur">
     <div class="header">新建表单 {{ title }}</div>
     <div class="create-form-container">
-      <div class="create-form-left-side">
+      <div class="create-form-left-side" v-show="options.showActions">
         <div class="left-wrap">
           <problem-list
             :title="'添加题目'"
+            @addProblem="addCommonProblem"
             :allowUnfold="false"
             :dataList="problemTypeList"
             :allowIcon="true"
           ></problem-list>
           <problem-list
             :title="'题目模板'"
+            @addProblem="addTemplateProblem"
             :allowUnfold="true"
             :dataList="problemBasicList"
           ></problem-list>
@@ -31,6 +33,7 @@
             <el-input
               v-model="title"
               :placeholder="titlePlaceholder"
+              :readonly="!options.showActions"
               @focus="titlePlaceholder = ''"
               @blur="titlePlaceholder = '请输入表单标题'"
             />
@@ -45,6 +48,7 @@
           >
             <el-input
               v-model="subTitle"
+              :readonly="!options.showActions"
               :placeholder="'点击设置描述'"
               @focus="subTitleFocus = true"
             />
@@ -66,32 +70,42 @@
             </div>
           </div>
           <div class="problem-form-list">
-            <input-problem
+            <component
               v-for="(item, index) in problems"
               :key="item"
-              @resultValueInput="item.result.value = $event"
-              :resultValue="item.result.value"
               :problemNumber="index"
-            ></input-problem>
+              :problemType="item.type"
+              :is="componentType(item.type)"
+            >
+            </component>
           </div>
         </div>
       </div>
-      <div class="create-form-right" ref="hhh">
+      <div class="create-form-right" v-show="options.showActions">
         <div class="right-wrap">
-          <div class="preview">预览</div>
-          <div class="sava-draft">保存草稿</div>
-          <div class="finish-create">完成创建</div>
+          <div class="preview" @click="options.showActions = false">预览</div>
+          <div class="sava-draft" @click="saveDraft">保存草稿</div>
+          <div class="finish-create" @click="finishCreateForm">完成创建</div>
         </div>
       </div>
+    </div>
+    <div class="bottom-actions" v-show="!options.showActions">
+      <div class="preview" @click="options.showActions = true">继续编辑</div>
+      <div class="finish-create" @click="finishCreateForm">完成创建</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, h } from 'vue'
+import { defineComponent } from 'vue'
 import { ElMessage } from 'element-plus'
 import ProblemList from '../components/ProblemList.vue'
-import { login, getProblemTypeList, getProblemBasicList } from '../services/api'
+import {
+  login,
+  getProblemTypeList,
+  getProblemBasicList,
+  createForm,
+} from '../services/api'
 import { IProblemType, IProblem, ProblemType } from '../types'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
@@ -101,11 +115,12 @@ export default defineComponent({
   components: {
     ProblemList,
     InputProblem,
+    SelectProblem,
   },
   provide() {
     return {
       forefatherComponent: this,
-      showActions: this.showActions,
+      options: this.options,
     }
   },
   data() {
@@ -115,43 +130,49 @@ export default defineComponent({
       msgBoxClose: true,
       subTitleFocus: false,
       subTitleCenter: true,
-      showActions: true,
+      options: {
+        showActions: true,
+      },
       problemTypeList: [] as IProblemType[],
       problemBasicList: [] as IProblem[],
+      status: 1,
       title: '',
       subTitle: '',
-      problems: [
-        {
-          title: '问题1',
-          type: ProblemType.input,
-          isNew: true,
-          required: false,
-          result: {
-            value: '',
-          },
-        },
-        {
-          title: '问题2',
-          type: ProblemType.input,
-          isNew: true,
-          required: false,
-          result: {
-            value: '',
-          },
-        },
-      ] as IProblem[],
+      problems: [] as IProblem[],
     }
   },
   methods: {
+    // 判断动态使用的的组件名
+    componentType(type: string) {
+      if (
+        type === ProblemType.input ||
+        type === ProblemType.date ||
+        type === ProblemType.time ||
+        type === ProblemType.score
+      )
+        return 'InputProblem'
+      else return 'SelectProblem'
+    },
+    // todo: 确定组件的blur样式，不仅仅是子标题
     itemBlur() {
       this.subTitleFocus = false
     },
+    // 数据初始化 todo
     async init() {
       await this.userLogin()
       await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
+      // 路由传递的form
+      const res = this.$route.query.form
+      if (res && typeof res === 'string') {
+        const { status, title, subTitle, problems } = JSON.parse(res)
+        this.status = status
+        this.title = title
+        this.subTitle = subTitle
+        this.problems = problems
+      }
     },
     async userLogin() {
-      const res = await login('leibuyun', '123456')
+      await login('leibuyun', '123456')
     },
     async getProblemTypes() {
       const res = await getProblemTypeList()
@@ -161,11 +182,45 @@ export default defineComponent({
       const res = await getProblemBasicList()
       this.problemBasicList = res.data.basicProblems
     },
+    // 完成表单创建
+    // if status ==  1, 删除localstorage的草稿信息
+    // 创建
+    async finishCreateForm() {
+      if (this.title.trim().length > 0 && this.subTitle.trim().length > 0) {
+        // todo: 校验problems
+        const res = await createForm(this.title, this.subTitle, this.problems)
+        // 创建完成后删除草稿
+        // localStorage.removeItem('form')
+      }
+    },
+    // 将form保存至localstorage
+    saveDraft() {
+      // localStorage.setItem('problems', JSON.stringify(this.problems))
+      ElMessage({
+        message: '草稿保存成功',
+        customClass: 'msg-box-form-title-success',
+        duration: 1000,
+        type: 'success',
+        onClose: () => (this.msgBoxClose = true),
+      })
+    },
+    addCommonProblem(problemType: IProblemType) {
+      this.problems.push({
+        title: '',
+        type: problemType.type,
+        required: false,
+        isNew: false,
+      })
+    },
+    addTemplateProblem(problem: IProblem) {
+      this.problems.push(problem)
+    },
   },
   created() {
     this.init()
   },
   watch: {
+    // 监听form标题的变化，不能超过30个字
     title(newVal: string, oldVal: string) {
       if (newVal.length >= 30 && this.msgBoxClose) {
         ElMessage({
@@ -188,11 +243,13 @@ export default defineComponent({
   height: 100%;
   overflow: auto;
   display: flex;
+  flex-direction: column;
 
   // to delete
   .header {
     height: 56px;
     position: fixed;
+    z-index: 999;
     background: #fff;
     top: 0;
     bottom: 0;
@@ -264,7 +321,7 @@ export default defineComponent({
 
   .middle-wrap {
     background-color: #fff;
-    height: 100%;
+    // height: 100%;
     padding: 50px 88px;
     min-height: calc(100vh - 150px);
     display: flex;
@@ -350,6 +407,26 @@ export default defineComponent({
   }
 }
 
+.preview {
+  grid-area: priview;
+  background-color: #ffffff;
+  border: 1px solid #e7e9eb;
+  color: #3d4757;
+  &:hover {
+    background-color: #f9fafd;
+  }
+}
+
+.finish-create {
+  grid-area: create;
+  background-color: #1488ed;
+  border: none;
+  color: #fff;
+  &:hover {
+    background-color: #2b94ee;
+  }
+}
+
 .create-form-right {
   width: 290px;
   margin-left: 16px;
@@ -375,35 +452,33 @@ export default defineComponent({
       line-height: 32px;
     }
 
-    .preview {
-      grid-area: priview;
-      background-color: #ffffff;
-      border: 1px solid #e7e9eb;
-      color: #3d4757;
-      &:hover {
-        background-color: #f9fafd;
-      }
-    }
-
     .sava-draft {
       .preview();
       grid-area: draft;
     }
+  }
+}
 
-    .finish-create {
-      grid-area: create;
-      background-color: #1488ed;
-      border: none;
-      color: #fff;
-      &:hover {
-        background-color: #2b94ee;
-      }
-    }
+.bottom-actions {
+  width: 776px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex: 1;
+
+  > div {
+    cursor: pointer;
+    width: 156px;
+    height: 36px;
+    line-height: 32px;
+    text-align: center;
   }
 }
 </style>
 <style lang="less">
 // 修改弹出的消息框的样式，覆盖elmentui
+// warning
 .msg-box-form-title {
   top: 16px !important;
   background-color: #fff !important;
@@ -417,6 +492,14 @@ export default defineComponent({
 
   .el-message__content {
     color: rgba(0, 0, 0, 0.65) !important;
+  }
+}
+
+// success
+.msg-box-form-title-success {
+  .msg-box-form-title();
+  .el-message-icon--warning {
+    color: #00be77 !important;
   }
 }
 

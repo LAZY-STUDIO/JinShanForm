@@ -1,16 +1,20 @@
 <template>
   <problem-base :problemNumber="problemNumber">
     <el-input
+      v-if="problemType === 'input'"
       v-model="input"
       :readonly="showActions"
       :placeholder="showActions ? '填写者回答区' : '请输入'"
       :class="['input-problem', showActions ? 'dashd-input' : '']"
     />
+    <div v-else-if="problemType === 'date'">日期题</div>
+    <div v-else-if="problemType === 'time'">时间题</div>
+    <div v-else>打分题</div>
   </problem-base>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import ProblemBase from './ProblemBase.vue'
 
 export default defineComponent({
@@ -23,7 +27,13 @@ export default defineComponent({
       input: this.resultValue,
     }
   },
-  inject: ['showActions'],
+  computed: {
+    showActions() {
+      return this.options.showActions
+    },
+  },
+  // inject: ['showActions'],
+  inject: ['options'],
   // 答案输入事件
   emits: ['resultValueInput'],
   props: {
@@ -35,7 +45,11 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    problemType: {
+      type: String,
+    },
   },
+  // todo: 添加时的效果
   watch: {
     input(newVal: string) {
       this.$emit('resultValueInput', newVal)

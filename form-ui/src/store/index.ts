@@ -1,14 +1,7 @@
 import { createStore } from 'vuex'
 
 export default createStore({
-  state: {
-    formList: [
-      {
-        problems: [],
-      },
-    ],
-    problems: [],
-  },
+  state: {},
   getters: {},
   mutations: {},
   actions: {},
