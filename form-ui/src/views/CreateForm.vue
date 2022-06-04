@@ -73,6 +73,15 @@
             <component
               v-for="(item, index) in problems"
               :key="item"
+              :resultValue="item.result.value"
+              @resultValueInput="item.result.value = $event"
+              @scoreChange="item.result.value = $event"
+              @dateFormatChange="item.setting.options[0].title = $event"
+              :dateFormat="
+                item.setting.options[0].title === ''
+                  ? 'YYYY/MM'
+                  : item.setting.options[0].title
+              "
               :problemNumber="index"
               :problemType="item.type"
               :is="componentType(item.type)"
@@ -90,7 +99,7 @@
       </div>
     </div>
     <div class="bottom-actions" v-show="!options.showActions">
-      <div class="preview" @click="options.showActions = true">继续编辑</div>
+      <div class="preview" @click="backToEdit">继续编辑</div>
       <div class="finish-create" @click="finishCreateForm">完成创建</div>
     </div>
   </div>
@@ -168,7 +177,18 @@ export default defineComponent({
         this.status = status
         this.title = title
         this.subTitle = subTitle
-        this.problems = problems
+        this.problems = problems.map((problem) => ({
+          ...problem,
+          setting: {
+            options: [{ title: '', status: 1 }] as {
+              title: string
+              status: 1 | 2
+            }[],
+          },
+          result: {
+            value: '',
+          },
+        }))
       }
     },
     async userLogin() {
@@ -193,6 +213,15 @@ export default defineComponent({
         // localStorage.removeItem('form')
       }
     },
+    backToEdit() {
+      this.options.showActions = true
+      this.problems = this.problems.map((problem) => ({
+        ...problem,
+        result: {
+          value: '',
+        },
+      }))
+    },
     // 将form保存至localstorage
     saveDraft() {
       // localStorage.setItem('problems', JSON.stringify(this.problems))
@@ -210,10 +239,30 @@ export default defineComponent({
         type: problemType.type,
         required: false,
         isNew: false,
+        setting: {
+          options: [{ title: '', status: 1 }] as {
+            title: string
+            status: 1 | 2
+          }[],
+        },
+        result: {
+          value: '',
+        },
       })
     },
     addTemplateProblem(problem: IProblem) {
-      this.problems.push(problem)
+      this.problems.push({
+        setting: {
+          options: [{ title: '', status: 1 }] as {
+            title: string
+            status: 1 | 2
+          }[],
+        },
+        result: {
+          value: '',
+        },
+        ...problem,
+      })
     },
   },
   created() {

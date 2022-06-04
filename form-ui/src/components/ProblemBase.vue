@@ -14,24 +14,7 @@
     </div>
     <slot></slot>
     <div class="problem-actions" v-if="showActions">
-      <div class="allow-repeat">
-        <input type="checkbox" name="reading" checked style="margin: 0" />
-        <span style="font-">不允许重复</span>
-        <el-tooltip
-          popper-class="tooltip-box"
-          effect="light"
-          placement="bottom"
-        >
-          <template #content
-            >勾选后不允许填写者提交和已有数据<br />重复的内容</template
-          >
-          <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
-              <circle stroke="#C0C6CF" cx="8" cy="8" r="6.5"></circle>
-              <path fill="#C0C6CF" d="M7 4h2v5H7zM7 10h2v2H7z"></path>
-            </g></svg
-        ></el-tooltip>
-      </div>
+      <slot name="footer"></slot>
       <div class="problem-buttons">
         <span class="problem-type">填空题</span>
         <div class="split-div"></div>
@@ -159,6 +142,7 @@ export default defineComponent({
 
 .problem-titie-container {
   padding: 8px 0 5px 0;
+  margin-bottom: 3px;
   color: #3d4757;
   font-size: 14px;
   line-height: 18px;
@@ -191,18 +175,6 @@ export default defineComponent({
     color: #3d4757;
     background-color: transparent;
     cursor: unset;
-  }
-}
-
-.allow-repeat {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-
-  span {
-    font-size: 12px;
-    color: #1488ed;
-    margin: 0 8px;
   }
 }
 
