@@ -1,0 +1,270 @@
+@font-face {
+    font-family: icons;
+    src: url(../fonts/icons.woff2) format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+body{
+    background-color: #f5f7fa;
+}
+.iconfont {
+    font-family: icons;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.icon-angle-left-o:before {
+    content: "\E922";
+}
+
+.icon-angle-left-o-thin:before {
+    content: "\E921";
+}
+
+.icon-angle-right-o-thin:before {
+    content: "\E923";
+}
+
+body {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+header {
+    border-bottom: 1px solid #e7e9eb;
+}
+
+.header-inner {
+    max-width: 900px;
+    margin: auto;
+    text-align: left;
+}
+
+.tapoption {
+    display: inline-block;
+    margin-right: 50px;
+    height: 50px;
+    line-height: 50px;
+}
+
+.tapoption:hover {
+    color: rgb(71, 135, 255);
+    cursor: pointer;
+}
+
+.tapclick {
+    color: rgb(71, 135, 255);
+    border-bottom: 3px solid rgb(71, 135, 255);
+}
+
+.top-name {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0.67em 0;
+    display: inline-block;
+}
+
+.top {
+    text-align: left;
+    border-bottom: 1px solid #e7e9eb;
+    background-color: #fff;
+}
+
+.list-anayse {
+    width: 900px;
+    margin: auto;
+    text-align: left;
+    padding: 24px 25px 100px 25px;
+    background-color: #fff;
+    height: max-content;
+    margin-top: 20px;
+}
+.qrcodes{
+    width: 900px;
+    margin: auto;
+    text-align: left;
+    padding: 50px 25px 100px 25px;
+    background-color: #fff;
+    height: max-content;
+    margin-top: 20px;
+}
+.switch-up,
+.switch-down,
+.num {
+    display: inline-block;
+}
+
+.switch-up {
+    margin-right: 16px;
+    background-color: rgb(224, 224, 224);
+    cursor: pointer;
+}
+
+.switch-down {
+    margin-left: 16px;
+    background-color: rgb(224, 224, 224);
+    cursor: pointer;
+}
+
+.sum {
+    font-size: 20px;
+    margin-bottom: 14px;
+}
+
+#num-list {
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+}
+
+.user-list {
+    margin-top: 16px;
+    border-top: 1px solid #e7e9eb;
+    padding: 16px 0;
+}
+
+.formname {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 18px;
+}
+
+.quesname {
+    padding: 8px 0 5px 0;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 600;
+    display: block;
+}
+
+#isrequired {
+    position: absolute;
+    left: 325px;
+    color: red;
+}
+
+.ques-list {
+    margin-top: 32px;
+}
+
+.none-dir {
+    border: none;
+}
+
+.quesvalue {
+    padding: 8px 0 5px 0;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 400;
+}
+
+.qrcode {
+    width: 260px;
+    height: 260px;
+    margin: auto;
+    border: .01rem solid #e3e3e3;
+    margin-top: 50px;
+}
+#vueqr{
+    margin-left: 30px;
+    margin-right: 30px;
+}
+.light {
+    color: rgb(184, 184, 184);
+    font-size: 12px;
+    text-align: center;
+}
+
+.qrname {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.home {
+    margin-top: 60px;
+}
+
+.download {
+    margin-top: 50px;
+    text-align: center;
+    
+}
+
+.link {
+    color: #1890ff;
+    cursor: pointer;
+}
+
+.copy {
+    border: 1px solid #e2e4e8;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 120px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px;
+    text-align: center;
+    font-size: 15px;
+    margin-top: 30px;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 15px;
+    margin-top: 10px;
+}
+.formcreate{
+    width: 900px;
+    margin: auto;
+    text-align: left;
+    padding: 24px 25px;
+    background-color: #fff;
+    margin-top: 20px;
+}
+.jump{
+    flex-direction: column;
+    position: fixed;
+    z-index: 997;
+    bottom: 0;
+    width: 850px;
+    height: 130px;
+    background-color: #fff;
+}
+.revise{
+    width: 100px;
+    background-color: #1890ff;
+    color: #e2e4e8;
+    height: 32px;
+    text-align: center;
+    padding: 5px;
+    margin-bottom: 10px;
+    margin: 10px auto;
+}
+.fill{
+    width: 100px;
+    color: #1890ff;
+    margin: 0 auto;
+    height: 32px;
+    padding: 5px;
+    text-align: center;
+}
+.submit{
+    margin-top: 40px;
+    height: 200px;
+}
+.options{
+    padding: 8px 0 5px 0;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 400;
+    display: inline-block;
+    margin-left: 24px;
+    margin-right: 30px;
+}
+#app{
+    background-color: #f5f7fa;
+}

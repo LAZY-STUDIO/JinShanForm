@@ -66,3 +66,8 @@ export function createForm(
     problems,
   })
 }
+
+//获取表单填写详情
+export function list(num: string) {
+  return request.get<Getmsg>('/api/form/formResult/' + num)
+}
