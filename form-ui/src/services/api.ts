@@ -1,5 +1,5 @@
 import * as request from './request'
-import { IProblemType, IProblem } from '../types'
+import { IProblemType, IProblem, Getmsg } from '../types'
 
 interface BaseRes {
   stat: string
@@ -65,4 +65,9 @@ export function createForm(
     subTitle,
     problems,
   })
+}
+
+//获取表单填写详情
+export function list(num: string) {
+  return request.get<Getmsg>('/api/form/formResult/' + num)
 }

@@ -9,6 +9,7 @@ import { defineComponent } from 'vue'
 import './assets/css/base.css'
 import './assets/css/icon.css'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import './assets/css/formanayse.css'
 
 export default defineComponent({
   data() {

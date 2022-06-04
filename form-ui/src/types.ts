@@ -39,3 +39,67 @@ export interface IProblem extends IProblemType {
         }[]
   }
 }
+
+//未修改的获取题目
+export interface GetIlist {
+  info: IProblems
+  items: Onelist[]
+}
+export interface Getmsg {
+  data: GetIlist
+  stat: boolean
+}
+export interface Onelist {
+  id: string
+  formAuthor: string
+  formId: string
+  result: Result[]
+}
+export interface Result {
+  title: string
+  type: string
+  required: boolean
+  setting: Option
+  id: string
+  result: Value
+}
+export interface Value {
+  value?:
+    | string
+    | number
+    | {
+        id: string
+        title: string
+      }
+    | {
+        id: string
+        title: string
+      }[]
+}
+export interface IProblems {
+  id: string
+  ctime: number
+  utime: number
+  status: number
+  author: string
+  isStar: boolean
+  title: string
+  subTitle: string
+  problems: Problem[]
+}
+export interface Problem {
+  title: string
+  type: string
+  required: boolean
+  isNew: boolean
+  id: string
+  setting: Option
+}
+export interface Option {
+  options: Choice[]
+}
+export interface Choice {
+  title: string
+  status: number
+  id: string
+}
