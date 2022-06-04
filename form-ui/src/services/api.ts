@@ -1,5 +1,5 @@
 import * as request from './request'
-import { IProblemType, IProblem } from '../types'
+import { IProblemType, IProblem, Getmsg } from '../types'
 
 interface BaseRes {
   stat: string

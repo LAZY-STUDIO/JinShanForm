@@ -2,6 +2,7 @@
   <div>首页</div>
   <button @click="fun1">新建表单</button>
   <button @click="fun2">编辑表单</button>
+  <button @click="fun3">数据解析</button>
 </template>
 
 <script lang="ts">
@@ -45,6 +46,10 @@ export default defineComponent({
           form: JSON.stringify(this.formList[0]),
         },
       })
+    },
+    fun3() {
+      console.log('新建表单')
+      this.$router.push({ name: 'datanayse' })
     },
   },
   created() {

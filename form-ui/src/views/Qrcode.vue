@@ -9,7 +9,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import QRcode from '../components/qrcode.vue'
-import '../assets/imgs/zm1.jpg'
 export default defineComponent({
   name: 'QR',
   components: {
