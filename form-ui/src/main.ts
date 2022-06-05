@@ -9,3 +9,16 @@ import { Calendar } from '@element-plus/icons-vue'
 const app = createApp(App)
 app.component('IconCalendar', Calendar)
 app.use(store).use(router).use(ElementPlus).mount('#app')
+
+router.beforeEach(function (to, from, next) {
+  if (to.path === '/login' || to.path === '/register') {
+    next()
+  } else {
+    const token = localStorage.getItem('token')
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+})

@@ -1,3 +1,15 @@
+//用户信息
+export interface IUser {
+  id: string
+  account: string
+  pwd: string
+  status: number
+  ctime: number
+  utime: number
+  nickname: string
+  avatar: string
+}
+
 // 题目类型
 export enum ProblemType {
   input = 'input',
@@ -102,4 +114,16 @@ export interface Choice {
   title: string
   status: number
   id: string
+}
+
+export interface IForm {
+  id: string
+  ctime: number
+  utime: number
+  status: number
+  author: string
+  isStar: boolean
+  title: string
+  subTitle: string
+  problems: IProblem[]
 }

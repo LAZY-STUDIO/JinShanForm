@@ -168,7 +168,7 @@ export default defineComponent({
     },
     // 数据初始化 todo
     async init() {
-      await this.userLogin()
+      // await this.userLogin()
       await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
       // 路由传递的form
       const res = this.$route.query.form
@@ -191,9 +191,9 @@ export default defineComponent({
         }))
       }
     },
-    async userLogin() {
-      await login('leibuyun', '123456')
-    },
+    // async userLogin() {
+    //   await login('leibuyun', '123456')
+    // },
     async getProblemTypes() {
       const res = await getProblemTypeList()
       this.problemTypeList = res.data.problemTypes

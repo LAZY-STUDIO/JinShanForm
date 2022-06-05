@@ -3,11 +3,24 @@ import CreateForm from '../views/CreateForm.vue'
 import FillForm from '../views/FillForm.vue'
 import IndexPage from '../views/Index.vue'
 import QR from '../views/Qrcode.vue'
+import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
+import ResgisterView from '../views/ResgisterView.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'IndexPage',
-    component: IndexPage,
+    name: 'HomeView',
+    component: HomeView,
+  },
+  {
+    path: '/login',
+    name: 'LoginView',
+    component: LoginView,
+  },
+  {
+    path: '/register',
+    name: 'RegisterView',
+    component: ResgisterView,
   },
   {
     path: '/createForm',
