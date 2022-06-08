@@ -1,5 +1,5 @@
 <template>
-  <div class="create-form-outer" @click="itemBlur">
+  <div class="create-form-outer">
     <div class="header">新建表单 {{ title }}</div>
     <div class="create-form-container">
       <div class="create-form-left-side" v-show="options.showActions">
@@ -39,20 +39,18 @@
             />
           </div>
           <div
-            :class="[
-              'form-subTitle',
-              subTitleFocus ? 'item-focus' : '',
-              subTitleCenter ? 'el-text-center' : '',
-            ]"
-            @click.stop
+            :class="['form-subTitle', subTitleCenter ? 'el-text-center' : '']"
+            tabindex="0"
           >
             <el-input
               v-model="subTitle"
+              type="textarea"
+              autosize
+              resize="none"
               :readonly="!options.showActions"
               :placeholder="'点击设置描述'"
-              @focus="subTitleFocus = true"
             />
-            <div v-show="subTitleFocus" class="subTitle-actions" ref="subTitle">
+            <div class="subTitle-actions" ref="subTitle">
               <img
                 src="../assets/imgs/icon-text-left.png"
                 :style="{
@@ -134,6 +132,7 @@ export default defineComponent({
   },
   data() {
     return {
+      // 常用题
       tmpList: [],
       titlePlaceholder: '请输入表单标题',
       msgBoxClose: true,
@@ -161,10 +160,6 @@ export default defineComponent({
       )
         return 'InputProblem'
       else return 'SelectProblem'
-    },
-    // todo: 确定组件的blur样式，不仅仅是子标题
-    itemBlur() {
-      this.subTitleFocus = false
     },
     // 数据初始化 todo
     async init() {
@@ -251,7 +246,9 @@ export default defineComponent({
       })
     },
     addTemplateProblem(problem: IProblem) {
+      console.log(problem)
       this.problems.push({
+        ...problem,
         setting: {
           options: [{ title: '', status: 1 }] as {
             title: string
@@ -261,7 +258,6 @@ export default defineComponent({
         result: {
           value: '',
         },
-        ...problem,
       })
     },
   },
@@ -400,19 +396,25 @@ export default defineComponent({
 }
 
 .form-subTitle {
-  .form-title();
-
-  margin-top: 16px;
+  width: 100%;
+  margin-top: 28px;
   padding: 12px 20px;
 
-  :deep(.el-input__inner) {
-    text-align: left;
-    font-size: 14px;
-    font-weight: normal;
+  &:focus {
+    box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
 
-    &::-webkit-input-placeholder {
-      color: #aeb5c0;
+    :deep(.el-textarea__inner) {
+      border-bottom: 1px solid #1488ed;
     }
+  }
+
+  :deep(.el-textarea__inner) {
+    text-align: left;
+    box-shadow: none;
+    overflow: hidden;
+    border-radius: 0;
+    color: #3d4757;
+    padding: 8px 0 5px 0;
 
     &:hover {
       border-bottom: 1px solid #e8ebee;
@@ -423,8 +425,9 @@ export default defineComponent({
     margin-top: 15px;
 
     img {
-      margin-left: 10px;
       cursor: pointer;
+      margin-right: 8px;
+      visibility: hidden;
 
       &:focus {
         background-color: #f2f4f7;
@@ -438,21 +441,8 @@ export default defineComponent({
 }
 
 .el-text-center {
-  :deep(.el-input__inner) {
+  :deep(.el-textarea__inner) {
     text-align: center;
-  }
-}
-
-// 元素聚焦的时候
-.item-focus {
-  box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
-
-  :deep(.el-input__inner) {
-    border-bottom: 1px solid #1488ed;
-  }
-
-  &:hover {
-    border-bottom: none;
   }
 }
 
@@ -552,18 +542,16 @@ export default defineComponent({
   }
 }
 
-// tooltip
-.tooltip-box {
-  padding: 10px 20px !important;
+// 元素聚焦的时候
+.item-focus {
   box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
-  color: #969696;
-}
 
-.action-must-select {
-  width: 100%;
+  :deep(.el-textarea__inner) {
+    border-bottom: 1px solid #1488ed;
+  }
 
   &:hover {
-    background-color: #f2f2f2;
+    border-bottom: none;
   }
 }
 </style>

@@ -1,123 +1,122 @@
 <template>
   <problem-base :problemNumber="problemNumber">
-    <template v-if="problemType === 'input'">
-      <el-input
-        v-model="input"
-        :readonly="showActions"
-        :placeholder="showActions ? '填写者回答区' : '请输入'"
-        :class="['input-problem', showActions ? 'dashd-input' : '']"
-      />
-      <div class="allow-repeat" v-show="showActions">
-        <input type="checkbox" name="reading" checked style="margin: 0" />
-        <span style="font-">不允许重复</span>
-        <el-tooltip
-          popper-class="tooltip-box"
-          effect="light"
-          placement="bottom"
-        >
-          <template #content
-            >勾选后不允许填写者提交和已有数据<br />重复的内容</template
+    <template v-slot:default>
+      <template v-if="problemType === 'input'">
+        <el-input
+          v-model="input"
+          :readonly="showActions"
+          :placeholder="showActions ? '填写者回答区' : '请输入'"
+          :class="['input-problem', showActions ? 'dashd-input' : '']"
+        />
+      </template>
+      <template v-else-if="problemType === 'date'">
+        <div v-if="showActions" class="dateformat-wrap">
+          <div
+            class="trigger-date-container"
+            @click="showDateFormatMenu = !showDateFormatMenu"
           >
-          <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
-              <circle stroke="#C0C6CF" cx="8" cy="8" r="6.5"></circle>
-              <path fill="#C0C6CF" d="M7 4h2v5H7zM7 10h2v2H7z"></path>
-            </g></svg
-        ></el-tooltip>
-      </div>
-    </template>
-
-    <template v-else-if="problemType === 'date'">
-      <div v-if="showActions" class="dateformat-wrap">
-        <div
-          class="trigger-date-container"
-          @click="showDateFormatMenu = !showDateFormatMenu"
-        >
-          <svg
-            width="16"
-            height="16"
-            xmlns="http://www.w3.org/2000/svg"
-            class="date-img_3JSYa"
-          >
-            <g fill="none" fill-rule="nonzero">
-              <path
-                d="M6 1v1h3V1h1v1h2a2 2 0 012 2v3h-1V6H2v7a1 1 0 001 1h3v1H3a2 2 0 01-2-2V4a2 2 0 012-2h2V1h1zm0 10v1H4v-1h2zm0-3v1H4V8h2zM4.999 3H3a1 1 0 00-1 1v1h11V4a1 1 0 00-1-1h-2v1H9V3H5.999L6 4H5l-.001-1z"
-                fill="#1488ED"
-              ></path>
-              <g stroke="#1488ED">
+            <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" fill-rule="nonzero">
                 <path
-                  d="M11.578 7.503l.348.68 1.953.62.56.939-.39.525a.743.743 0 00-.134.507h0l.53 1.505-.56.937-.715-.063a.748.748 0 00-.485.128 2.92 2.92 0 01-.479.267.74.74 0 00-.395.394h0l-.232.558h-1.127l-.233-.562a.737.737 0 00-.395-.39 2.928 2.928 0 01-.497-.266.75.75 0 00-.49-.13h0l-.71.064-.555-.942.382-.541a.743.743 0 00.125-.497h0l-.525-1.513.562-.94.712.064a.743.743 0 00.486-.127h0l1.089-1.19 1.175-.027z"
+                  d="M6 1v1h3V1h1v1h2a2 2 0 012 2v3h-1V6H2v7a1 1 0 001 1h3v1H3a2 2 0 01-2-2V4a2 2 0 012-2h2V1h1zm0 10v1H4v-1h2zm0-3v1H4V8h2zM4.999 3H3a1 1 0 00-1 1v1h11V4a1 1 0 00-1-1h-2v1H9V3H5.999L6 4H5l-.001-1z"
+                  fill="#1488ED"
                 ></path>
-                <path
-                  d="M11 10h0a1 1 0 101 1s0 0 0 0h0a1 1 0 00-1-1s0 0 0 0h0z"
-                ></path>
-              </g>
-            </g></svg
-          ><svg
-            width="5"
-            height="3"
-            xmlns="http://www.w3.org/2000/svg"
-            class="arrow-icon_2irI9"
-          >
-            <path d="M2.5 3L5 0H0z" fill="#767C85" fill-rule="evenodd"></path>
-          </svg>
-          <div class="date-menu" v-show="showDateFormatMenu">
-            <div
-              v-for="(item, index) in dateformatTexts"
-              :key="item"
-              @click="changeDateformat(index)"
-            >
-              <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-                <g
-                  :fill="dateformatIndex === index ? '#1488ED' : '#fff'"
-                  fill-rule="evenodd"
-                >
+                <g stroke="#1488ED">
                   <path
-                    d="M3.219 8.222l1.414-1.414 4.243 4.242-1.414 1.415z"
+                    d="M11.578 7.503l.348.68 1.953.62.56.939-.39.525a.743.743 0 00-.134.507h0l.53 1.505-.56.937-.715-.063a.748.748 0 00-.485.128 2.92 2.92 0 01-.479.267.74.74 0 00-.395.394h0l-.232.558h-1.127l-.233-.562a.737.737 0 00-.395-.39 2.928 2.928 0 01-.497-.266.75.75 0 00-.49-.13h0l-.71.064-.555-.942.382-.541a.743.743 0 00.125-.497h0l-.525-1.513.562-.94.712.064a.743.743 0 00.486-.127h0l1.089-1.19 1.175-.027z"
                   ></path>
                   <path
-                    d="M6.166 10.932l6.364-6.364 1.414 1.414-6.364 6.364z"
+                    d="M11 10h0a1 1 0 101 1s0 0 0 0h0a1 1 0 00-1-1s0 0 0 0h0z"
                   ></path>
                 </g>
-              </svg>
-              <span>{{ item }}</span>
+              </g></svg
+            ><svg width="5" height="3" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.5 3L5 0H0z" fill="#767C85" fill-rule="evenodd"></path>
+            </svg>
+            <div class="date-menu" v-show="showDateFormatMenu">
+              <div
+                v-for="(item, index) in dateformatTexts"
+                :key="item"
+                @click="changeDateformat(index)"
+              >
+                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+                  <g
+                    :fill="dateformatIndex === index ? '#1488ED' : '#fff'"
+                    fill-rule="evenodd"
+                  >
+                    <path
+                      d="M3.219 8.222l1.414-1.414 4.243 4.242-1.414 1.415z"
+                    ></path>
+                    <path
+                      d="M6.166 10.932l6.364-6.364 1.414 1.414-6.364 6.364z"
+                    ></path>
+                  </g>
+                </svg>
+                <span>{{ item }}</span>
+              </div>
             </div>
           </div>
+          <span>{{ dateformatTexts[dateformatIndex] }}</span>
         </div>
-        <span>{{ dateformatTexts[dateformatIndex] }}</span>
-      </div>
-      <div v-else>
-        <el-date-picker
-          v-model="dateTmp"
-          type="datetime"
-          :format="dateFormat"
-          :value-format="dateFormat"
-          prefix-icon="icon-calendar"
-          placeholder="请输入"
-          class="date-choice"
-        />
-      </div>
+        <div v-else>
+          <el-date-picker
+            v-model="dateTmp"
+            type="datetime"
+            readonly
+            :format="dateFormat"
+            :value-format="dateFormat"
+            prefix-icon="icon-calendar"
+            placeholder="请输入"
+            class="date-choice"
+            :teleported="false"
+          />
+        </div>
+      </template>
+      <template v-else-if="problemType === 'time'">
+        <div>hello</div>
+      </template>
+      <template v-else>
+        <div class="icon-stars-container">
+          <i
+            class="iconfont icon-star"
+            v-for="(item, index) in 5"
+            :key="item"
+            :style="{
+              color:
+                (!showActions && index <= mouseHoverIndex) || index <= score
+                  ? '#f8d61d'
+                  : '#c2c2c2',
+            }"
+            @mouseenter="mouseHoverIndex = index"
+            @mouseleave="mouseHoverIndex = -1"
+            @click="changeScore(index)"
+          ></i>
+          <span>{{ resultScore }}</span>
+        </div>
+      </template>
     </template>
-    <div v-else-if="problemType === 'time'">时间题</div>
-    <div v-else>
-      <div class="icon-stars-container">
-        <i
-          class="iconfont icon-star"
-          v-for="(item, index) in 5"
-          :key="item"
-          :style="{
-            color:
-              (!showActions && index <= mouseHoverIndex) || index <= score
-                ? '#f8d61d'
-                : '#c2c2c2',
-          }"
-          @mouseenter="mouseHoverIndex = index"
-          @mouseleave="mouseHoverIndex = -1"
-          @click="changeScore(index)"
-        ></i>
-        <span>{{ resultScore }}</span>
-      </div>
-    </div>
+    <template v-slot:slot-actions>
+      <template v-if="problemType === 'input'">
+        <div class="allow-repeat">
+          <input type="checkbox" name="reading" checked style="margin: 0" />
+          <span style="font-">不允许重复</span>
+          <el-tooltip
+            popper-class="tooltip-box"
+            effect="light"
+            placement="bottom"
+          >
+            <template #content
+              >勾选后不允许填写者提交和已有数据<br />重复的内容</template
+            >
+            <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" fill-rule="evenodd">
+                <circle stroke="#C0C6CF" cx="8" cy="8" r="6.5"></circle>
+                <path fill="#C0C6CF" d="M7 4h2v5H7zM7 10h2v2H7z"></path>
+              </g></svg
+          ></el-tooltip>
+        </div>
+      </template>
+    </template>
   </problem-base>
 </template>
 
@@ -155,6 +154,7 @@ export default defineComponent({
   methods: {
     changeDateformat(index: number) {
       this.dateformatIndex = index
+      console.log(index)
     },
     changeScore(index: number) {
       if (!this.showActions) {
@@ -207,7 +207,6 @@ export default defineComponent({
           break
       }
       this.$emit('dateFormatChange', format)
-      console.log('change')
     },
     dateTmp(newVal: string) {
       this.$emit('resultValueInput', newVal)
@@ -221,6 +220,7 @@ export default defineComponent({
   :deep(.el-input__wrapper) {
     box-shadow: none;
     border-bottom: 1px solid #e2e6ed;
+    padding-left: 0;
   }
 }
 
@@ -247,6 +247,10 @@ export default defineComponent({
     font-size: 12px;
     color: #1488ed;
     margin: 0 8px;
+  }
+
+  .el-only-child__content el-tooltip__trigger el-tooltip__trigger {
+    height: 16px;
   }
 }
 // 分数题
@@ -279,8 +283,10 @@ export default defineComponent({
   .date-menu {
     position: absolute;
     top: 27px;
+    background-color: #fff;
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
     padding: 4px;
+    z-index: 99;
 
     > div {
       padding-left: 10px;

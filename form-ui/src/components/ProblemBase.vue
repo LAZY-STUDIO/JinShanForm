@@ -1,7 +1,16 @@
 <template>
-  <div class="problem-container-outer">
+  <div
+    :class="[
+      'problem-container-outer',
+      showActions ? '' : 'other-page-problem-container-outer',
+    ]"
+    tabindex="0"
+  >
     <div class="problem-titie-container">
-      <span class="problem-number">{{ problemNumber + 1 }}.</span>
+      <span class="problem-number">
+        <span class="must-star" v-show="required">*</span>
+        {{ problemNumber + 1 }}.</span
+      >
       <el-input
         v-model="title"
         type="textarea"
@@ -13,10 +22,10 @@
       />
     </div>
     <slot></slot>
-    <div class="problem-actions" v-if="showActions">
-      <slot name="footer"></slot>
+    <div class="hidden-wrap" v-if="showActions">
+      <slot name="slot-actions"></slot>
       <div class="problem-buttons">
-        <span class="problem-type">填空题</span>
+        <span class="problem-type">{{ problemTypeName }}</span>
         <div class="split-div"></div>
         <div @click="copy" class="copy-button">复制</div>
         <div class="split-div"></div>
@@ -57,6 +66,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ElMessage } from 'element-plus'
+import { IProblemType, ProblemType } from '@/types'
 
 export default defineComponent({
   // export default {
@@ -75,6 +85,34 @@ export default defineComponent({
     mustSelectText() {
       return '设置所有题目为' + (this.required ? '必填' : '非必填') + '项'
     },
+    problemTypeName() {
+      const type = this.forefatherComponent.problems[this.problemNumber].type
+      let res = ''
+      switch (type) {
+        case ProblemType.input:
+          res = '填空题'
+          break
+        case ProblemType.singleSelect:
+          res = '单选题'
+          break
+        case ProblemType.multiSelect:
+          res = '多选题'
+          break
+        case ProblemType.pullSelect:
+          res = '下拉题'
+          break
+        case ProblemType.score:
+          res = '打分题'
+          break
+        case ProblemType.time:
+          res = '时间题'
+          break
+        case ProblemType.date:
+          res = '日期题'
+          break
+      }
+      return res
+    },
   },
   methods: {
     copy() {
@@ -87,7 +125,7 @@ export default defineComponent({
     // 设置所有题目的required
     mustSelect() {
       this.forefatherComponent.problems = this.forefatherComponent.problems.map(
-        (problem) => ({
+        (problem: IProblemType) => ({
           ...problem,
           required: this.required,
         })
@@ -132,12 +170,33 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .problem-container-outer {
-  position: relative;
   width: 100%;
   padding: 20px 24px 40px;
   display: flex;
   flex-direction: column;
   align-items: left;
+  // border: 1px solid blue;
+
+  // 题目聚焦时
+  &:focus-within {
+    box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
+    padding-bottom: 0;
+
+    .hidden-wrap {
+      display: initial;
+    }
+  }
+}
+
+.other-page-problem-container-outer {
+  &:focus-within {
+    box-shadow: none;
+    padding-bottom: 40px;
+  }
+
+  .problem-titie-container:hover {
+    border-bottom: none;
+  }
 }
 
 .problem-titie-container {
@@ -145,13 +204,28 @@ export default defineComponent({
   margin-bottom: 3px;
   color: #3d4757;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 20px;
   position: relative;
+
+  &:hover {
+    border-bottom: 1px solid #e8ebee;
+  }
+
+  &:focus-within {
+    border-bottom: 1px solid #1488ed;
+  }
 
   .problem-number {
     position: absolute;
     top: 8px;
     z-index: 1;
+
+    .must-star {
+      position: absolute;
+      top: 0;
+      left: -8px;
+      color: red;
+    }
   }
 
   :deep(.el-textarea__inner) {
@@ -160,15 +234,10 @@ export default defineComponent({
     box-shadow: none;
     text-indent: 20px;
     line-height: inherit;
-    height: 18px;
     padding: 0;
     border-radius: 0;
     overflow-y: hidden;
     color: #3d4757;
-
-    &:focus {
-      border-bottom: 1px solid #1488ed;
-    }
   }
 
   :deep(.is-disabled .el-textarea__inner) {
@@ -178,11 +247,17 @@ export default defineComponent({
   }
 }
 
+.hidden-wrap {
+  display: none;
+}
+
+// 操作栏
 .problem-buttons {
   display: flex;
   justify-content: right;
   align-items: center;
   font-size: 12px;
+  padding: 4px 0;
 
   .problem-type {
     color: #949aae;
@@ -210,16 +285,47 @@ export default defineComponent({
 
     :deep(.el-checkbox) {
       flex-direction: row-reverse;
+
+      .el-checkbox__label {
+        font-size: 12px;
+        color: #949aae;
+      }
     }
 
     :deep(.el-checkbox__inner) {
       margin: 8px;
+    }
+
+    .action-must-select {
+      cursor: pointer;
     }
   }
 
   .operation-icon {
     margin-left: 15px;
     cursor: pointer;
+  }
+}
+
+// tooltip
+.tooltip-box {
+  padding: 10px 20px !important;
+  box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
+  color: #969696;
+}
+
+// 设置所有题目为必填项/非必填项
+.action-must-select {
+  width: 100%;
+  font-size: 13px;
+  text-align: center;
+  height: 26px;
+  line-height: 26px;
+  color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f2f2f2;
   }
 }
 </style>
