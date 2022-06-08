@@ -3,6 +3,8 @@
   <button @click="fun1">新建表单</button>
   <button @click="fun2">编辑表单</button>
   <button @click="fun3">数据解析</button>
+  <button @click="fun4">表单填写</button>
+  <button @click="fun5">个人中心</button>
 </template>
 
 <script lang="ts">
@@ -50,6 +52,14 @@ export default defineComponent({
     fun3() {
       console.log('新建表单')
       this.$router.push({ name: 'datanayse' })
+    },
+    fun4() {
+      console.log('表单填写')
+      this.$router.push('/write')
+    },
+    fun5() {
+      console.log('个人中心')
+      this.$router.push('/personal')
     },
   },
   created() {

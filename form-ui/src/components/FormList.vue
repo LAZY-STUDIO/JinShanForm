@@ -16,7 +16,9 @@
             >发布</el-button
           >
           <el-button class="btn" v-if="form.status === 2">编辑</el-button>
-          <el-button class="btn" v-if="form.status === 3">分享</el-button>
+          <el-button class="btn" v-if="form.status === 3" @click="goWrite"
+            >分享</el-button
+          >
           <el-button class="btn" v-if="form.status === 3 || form.status === 4"
             >查看结果</el-button
           >
@@ -92,6 +94,10 @@ export default defineComponent({
         console.log(2)
         this.onStar()
       }
+    },
+    goWrite() {
+      console.log(this.form.id)
+      this.$router.push({ path: '/write', query: { id: this.form.id } })
     },
   },
 })

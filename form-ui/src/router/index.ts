@@ -6,6 +6,8 @@ import QR from '../views/Qrcode.vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import ResgisterView from '../views/ResgisterView.vue'
+import PersonalCenter from '../views/PersonalCenter.vue'
+import FormWrite from '../views/FormWrite.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -31,6 +33,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/fillForm',
     name: 'FillForm',
     component: FillForm,
+  },
+  {
+    path: '/personal',
+    name: 'PersonalCenter',
+    component: PersonalCenter,
+  },
+  {
+    path: '/write',
+    name: 'FormWrite',
+    component: FormWrite,
   },
   {
     path: '/datanayse',

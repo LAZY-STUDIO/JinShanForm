@@ -6,7 +6,7 @@ interface BaseRes {
   msg?: string
 }
 
-interface UserRes extends BaseRes {
+export interface UserRes extends BaseRes {
   data: {
     user: IUser
   }
@@ -34,6 +34,66 @@ interface FormListRes extends BaseRes {
   data: {
     items: IForm[]
   }
+}
+
+// 获取表单
+interface FormRes extends BaseRes {
+  data: {
+    item: IForm
+    // 注意了，这里是item,不要乱取名字
+  }
+}
+interface FormWriteRes {
+  formId: string
+  problems: IProblem[]
+}
+// 个人中心
+// interface UserRes extends BaseRes {
+//   data: {
+//     user: IUser
+//   }
+// }
+// 设置用户信息
+interface UserInfoRes extends BaseRes {
+  nickname: string
+  avatar: string
+}
+// 密码
+interface PwdRes extends BaseRes {
+  oldPwd: string
+  pwd: string
+  confirmPwd: string
+}
+// 获取个人信息
+export function getPersonalInfo() {
+  return request.get<UserRes>('/api/user/getInfo')
+}
+// 获取表单
+export function getFormById(id: string) {
+  console.log(request.post<FormRes>('/api/form/get', { id }))
+  return request.post<FormRes>('/api/form/get', { id })
+}
+// 填写表单
+export function writeForm(formId: string, problems: IProblem[]) {
+  console.log('这是测试我发的参数')
+  console.log({ formId, problems })
+  return request.post<FormWriteRes>('/api/form/input', { formId, problems })
+}
+// 退出登录
+export function logout() {
+  return request.post<BaseRes>('/api/auth/logout')
+}
+// 设置用户信息
+export function setInfo(nickname: string, avatar: string) {
+  return request.post<UserInfoRes>('/api/user/setInfo', { nickname, avatar })
+}
+// 修改密码
+export function changePwd(oldPwd: string, pwd: string, confirmPwd: string) {
+  return request.post<PwdRes>('/api/user/changePwd', {
+    oldPwd,
+    pwd,
+    confirmPwd,
+  })
 }
 
 /**

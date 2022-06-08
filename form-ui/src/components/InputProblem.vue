@@ -159,7 +159,8 @@ export default defineComponent({
     changeScore(index: number) {
       if (!this.showActions) {
         this.score = index
-        this.$emit('scoreChange', this.resultScore)
+        this.$emit('scoreChange', this.score + 1)
+        this.$emit('problemNum', this.problemNumber)
       }
     },
     selectDate(val: string) {
@@ -170,7 +171,14 @@ export default defineComponent({
   // inject: ['showActions'],
   inject: ['options'],
   // 答案输入事件
-  emits: ['resultValueInput', 'scoreChange', 'dateFormatChange', 'dateChange'],
+  emits: [
+    'resultValueInput',
+    'scoreChange',
+    'dateFormatChange',
+    'dateValueInput',
+    'dateChange',
+    'problemNum',
+  ],
   props: {
     problemNumber: {
       type: Number,
@@ -192,6 +200,7 @@ export default defineComponent({
   watch: {
     input(newVal: string) {
       this.$emit('resultValueInput', newVal)
+      this.$emit('problemNum', this.problemNumber)
     },
     dateformatIndex(newVal: number) {
       let format = 'YYYY/MM'
@@ -209,7 +218,7 @@ export default defineComponent({
       this.$emit('dateFormatChange', format)
     },
     dateTmp(newVal: string) {
-      this.$emit('resultValueInput', newVal)
+      this.$emit('dateValueInput', newVal)
     },
   },
 })
