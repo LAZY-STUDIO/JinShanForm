@@ -105,7 +105,7 @@ export interface Problem {
   required: boolean
   isNew: boolean
   id: string
-  setting: Option
+  setting?: Option
 }
 export interface Option {
   options: Choice[]

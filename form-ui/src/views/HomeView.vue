@@ -15,7 +15,7 @@
   </div>
   <div class="logout" v-show="show" ref="s2">
     <div>{{ user.account }}</div>
-    <div>
+    <div @click="goPersonal">
       <a href="#">个人中心</a>
     </div>
     <div @click="logout">
@@ -169,6 +169,9 @@ export default defineComponent({
     logout() {
       localStorage.removeItem('token')
       this.$router.push('/login')
+    },
+    goPersonal() {
+      this.$router.push('/personal')
     },
   },
   created() {
