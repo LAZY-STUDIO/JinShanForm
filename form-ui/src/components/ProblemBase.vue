@@ -12,6 +12,7 @@
         {{ problemNumber + 1 }}.</span
       >
       <el-input
+        :id="'problemBase' + problemNumber"
         v-model="title"
         type="textarea"
         :disabled="!showActions"
@@ -71,6 +72,10 @@ import { IProblemType, ProblemType } from '@/types'
 export default defineComponent({
   // export default {
   name: 'ProblemBase',
+  mounted() {
+    const p = document.getElementsByClassName('problem-container-outer')
+    console.log(document.activeElement)
+  },
   data() {
     return {
       title: this.forefatherComponent.problems[this.problemNumber].title,
@@ -179,6 +184,7 @@ export default defineComponent({
 
   // 题目聚焦时
   &:focus-within {
+    border: none;
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
     padding-bottom: 0;
 

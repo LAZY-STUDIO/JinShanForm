@@ -29,12 +29,7 @@
           >
         </div>
       </div>
-      <el-scrollbar
-        max-height="100vh"
-        ref="scrollbarRef"
-        @scroll="scroll"
-        always
-      >
+      <el-scrollbar max-height="100vh" ref="scrollbarRef" always>
         <div class="create-form-middle" ref="createFormMiddleRef">
           <div class="middle-wrap">
             <div class="form-title">
@@ -78,6 +73,7 @@
             <div class="problem-form-list">
               <component
                 v-for="(item, index) in problems"
+                :ref="'problem' + index"
                 :key="item"
                 :resultValue="item.result.value"
                 @resultValueInput="item.result.value = $event"
@@ -125,6 +121,7 @@ import {
 import { IProblemType, IProblem, ProblemType } from '../types'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
+import ProblemBaseVue from '@/components/ProblemBase.vue'
 
 export default defineComponent({
   name: 'CreateForm',
@@ -159,7 +156,7 @@ export default defineComponent({
     }
   },
   methods: {
-    test() {
+    changeScrollHeight() {
       let scrollbarRef = this.$refs.scrollbarRef as InstanceType<
         typeof ElScrollbar
       >
@@ -262,14 +259,12 @@ export default defineComponent({
           value: '',
         },
       })
-      this.test()
-      // if (scrollbarRef.wrap$.scrollTop) {
-      //   scrollbarRef.wrap$.scrollTop = 333
-      //   console.log('offsetHeight:' + createFormMiddleRef.offsetHeight)
-      //   console.log('clientHeight:' + createFormMiddleRef.clientHeight)
-      //   console.log(scrollbarRef)
-      // }
-      // scrollbarRef.setScrollTop(createFormMiddleRef.offsetHeight)
+      this.changeScrollHeight()
+      // 题目聚焦
+      this.$nextTick(() => {
+        const problemId = 'problemBase' + (this.problems.length - 1)
+        document.getElementById(problemId)?.focus()
+      })
     },
     addTemplateProblem(problem: IProblem) {
       this.problems.push({
@@ -284,9 +279,6 @@ export default defineComponent({
           value: '',
         },
       })
-    },
-    scroll({ scrollTop }) {
-      console.log('scrollTop:' + scrollTop)
     },
   },
   created() {
@@ -436,6 +428,7 @@ export default defineComponent({
 
   &:focus {
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
+    border: none;
 
     :deep(.el-textarea__inner) {
       border-bottom: 1px solid #1488ed;
@@ -564,6 +557,10 @@ export default defineComponent({
     }
   }
 }
+
+// .problem-container-outer:last-of-type {
+
+// }
 </style>
 <style lang="less">
 // 修改弹出的消息框的样式，覆盖elmentui
@@ -589,19 +586,6 @@ export default defineComponent({
   .msg-box-form-title();
   .el-message-icon--warning {
     color: #00be77 !important;
-  }
-}
-
-// 元素聚焦的时候
-.item-focus {
-  box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
-
-  :deep(.el-textarea__inner) {
-    border-bottom: 1px solid #1488ed;
-  }
-
-  &:hover {
-    border-bottom: none;
   }
 }
 </style>
