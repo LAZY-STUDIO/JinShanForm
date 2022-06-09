@@ -68,7 +68,7 @@ export default defineComponent({
       else return 'SelectProblem'
     },
     getFormById: async function () {
-      this.id = this.$route.query.id
+      this.id = String(this.$route.query.id)
       const res = await request.getFormById(this.id)
       // console.log('问题数组')
       this.title = res.data.item.title
