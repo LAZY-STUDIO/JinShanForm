@@ -188,6 +188,13 @@ export default defineComponent({
   }
 }
 
+// 解决日期题弹出展开后、再次点击不消失的问题
+:not(.problem-container-outer:focus-within) {
+  :deep(.date-menu) {
+    display: none;
+  }
+}
+
 .other-page-problem-container-outer {
   &:focus-within {
     box-shadow: none;
