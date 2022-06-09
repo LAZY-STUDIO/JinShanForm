@@ -279,6 +279,12 @@ export default defineComponent({
           value: '',
         },
       })
+      this.changeScrollHeight()
+      // 题目聚焦
+      this.$nextTick(() => {
+        const problemId = 'problemBase' + (this.problems.length - 1)
+        document.getElementById(problemId)?.focus()
+      })
     },
   },
   created() {
