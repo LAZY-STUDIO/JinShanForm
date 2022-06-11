@@ -49,7 +49,7 @@ import { Onelist, IProblems } from '../types'
 export default defineComponent({
   name: 'CreatePro',
   props: {
-    listmsg: { type: Object as PropType<IProblems> },
+    listmsg: { type: Object as PropType<IProblems>, required: true },
   },
 })
 </script>
