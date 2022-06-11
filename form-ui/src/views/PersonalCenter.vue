@@ -10,10 +10,10 @@
   </div>
   <div class="container">
     <div class="mainInfo">
-      <div class="avatar-box">
-        <img :src="user.avatar" class="img-circle" />
-        <!-- <div class="img-circle ifshow"><span>修改头像</span></div> -->
-      </div>
+      <!-- <div class="avatar-box"> -->
+      <img :src="user.avatar" class="img-circle" />
+      <!-- <div class="img-circle ifshow"><span>修改头像</span></div> -->
+      <!-- </div> -->
       <div class="avatar-username">
         <p>{{ user.nickname }}</p>
       </div>
