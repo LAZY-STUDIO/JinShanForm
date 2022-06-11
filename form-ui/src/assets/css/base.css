@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 body {
   margin: 0;
 }
@@ -19,26 +18,4 @@ li {
 
 a {
   text-decoration: none;
-=======
-body {
-  margin: 0;
-}
-
-html,
-body,
-#app {
-  height: 100%;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-li {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
->>>>>>> 9acbb3e94413816ae28b185cd132257f5573859e
 }
