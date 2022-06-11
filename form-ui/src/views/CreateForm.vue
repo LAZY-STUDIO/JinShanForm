@@ -73,20 +73,15 @@
             <div class="problem-form-list">
               <component
                 v-for="(item, index) in problems"
+                :is="componentType(item.type)"
                 :ref="'problem' + index"
                 :key="item"
-                :resultValue="item.result.value"
-                @resultValueInput="item.result.value = $event"
-                @scoreChange="item.result.value = $event"
-                @dateFormatChange="item.setting.options[0].title = $event"
-                :dateFormat="
-                  item.setting.options[0].title === ''
-                    ? 'YYYY/MM'
-                    : item.setting.options[0].title
-                "
                 :problemNumber="index"
                 :problemType="item.type"
-                :is="componentType(item.type)"
+                :resultValue="item.result.value"
+                @resultValueInput="item.result.value = $event"
+                :timeDateFormat="item.setting.options[0].title"
+                @timeDateFormatChange="item.setting.options[0].title = $event"
               >
               </component>
             </div>
@@ -121,7 +116,6 @@ import {
 import { IProblemType, IProblem, ProblemType } from '../types'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
-import ProblemBaseVue from '@/components/ProblemBase.vue'
 
 export default defineComponent({
   name: 'CreateForm',
@@ -181,24 +175,16 @@ export default defineComponent({
       // await this.userLogin()
       await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
       // 路由传递的form
+      // todo: 修改默认值
       const res = this.$route.query.form
       if (res && typeof res === 'string') {
         const { status, title, subTitle, problems } = JSON.parse(res)
         this.status = status
         this.title = title
         this.subTitle = subTitle
-        this.problems = problems.map((problem) => ({
-          ...problem,
-          setting: {
-            options: [{ title: '', status: 1 }] as {
-              title: string
-              status: 1 | 2
-            }[],
-          },
-          result: {
-            value: '',
-          },
-        }))
+        this.problems = problems.map((problem: IProblem) =>
+          this.problemInit(problem)
+        )
       }
     },
     // async userLogin() {
@@ -225,12 +211,9 @@ export default defineComponent({
     },
     backToEdit() {
       this.options.showActions = true
-      this.problems = this.problems.map((problem) => ({
-        ...problem,
-        result: {
-          value: '',
-        },
-      }))
+      this.problems = this.problems.map((problem: IProblem) =>
+        this.problemInit(problem, true)
+      )
     },
     // 将form保存至localstorage
     saveDraft() {
@@ -243,22 +226,49 @@ export default defineComponent({
         onClose: () => (this.msgBoxClose = true),
       })
     },
+    problemInit(problem: IProblem, flag = false) {
+      let setting = {
+        options: [{ title: '', status: 1 }] as {
+          title: string
+          status: 1 | 2
+        }[],
+      }
+      let result = {
+        value: '',
+      } as {
+        value: string | number
+      }
+      if (problem.type === ProblemType.score) {
+        result.value = -1
+      } else if (problem.type === ProblemType.date) {
+        setting.options[0].title = 'YYYY/MM'
+      } else if (problem.type === ProblemType.time) {
+        setting.options[0].title = '时刻: 时-分(24小时制)'
+      }
+      if (!problem.setting) {
+        problem.setting = setting
+      }
+      return !flag
+        ? {
+            setting,
+            result,
+            ...problem,
+          }
+        : {
+            setting,
+            ...problem,
+            result,
+          }
+    },
     addCommonProblem(problemType: IProblemType) {
-      this.problems.push({
-        title: '',
-        type: problemType.type,
-        required: false,
-        isNew: false,
-        setting: {
-          options: [{ title: '', status: 1 }] as {
-            title: string
-            status: 1 | 2
-          }[],
-        },
-        result: {
-          value: '',
-        },
-      })
+      this.problems.push(
+        this.problemInit({
+          title: '',
+          type: problemType.type,
+          required: false,
+          isNew: false,
+        })
+      )
       this.changeScrollHeight()
       // 题目聚焦
       this.$nextTick(() => {
@@ -267,18 +277,7 @@ export default defineComponent({
       })
     },
     addTemplateProblem(problem: IProblem) {
-      this.problems.push({
-        ...problem,
-        setting: {
-          options: [{ title: '', status: 1 }] as {
-            title: string
-            status: 1 | 2
-          }[],
-        },
-        result: {
-          value: '',
-        },
-      })
+      this.problems.push(this.problemInit(problem))
       this.changeScrollHeight()
       // 题目聚焦
       this.$nextTick(() => {
@@ -563,10 +562,6 @@ export default defineComponent({
     }
   }
 }
-
-// .problem-container-outer:last-of-type {
-
-// }
 </style>
 <style lang="less">
 // 修改弹出的消息框的样式，覆盖elmentui

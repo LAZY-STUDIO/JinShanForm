@@ -12,6 +12,7 @@
         {{ problemNumber + 1 }}.</span
       >
       <el-input
+        autofocus
         :id="'problemBase' + problemNumber"
         v-model="title"
         type="textarea"
@@ -70,12 +71,7 @@ import { ElMessage } from 'element-plus'
 import { IProblemType, ProblemType } from '@/types'
 
 export default defineComponent({
-  // export default {
   name: 'ProblemBase',
-  mounted() {
-    const p = document.getElementsByClassName('problem-container-outer')
-    console.log(document.activeElement)
-  },
   data() {
     return {
       title: this.forefatherComponent.problems[this.problemNumber].title,
@@ -169,7 +165,6 @@ export default defineComponent({
       this.forefatherComponent.problems[this.problemNumber].required = newVal
     },
   },
-  // }
 })
 </script>
 
