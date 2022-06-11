@@ -10,12 +10,23 @@
     <div class="ques-list" v-for="(rex, index) of data2.result" :key="rex.id">
       <div class="quesname">
         <span id="isrequired" v-if="rex.required">*</span>
+        <span id="isrequired" v-else>&nbsp;</span>
         {{ index + 1 }}.{{ rex.title }}
       </div>
-      <div class="quesvalue" v-if="!rex.setting">
+      <div class="quesvalue" v-if="!rex.result.value">此题未填写</div>
+      <div class="quesvalue" v-else-if="rex.type == 'date'">
         {{ rex.result.value }}
       </div>
-      <div class="quesvalue" v-else-if="rex.type == 'singleSelect'">
+      <div
+        class="quesvalue"
+        v-else-if="rex.type == 'input' || rex.type == 'time'"
+      >
+        {{ rex.result.value }}
+      </div>
+      <div
+        class="quesvalue"
+        v-else-if="rex.type == 'singleSelect' || rex.type == 'pullSelect'"
+      >
         {{ rex.setting.options[Number(rex.result.value) - 1].title }}
       </div>
       <div class="quesvalue" v-else-if="rex.type == 'multiSelect'">
@@ -30,8 +41,8 @@ import { Onelist, IProblems } from '../types'
 export default defineComponent({
   name: 'QuesList',
   props: {
-    data2: { type: Object as PropType<Onelist> },
-    listmsg: { type: Object as PropType<IProblems> },
+    data2: { type: Object as PropType<Onelist>, required: true },
+    listmsg: { type: Object as PropType<IProblems>, required: true },
   },
   data() {
     return {
