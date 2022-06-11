@@ -361,6 +361,100 @@
           "id": "edb2f333-a03e-4948-9938-2fb600727f5b"
         }
       ]
+    },
+    {
+      "id": "5950e1a1-74ac-4cd2-b916-734679a2a51f",
+      "ctime": 1654934521260,
+      "utime": 1654934521260,
+      "status": 3,
+      "author": "aa6ab6b8-d247-469c-a94b-ad97b39cfbd2",
+      "isStar": false,
+      "title": "选择题表单",
+      "subTitle": "subTitle1",
+      "problems": [
+        {
+          "title": "problem2Title",
+          "type": "singleSelect",
+          "required": false,
+          "isNew": true,
+          "setting": {
+            "options": [
+              {
+                "title": "choice1Title",
+                "status": 1,
+                "id": "48e7c695-1f87-468e-8809-d36d07e32a1a"
+              },
+              {
+                "title": "choice2Title",
+                "status": 2,
+                "id": "1c3d5184-329f-429e-9f8b-29f3b990975e"
+              }
+            ]
+          },
+          "id": "853b9bc3-66b6-47d5-9f9b-5fac3ec2fe45"
+        },
+        {
+          "title": "problem2Title",
+          "type": "multiSelect",
+          "required": false,
+          "isNew": true,
+          "setting": {
+            "options": [
+              {
+                "title": "choice1Title",
+                "status": 1,
+                "id": "8cbe2a5e-4aae-4c3a-bc25-f8379000d9e8"
+              },
+              {
+                "title": "choice2Title",
+                "status": 2,
+                "id": "59ddc2ad-f982-48db-bc19-65e0e9a2757c"
+              }
+            ]
+          },
+          "id": "2f87e063-a64a-417f-bea7-fb0ce769b3b1"
+        }
+      ]
+    },
+    {
+      "id": "c4db15cc-8267-4b6e-acf1-8d8d888eef47",
+      "ctime": 1654940088729,
+      "utime": 1654940088729,
+      "status": 3,
+      "author": "aa6ab6b8-d247-469c-a94b-ad97b39cfbd2",
+      "isStar": false,
+      "title": "title1",
+      "subTitle": "subTitle1",
+      "problems": [
+        {
+          "title": "problem1Title",
+          "type": "input",
+          "required": true,
+          "isNew": true,
+          "id": "612f544f-dcbe-4925-b2aa-13be6063d785"
+        },
+        {
+          "title": "problem2Title",
+          "type": "singleSelect",
+          "required": false,
+          "isNew": true,
+          "setting": {
+            "options": [
+              {
+                "title": "choice1Title",
+                "status": 1,
+                "id": "4795d8f0-ec29-4652-aaee-7d81f9d63258"
+              },
+              {
+                "title": "choice2Title",
+                "status": 2,
+                "id": "c487aacc-d672-437c-ab7e-386432fcf9bb"
+              }
+            ]
+          },
+          "id": "9c974679-418c-41d0-a8e4-58238d346550"
+        }
+      ]
     }
   ],
   "users": [
@@ -485,6 +579,103 @@
             "value": "12345678"
           },
           "id": "edb2f333-a03e-4948-9938-2fb600727f5b"
+        }
+      ]
+    },
+    {
+      "id": "df63cf8b-08aa-4ff4-a58b-f58562c14b2b",
+      "formAuthor": "aa6ab6b8-d247-469c-a94b-ad97b39cfbd2",
+      "formId": "5950e1a1-74ac-4cd2-b916-734679a2a51f",
+      "result": [
+        {
+          "title": "problem2Title",
+          "type": "singleSelect",
+          "required": false,
+          "isNew": true,
+          "result": {
+            "value": [
+              {
+                "title": "choice1Title",
+                "status": 1,
+                "id": "48e7c695-1f87-468e-8809-d36d07e32a1a"
+              }
+            ]
+          },
+          "setting": {
+            "options": [
+              {
+                "title": "choice1Title",
+                "status": 1,
+                "id": "48e7c695-1f87-468e-8809-d36d07e32a1a"
+              },
+              {
+                "title": "choice2Title",
+                "status": 2,
+                "id": "1c3d5184-329f-429e-9f8b-29f3b990975e"
+              }
+            ]
+          },
+          "id": "853b9bc3-66b6-47d5-9f9b-5fac3ec2fe45"
+        },
+        {
+          "title": "problem2Title",
+          "type": "multiSelect",
+          "required": false,
+          "isNew": true,
+          "setting": {
+            "options": [
+              {
+                "title": "choice1Title",
+                "status": 1,
+                "id": "8cbe2a5e-4aae-4c3a-bc25-f8379000d9e8"
+              },
+              {
+                "title": "choice2Title",
+                "status": 2,
+                "id": "59ddc2ad-f982-48db-bc19-65e0e9a2757c"
+              }
+            ]
+          },
+          "id": "2f87e063-a64a-417f-bea7-fb0ce769b3b1"
+        }
+      ]
+    },
+    {
+      "id": "1667c87a-5760-4b11-b74c-5ad560c17c76",
+      "formAuthor": "aa6ab6b8-d247-469c-a94b-ad97b39cfbd2",
+      "formId": "c4db15cc-8267-4b6e-acf1-8d8d888eef47",
+      "result": [
+        {
+          "title": "problem1Title",
+          "type": "input",
+          "required": true,
+          "id": "9ab22bb8-159a-4e03-95bb-81e81007c52f",
+          "result": {
+            "value": "test"
+          }
+        },
+        {
+          "title": "problem2Title",
+          "type": "singleSelect",
+          "required": false,
+          "setting": {
+            "options": [
+              {
+                "title": "choice1Title",
+                "status": 1,
+                "id": "3f2c01a2-77c5-4cf2-b142-03aefdaaf2c8"
+              },
+              {
+                "title": "choice2Title",
+                "status": 2,
+                "id": "189f014f-0568-451b-b808-514df169a3f9"
+              }
+            ]
+          },
+          "id": "898155ef-8a15-4ad5-b9d3-615d290834b0",
+          "result": {
+            "value": 1
+          }
         }
       ]
     }

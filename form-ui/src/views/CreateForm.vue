@@ -82,6 +82,7 @@
                 @resultValueInput="item.result.value = $event"
                 :timeDateFormat="item.setting.options[0].title"
                 @timeDateFormatChange="item.setting.options[0].title = $event"
+                :problemOptions="item.setting.options"
               >
               </component>
             </div>
@@ -238,12 +239,20 @@ export default defineComponent({
       } as {
         value: string | number
       }
-      if (problem.type === ProblemType.score) {
+      if (problem.type === ProblemType.input) {
+        result.value = ''
+      } else if (problem.type === ProblemType.score) {
         result.value = -1
       } else if (problem.type === ProblemType.date) {
         setting.options[0].title = 'YYYY/MM'
       } else if (problem.type === ProblemType.time) {
         setting.options[0].title = '时刻: 时-分(24小时制)'
+      } else {
+        setting.options[0].title = '选项1'
+        setting.options.push({
+          title: '选项2',
+          status: 1,
+        })
       }
       if (!problem.setting) {
         problem.setting = setting
