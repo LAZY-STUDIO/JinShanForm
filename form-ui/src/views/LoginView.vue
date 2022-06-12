@@ -84,7 +84,7 @@ export default defineComponent({
       } else {
         const user = await this.getUser()
         store.commit('setUser', user)
-        localStorage.setItem('token', 'Bearer xxxx')
+        sessionStorage.setItem('token', 'Bearer xxxx')
         this.$router.push({
           name: 'HomeView',
         })

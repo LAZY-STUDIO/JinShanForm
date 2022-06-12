@@ -1,27 +1,11 @@
 <template>
-  <div class="head_c">
-    <div class="logo">
-      <div class="logo-img">
-        <img src="../assets/imgs/logo.svg" />
-      </div>
-      <h1 class="logo-title">金山表单</h1>
-    </div>
-    <div class="user" @click="show = !show" ref="s1">
-      <div class="user-img">
-        <img :src="userSrc" width="30px" />
-      </div>
-      <p class="user-title">{{ user.account }}</p>
-    </div>
-  </div>
-  <div class="logout" v-show="show" ref="s2">
-    <div>{{ user.account }}</div>
-    <div @click="goPersonal">
-      <a href="#">个人中心</a>
-    </div>
-    <div @click="logout">
-      <a href="#">退出登录</a>
-    </div>
-  </div>
+  <MyHeader>
+    <template #left-img>
+      <img src="../assets/imgs/logo.svg" />
+    </template>
+    <template #left-name> 金山表单 </template>
+    <template #right></template>
+  </MyHeader>
   <div class="home-list">
     <div class="left-list">
       <div class="new-btn" @click="newList">
@@ -78,6 +62,7 @@
 </template>
 
 <script lang="ts">
+import MyHaeder from '../components/MyHeader.vue'
 import { defineComponent } from 'vue'
 import { IUser, IForm } from '../types'
 import {
@@ -90,18 +75,18 @@ import {
   endForm,
 } from '../services/api'
 import FormList from '../components/FormList.vue'
+import MyHeader from '../components/MyHeader.vue'
 export default defineComponent({
   data() {
     return {
       user: {} as IUser,
       formList: [] as IForm[],
-      userSrc: '',
-      show: false,
       showOnlyStar: false,
     }
   },
   components: {
     FormList,
+    MyHeader,
   },
   methods: {
     async getUser() {
@@ -115,12 +100,6 @@ export default defineComponent({
     },
     async fun() {
       this.user = await this.getUser()
-      if (this.user.avatar === '') {
-        this.userSrc =
-          'https://img2.baidu.com/it/u=3150609636,3981665520&fm=253&fmt=auto&app=138&f=JPEG?w=212&h=211'
-      } else {
-        this.userSrc = this.user.avatar
-      }
       this.getList(this.user.account)
     },
     //删除表单
@@ -166,104 +145,19 @@ export default defineComponent({
     newList() {
       this.$router.push('/createForm')
     },
-    logout() {
-      localStorage.removeItem('token')
-      this.$router.push('/login')
-    },
-    goPersonal() {
-      this.$router.push('/personal')
-    },
   },
   created() {
     this.fun()
-  },
-  mounted() {
-    document.addEventListener(
-      'click',
-      (e) => {
-        let s1: any = this.$refs.s1
-        let s2: any = this.$refs.s2
-        if (!s1.contains(e.target) && !s2.contains(e.target)) {
-          this.show = false
-        }
-      },
-      true
-    )
   },
 })
 </script>
 
 <style scoped>
-.head_c {
-  display: flex;
-  height: 56px;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 18px;
-  border-bottom: 1px solid #e7e9eb;
-}
-.logo {
-  width: 110px;
-  line-height: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  vertical-align: middle;
-}
-.logo-title {
-  font-size: 18px;
-  font-weight: 500;
-  color: #3c414b;
-  margin: 0.67em 0;
-}
-.user {
-  width: 100px;
-  line-height: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  vertical-align: middle;
-  cursor: pointer;
-}
-.user-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
-  overflow: hidden;
-}
-.user-img img {
-  width: 30px;
-}
-.logout {
-  position: absolute;
-  right: 10px;
-  z-index: 999999;
-  width: 130px;
-  background-color: white;
-  padding: 0 15px;
-  border: 1px solid #e7e9eb;
-  text-align: center;
-  font-size: 12px;
-}
-.logout div {
-  height: 30px;
-  line-height: 30px;
-  margin: 8px;
-}
-.logout div:first-child {
-  font-weight: bold;
-  border-bottom: 1px solid #e7e9eb;
-}
-.logout div a {
-  color: black;
-}
 .home-list {
   display: flex;
   height: 100%;
 }
 .left-list {
-  /* width: 18%; */
   min-width: 167px;
   max-width: 230px;
   height: 100%;
@@ -343,4 +237,8 @@ export default defineComponent({
   width: 40%;
   text-align: center;
 }
+/* .dosth {
+  display: flex;
+  align-items: center;
+} */
 </style>
