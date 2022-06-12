@@ -10,12 +10,12 @@
         </h1>
       </div>
       <slot name="right">
-        <div class="user" @click="howshow = !howshow" tabindex="0">
+        <div class="user" tabindex="0">
           <div class="user-img">
             <img :src="userSrc" width="30px" />
           </div>
           <p class="user-title">{{ user.account }}</p>
-          <div class="logout" v-show="howshow">
+          <div class="logout">
             <div>{{ user.account }}</div>
             <div @click="goPersonal">
               <a href="/personal">个人中心</a>
@@ -39,7 +39,7 @@ export default defineComponent({
   data() {
     return {
       user: {} as IUser,
-      howshow: false,
+      // howshow: false,
       userSrc: '',
     }
   },
