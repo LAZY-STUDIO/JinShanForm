@@ -321,7 +321,9 @@ export default defineComponent({
               title: string
             }[]
       }
-      if (problem.type === ProblemType.score) {
+      if (problem.type === ProblemType.input) {
+        result.value = ''
+      } else if (problem.type === ProblemType.score) {
         result.value = -1
       } else if (problem.type === ProblemType.date) {
         setting.options[0].title = 'YYYY/MM'
