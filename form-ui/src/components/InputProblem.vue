@@ -58,7 +58,7 @@
           </div>
           <span>{{ dateformatTexts[dateformatIndex] }}</span>
         </div>
-        <div v-else>
+        <div v-else class="datepicker-outer">
           <el-date-picker
             v-model="dateTmp"
             type="datetime"
@@ -447,6 +447,7 @@ export default defineComponent({
     background-color: #fff;
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
     padding: 4px;
+    z-index: 20;
 
     > div {
       padding-left: 10px;
@@ -470,13 +471,47 @@ export default defineComponent({
   }
 }
 
-:deep(.el-date-editor.el-input.date-choice) {
-  width: 100% !important;
-  border: none !important;
+.datepicker-outer {
+  position: relative;
 
-  .el-input__wrapper {
+  :deep(.el-popper.is-pure.is-light.el-picker__popper) {
+    top: 0 !important;
+    left: 30px !important;
+  }
+
+  :deep(.el-date-editor.el-input.date-choice) {
+    width: 100% !important;
     border: none !important;
-    box-shadow: none;
+
+    .el-input__wrapper {
+      border: none !important;
+      box-shadow: none;
+    }
+  }
+
+  :deep(.el-date-picker) {
+    width: 250px !important;
+  }
+
+  :deep(.el-date-picker__header) {
+    margin: 0 auto !important;
+  }
+
+  :deep(.el-picker-panel__content) {
+    width: 230px !important;
+    margin: 0 auto !important;
+  }
+
+  :deep(.el-date-table th) {
+    padding: 0 !important;
+  }
+
+  :deep(.el-date-table td) {
+    padding: 0 !important;
+  }
+
+  :deep(.el-date-picker__time-header) {
+    display: none;
   }
 }
 

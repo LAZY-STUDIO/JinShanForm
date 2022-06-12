@@ -83,6 +83,24 @@
                 :timeDateFormat="item.setting.options[0].title"
                 @timeDateFormatChange="item.setting.options[0].title = $event"
                 :problemOptions="item.setting.options"
+                @optionTitleChange="
+                  (idx, newTitle) =>
+                    handleTitleChange(idx, newTitle, item.setting.options)
+                "
+                @delOptionTitle="delOptionTitle($event, item.setting.options)"
+                @addOptionTitle="
+                  item.setting.options.push({
+                    title: '',
+                    status: 1,
+                  })
+                "
+                @radioOptionChange="item.result.value.title = $event"
+                @checkboxOptionChange="
+                  item.result.value = $event.map((tmp) => ({
+                    id: '',
+                    title: tmp,
+                  }))
+                "
               >
               </component>
             </div>
@@ -109,7 +127,6 @@ import { defineComponent } from 'vue'
 import { ElMessage, ElScrollbar } from 'element-plus'
 import ProblemList from '../components/ProblemList.vue'
 import {
-  login,
   getProblemTypeList,
   getProblemBasicList,
   createForm,
@@ -137,7 +154,6 @@ export default defineComponent({
       tmpList: [],
       titlePlaceholder: '请输入表单标题',
       msgBoxClose: true,
-      subTitleFocus: false,
       subTitleCenter: true,
       options: {
         showActions: true,
@@ -151,6 +167,7 @@ export default defineComponent({
     }
   },
   methods: {
+    // 创建表单中间 添加题目时抖动效果（移动滚动条）
     changeScrollHeight() {
       let scrollbarRef = this.$refs.scrollbarRef as InstanceType<
         typeof ElScrollbar
@@ -173,7 +190,6 @@ export default defineComponent({
     },
     // 数据初始化 todo
     async init() {
-      // await this.userLogin()
       await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
       // 路由传递的form
       // todo: 修改默认值
@@ -188,9 +204,6 @@ export default defineComponent({
         )
       }
     },
-    // async userLogin() {
-    //   await login('leibuyun', '123456')
-    // },
     async getProblemTypes() {
       const res = await getProblemTypeList()
       this.problemTypeList = res.data.problemTypes
@@ -203,11 +216,71 @@ export default defineComponent({
     // if status ==  1, 删除localstorage的草稿信息
     // 创建
     async finishCreateForm() {
-      if (this.title.trim().length > 0 && this.subTitle.trim().length > 0) {
-        // todo: 校验problems
+      let tipMsg = ''
+      let flag = true
+      if (this.problems.length === 0) {
+        tipMsg = '请至少设置一个填选项'
+        flag = false
+      }
+      // 校验problems
+      if (
+        this.problems.filter((problem: IProblem) => {
+          // problem的title
+          let titleFlag = problem.title.trim() === ''
+          let optionFlag = false
+          if (
+            problem.type === ProblemType.singleSelect ||
+            problem.type === ProblemType.multiSelect ||
+            problem.type === ProblemType.pullSelect
+          ) {
+            optionFlag =
+              problem.setting?.options.filter((p) => p.title.trim() === '')
+                .length !== 0
+          }
+          // 找出title为空 或者存在option的title为空的个数
+          return titleFlag || optionFlag
+        }).length !== 0
+      ) {
+        tipMsg = '问题未填写完整'
+        flag = false
+      }
+      // todo 跳转
+      if (this.title.trim().length === 0) {
+        tipMsg = '表单标题不能为空'
+        flag = false
+      }
+      if (this.subTitle.trim().length === 0) {
+        tipMsg = '表单描述不能为空'
+        flag = false
+      }
+      // 校验失败
+      if (!flag) {
+        ElMessage({
+          message: tipMsg,
+          customClass: 'msg-box-form-title-success',
+          duration: 1000,
+          type: 'error',
+        })
+      } else {
+        // 校验成功
         const res = await createForm(this.title, this.subTitle, this.problems)
-        // 创建完成后删除草稿
-        // localStorage.removeItem('form')
+        if (res.stat !== 'ok') {
+          ElMessage({
+            message: res.msg,
+            customClass: 'msg-box-form-title-success',
+            duration: 1000 * 2,
+            type: 'error',
+          })
+        } else {
+          // todo: 创建完成后删除草稿
+          // localStorage.removeItem('form')
+          ElMessage({
+            message: '创建成功',
+            customClass: 'msg-box-form-title-success',
+            duration: 1000 * 2,
+            type: 'success',
+          })
+        }
       }
     },
     backToEdit() {
@@ -224,7 +297,6 @@ export default defineComponent({
         customClass: 'msg-box-form-title-success',
         duration: 1000,
         type: 'success',
-        onClose: () => (this.msgBoxClose = true),
       })
     },
     problemInit(problem: IProblem, flag = false) {
@@ -237,7 +309,17 @@ export default defineComponent({
       let result = {
         value: '',
       } as {
-        value: string | number
+        value:
+          | string
+          | number
+          | {
+              id: string
+              title: string
+            }
+          | {
+              id: string
+              title: string
+            }[]
       }
       if (problem.type === ProblemType.input) {
         result.value = ''
@@ -248,11 +330,18 @@ export default defineComponent({
       } else if (problem.type === ProblemType.time) {
         setting.options[0].title = '时刻: 时-分(24小时制)'
       } else {
-        setting.options[0].title = '选项1'
         setting.options.push({
-          title: '选项2',
+          title: '',
           status: 1,
         })
+        if (problem.type === ProblemType.multiSelect) {
+          result.value = [] as { id: string; title: string }[]
+        } else {
+          result.value = {
+            id: '',
+            title: '',
+          }
+        }
       }
       if (!problem.setting) {
         problem.setting = setting
@@ -294,6 +383,19 @@ export default defineComponent({
         document.getElementById(problemId)?.focus()
       })
     },
+    handleTitleChange(
+      idx: number,
+      newTitle: string,
+      options: { title: string; status: 1 | 2 }[]
+    ) {
+      options[idx].title = newTitle
+    },
+    delOptionTitle(idx: number, options: []) {
+      options.splice(idx, 1)
+    },
+    tipMsg(limit: number) {
+      console.log(limit)
+    },
   },
   created() {
     this.init()
@@ -312,6 +414,19 @@ export default defineComponent({
         this.msgBoxClose = false
       }
       if (newVal.length > 30) this.title = oldVal
+    },
+    subTitle(newVal: string, oldVal: string) {
+      if (newVal.length >= 300 && this.msgBoxClose) {
+        ElMessage({
+          message: '最多输入300个字',
+          customClass: 'msg-box-form-title',
+          duration: 1000 * 2,
+          type: 'warning',
+          onClose: () => (this.msgBoxClose = true),
+        })
+        this.msgBoxClose = false
+      }
+      if (newVal.length > 300) this.subTitle = oldVal
     },
   },
 })
@@ -440,12 +555,16 @@ export default defineComponent({
   margin-top: 28px;
   padding: 12px 20px;
 
-  &:focus {
+  &:focus-within {
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
     border: none;
 
     :deep(.el-textarea__inner) {
       border-bottom: 1px solid #1488ed;
+    }
+
+    .subTitle-actions {
+      display: initial;
     }
   }
 
@@ -463,12 +582,12 @@ export default defineComponent({
   }
 
   .subTitle-actions {
-    margin-top: 15px;
+    display: none;
 
     img {
       cursor: pointer;
+      margin-top: 15px;
       margin-right: 8px;
-      visibility: hidden;
 
       &:focus {
         background-color: #f2f4f7;
