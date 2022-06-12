@@ -120,11 +120,14 @@ export default defineComponent({
 }
 .list-simple .dosth {
   width: 40%;
+  /* display: flex;
+  align-items: center; */
   text-align: center;
 }
 .dosth-detail {
   width: 100%;
   display: flex;
+  align-items: center;
   text-align: center;
 }
 .form-star {
@@ -133,6 +136,7 @@ export default defineComponent({
 .form-isstar {
   color: #f8d61d;
 }
+
 .dosth .btns {
   margin-left: 180px;
   display: flex;
