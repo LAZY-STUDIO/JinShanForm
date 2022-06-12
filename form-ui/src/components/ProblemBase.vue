@@ -12,6 +12,8 @@
         {{ problemNumber + 1 }}.</span
       >
       <el-input
+        autofocus
+        :id="'problemBase' + problemNumber"
         v-model="title"
         type="textarea"
         :disabled="!showActions"
@@ -69,7 +71,6 @@ import { ElMessage } from 'element-plus'
 import { IProblemType, ProblemType } from '@/types'
 
 export default defineComponent({
-  // export default {
   name: 'ProblemBase',
   data() {
     return {
@@ -164,7 +165,6 @@ export default defineComponent({
       this.forefatherComponent.problems[this.problemNumber].required = newVal
     },
   },
-  // }
 })
 </script>
 
@@ -179,6 +179,7 @@ export default defineComponent({
 
   // 题目聚焦时
   &:focus-within {
+    border: none;
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
     padding-bottom: 0;
 

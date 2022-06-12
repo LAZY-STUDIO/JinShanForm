@@ -1,5 +1,7 @@
 <template>
-  <div class="create-form-outer">
+  <div
+    :class="['create-form-outer', !options.showActions ? 'preview-set' : '']"
+  >
     <div class="header">新建表单 {{ title }}</div>
     <div class="create-form-container">
       <div class="create-form-left-side" v-show="options.showActions">
@@ -27,67 +29,65 @@
           >
         </div>
       </div>
-      <div class="create-form-middle">
-        <div class="middle-wrap">
-          <div class="form-title">
-            <el-input
-              v-model="title"
-              :placeholder="titlePlaceholder"
-              :readonly="!options.showActions"
-              @focus="titlePlaceholder = ''"
-              @blur="titlePlaceholder = '请输入表单标题'"
-            />
-          </div>
-          <div
-            :class="['form-subTitle', subTitleCenter ? 'el-text-center' : '']"
-            tabindex="0"
-          >
-            <el-input
-              v-model="subTitle"
-              type="textarea"
-              autosize
-              resize="none"
-              :readonly="!options.showActions"
-              :placeholder="'点击设置描述'"
-            />
-            <div class="subTitle-actions" ref="subTitle">
-              <img
-                src="../assets/imgs/icon-text-left.png"
-                :style="{
-                  'background-color': subTitleCenter ? '' : '#f2f4f7',
-                }"
-                @click="subTitleCenter = false"
-              />
-              <img
-                src="../assets/imgs/icon-text-center.png"
-                :style="{
-                  'background-color': subTitleCenter ? '#f2f4f7' : '',
-                }"
-                @click="subTitleCenter = true"
+      <el-scrollbar max-height="100vh" ref="scrollbarRef" always>
+        <div class="create-form-middle" ref="createFormMiddleRef">
+          <div class="middle-wrap">
+            <div class="form-title">
+              <el-input
+                v-model="title"
+                :placeholder="titlePlaceholder"
+                :readonly="!options.showActions"
+                @focus="titlePlaceholder = ''"
+                @blur="titlePlaceholder = '请输入表单标题'"
               />
             </div>
-          </div>
-          <div class="problem-form-list">
-            <component
-              v-for="(item, index) in problems"
-              :key="item"
-              :resultValue="item.result.value"
-              @resultValueInput="item.result.value = $event"
-              @scoreChange="item.result.value = $event"
-              @dateFormatChange="item.setting.options[0].title = $event"
-              :dateFormat="
-                item.setting.options[0].title === ''
-                  ? 'YYYY/MM'
-                  : item.setting.options[0].title
-              "
-              :problemNumber="index"
-              :problemType="item.type"
-              :is="componentType(item.type)"
+            <div
+              :class="['form-subTitle', subTitleCenter ? 'el-text-center' : '']"
+              tabindex="0"
             >
-            </component>
+              <el-input
+                v-model="subTitle"
+                type="textarea"
+                autosize
+                resize="none"
+                :readonly="!options.showActions"
+                :placeholder="'点击设置描述'"
+              />
+              <div class="subTitle-actions" ref="subTitle">
+                <img
+                  src="../assets/imgs/icon-text-left.png"
+                  :style="{
+                    'background-color': subTitleCenter ? '' : '#f2f4f7',
+                  }"
+                  @click="subTitleCenter = false"
+                />
+                <img
+                  src="../assets/imgs/icon-text-center.png"
+                  :style="{
+                    'background-color': subTitleCenter ? '#f2f4f7' : '',
+                  }"
+                  @click="subTitleCenter = true"
+                />
+              </div>
+            </div>
+            <div class="problem-form-list">
+              <component
+                v-for="(item, index) in problems"
+                :is="componentType(item.type)"
+                :ref="'problem' + index"
+                :key="item"
+                :problemNumber="index"
+                :problemType="item.type"
+                :resultValue="item.result.value"
+                @resultValueInput="item.result.value = $event"
+                :timeDateFormat="item.setting.options[0].title"
+                @timeDateFormatChange="item.setting.options[0].title = $event"
+              >
+              </component>
+            </div>
           </div>
         </div>
-      </div>
+      </el-scrollbar>
       <div class="create-form-right" v-show="options.showActions">
         <div class="right-wrap">
           <div class="preview" @click="options.showActions = false">预览</div>
@@ -105,7 +105,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElScrollbar } from 'element-plus'
 import ProblemList from '../components/ProblemList.vue'
 import {
   login,
@@ -150,6 +150,15 @@ export default defineComponent({
     }
   },
   methods: {
+    changeScrollHeight() {
+      let scrollbarRef = this.$refs.scrollbarRef as InstanceType<
+        typeof ElScrollbar
+      >
+      let createFormMiddleRef = this.$refs.createFormMiddleRef as HTMLDivElement
+      setTimeout(() => {
+        scrollbarRef.setScrollTop(Number(createFormMiddleRef.clientHeight))
+      }, 500)
+    },
     // 判断动态使用的的组件名
     componentType(type: string) {
       if (
@@ -166,24 +175,16 @@ export default defineComponent({
       // await this.userLogin()
       await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
       // 路由传递的form
+      // todo: 修改默认值
       const res = this.$route.query.form
       if (res && typeof res === 'string') {
         const { status, title, subTitle, problems } = JSON.parse(res)
         this.status = status
         this.title = title
         this.subTitle = subTitle
-        this.problems = problems.map((problem) => ({
-          ...problem,
-          setting: {
-            options: [{ title: '', status: 1 }] as {
-              title: string
-              status: 1 | 2
-            }[],
-          },
-          result: {
-            value: '',
-          },
-        }))
+        this.problems = problems.map((problem: IProblem) =>
+          this.problemInit(problem)
+        )
       }
     },
     // async userLogin() {
@@ -210,12 +211,9 @@ export default defineComponent({
     },
     backToEdit() {
       this.options.showActions = true
-      this.problems = this.problems.map((problem) => ({
-        ...problem,
-        result: {
-          value: '',
-        },
-      }))
+      this.problems = this.problems.map((problem: IProblem) =>
+        this.problemInit(problem, true)
+      )
     },
     // 将form保存至localstorage
     saveDraft() {
@@ -228,36 +226,63 @@ export default defineComponent({
         onClose: () => (this.msgBoxClose = true),
       })
     },
+    problemInit(problem: IProblem, flag = false) {
+      let setting = {
+        options: [{ title: '', status: 1 }] as {
+          title: string
+          status: 1 | 2
+        }[],
+      }
+      let result = {
+        value: '',
+      } as {
+        value: string | number
+      }
+      if (problem.type === ProblemType.score) {
+        result.value = -1
+      } else if (problem.type === ProblemType.date) {
+        setting.options[0].title = 'YYYY/MM'
+      } else if (problem.type === ProblemType.time) {
+        setting.options[0].title = '时刻: 时-分(24小时制)'
+      }
+      if (!problem.setting) {
+        problem.setting = setting
+      }
+      return !flag
+        ? {
+            setting,
+            result,
+            ...problem,
+          }
+        : {
+            setting,
+            ...problem,
+            result,
+          }
+    },
     addCommonProblem(problemType: IProblemType) {
-      this.problems.push({
-        title: '',
-        type: problemType.type,
-        required: false,
-        isNew: false,
-        setting: {
-          options: [{ title: '', status: 1 }] as {
-            title: string
-            status: 1 | 2
-          }[],
-        },
-        result: {
-          value: '',
-        },
+      this.problems.push(
+        this.problemInit({
+          title: '',
+          type: problemType.type,
+          required: false,
+          isNew: false,
+        })
+      )
+      this.changeScrollHeight()
+      // 题目聚焦
+      this.$nextTick(() => {
+        const problemId = 'problemBase' + (this.problems.length - 1)
+        document.getElementById(problemId)?.focus()
       })
     },
     addTemplateProblem(problem: IProblem) {
-      console.log(problem)
-      this.problems.push({
-        ...problem,
-        setting: {
-          options: [{ title: '', status: 1 }] as {
-            title: string
-            status: 1 | 2
-          }[],
-        },
-        result: {
-          value: '',
-        },
+      this.problems.push(this.problemInit(problem))
+      this.changeScrollHeight()
+      // 题目聚焦
+      this.$nextTick(() => {
+        const problemId = 'problemBase' + (this.problems.length - 1)
+        document.getElementById(problemId)?.focus()
       })
     },
   },
@@ -283,10 +308,13 @@ export default defineComponent({
 })
 </script>
 <style lang="less" scoped>
+* {
+  transition: margin-right 2s;
+}
+
 .create-form-outer {
   background-color: #f2f4f7;
   height: 100%;
-  overflow: auto;
   display: flex;
   flex-direction: column;
 
@@ -307,6 +335,7 @@ export default defineComponent({
     padding-top: 72px;
     display: flex;
     justify-content: center;
+    overflow: hidden;
   }
 }
 
@@ -362,11 +391,13 @@ export default defineComponent({
 
 .create-form-middle {
   width: 776px;
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
 
   .middle-wrap {
     background-color: #fff;
     // height: 100%;
+    // margin-bottom: 30px;
+    margin-bottom: 80px;
     padding: 50px 88px;
     min-height: calc(100vh - 150px);
     display: flex;
@@ -402,6 +433,7 @@ export default defineComponent({
 
   &:focus {
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
+    border: none;
 
     :deep(.el-textarea__inner) {
       border-bottom: 1px solid #1488ed;
@@ -500,11 +532,10 @@ export default defineComponent({
 
 .bottom-actions {
   width: 776px;
-  margin: auto;
+  margin: 20px auto;
   display: flex;
   justify-content: center;
   gap: 30px;
-  flex: 1;
 
   > div {
     cursor: pointer;
@@ -512,6 +543,23 @@ export default defineComponent({
     height: 36px;
     line-height: 32px;
     text-align: center;
+  }
+}
+
+// 滚动条位置区别 默认 / 预览
+.create-form-outer:not(.preview-set) {
+  .create-form-container {
+    :deep(.el-scrollbar) {
+      position: initial !important;
+
+      .el-scrollbar__bar.is-vertical {
+        top: 76px;
+      }
+    }
+
+    :deep(el-scrollbar__bar.is-vertical) {
+      top: 76px;
+    }
   }
 }
 </style>
@@ -539,19 +587,6 @@ export default defineComponent({
   .msg-box-form-title();
   .el-message-icon--warning {
     color: #00be77 !important;
-  }
-}
-
-// 元素聚焦的时候
-.item-focus {
-  box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
-
-  :deep(.el-textarea__inner) {
-    border-bottom: 1px solid #1488ed;
-  }
-
-  &:hover {
-    border-bottom: none;
   }
 }
 </style>
