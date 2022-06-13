@@ -75,17 +75,6 @@ export default defineComponent({
       this.isclick1 = false
     },
     async login() {
-      if (test == 0) {
-        await fetch('/api/auth/login', {
-          method: 'POST',
-          body: JSON.stringify({
-            account: 'leibuyun',
-            pwd: '123456',
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
         test++
         let { data } = await list('092bab9d-c0b2-48c1-a649-dff723440591')
         this.result = data.items
@@ -93,7 +82,6 @@ export default defineComponent({
         this.y = data.items.length
       }
     },
-  },
   created() {
     test = 0
     this.login()
