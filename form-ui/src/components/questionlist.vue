@@ -13,7 +13,16 @@
         <span id="isrequired" v-else>&nbsp;</span>
         {{ index + 1 }}.{{ rex.title }}
       </div>
-      <div class="quesvalue" v-if="!rex.result.value">此题未填写</div>
+      <div
+        class="quesvalue"
+        v-if="
+          !rex.result.value ||
+          !rex.result.value.id ||
+          rex.result.value.length == 0
+        "
+      >
+        此题未填写
+      </div>
       <div class="quesvalue" v-else-if="rex.type == 'date'">
         {{ rex.result.value }}
       </div>

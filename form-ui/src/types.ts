@@ -106,6 +106,7 @@ export interface Problem {
   isNew: boolean
   id: string
   setting?: Option
+  result: Result[]
 }
 export interface Option {
   options: Choice[]
@@ -113,7 +114,7 @@ export interface Option {
 export interface Choice {
   title: string
   status: number
-  id: string
+  id?: string
 }
 
 export interface IForm {

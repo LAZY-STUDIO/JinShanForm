@@ -49,6 +49,8 @@ export default defineComponent({
   },
   created() {
     this.x = 0
+    console.log(this.data1)
+    console.log(this.result1)
   },
 })
 </script>

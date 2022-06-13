@@ -1,42 +1,44 @@
 <template>
-  <div class="top">
-    <h1 class="top-name">
-      <i class="iconfont icon-angle-left-o"></i>
-      {{ data.title }}
-    </h1>
-  </div>
-  <header style="background-color: #fff">
-    <div class="header-inner">
-      <router-link to="/anayse"
-        ><div
-          class="tapoption"
-          :class="{ tapclick: isclick1 }"
-          @click="tapclick1"
-        >
-          数据统计&分析
-        </div></router-link
-      >
-      <router-link to="/anaypro">
-        <div
-          class="tapoption"
-          :class="{ tapclick: isclick2 }"
-          @click="tapclick2"
-        >
-          表单问题
-        </div></router-link
-      >
-      <router-link to="/qr">
-        <div
-          class="tapoption"
-          :class="{ tapclick: isclick3 }"
-          @click="tapclick3"
-        >
-          分享
-        </div></router-link
-      >
+  <div>
+    <div class="top">
+      <h1 class="top-name">
+        <i class="iconfont icon-angle-left-o"></i>
+        {{ data.title }}
+      </h1>
     </div>
-  </header>
-  <router-view :data1="data" :result1="result" :y="y" />
+    <header style="background-color: #fff">
+      <div class="header-inner">
+        <router-link to="/anayse"
+          ><div
+            class="tapoption"
+            :class="{ tapclick: isclick1 }"
+            @click="tapclick1"
+          >
+            数据统计&分析
+          </div></router-link
+        >
+        <router-link to="/anaypro">
+          <div
+            class="tapoption"
+            :class="{ tapclick: isclick2 }"
+            @click="tapclick2"
+          >
+            表单问题
+          </div></router-link
+        >
+        <router-link to="/qr">
+          <div
+            class="tapoption"
+            :class="{ tapclick: isclick3 }"
+            @click="tapclick3"
+          >
+            分享
+          </div></router-link
+        >
+      </div>
+    </header>
+    <router-view :data1="data" :result1="result" :y="y" :key="$route.path" />
+  </div>
 </template>
 <script lang="ts">
 let test = 0
@@ -85,7 +87,7 @@ export default defineComponent({
           },
         })
         test++
-        let { data } = await list('350b3a52-9002-4954-bd98-b625c38cbe64')
+        let { data } = await list('092bab9d-c0b2-48c1-a649-dff723440591')
         this.result = data.items
         this.data = data.info
         this.y = data.items.length

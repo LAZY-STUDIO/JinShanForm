@@ -2,8 +2,7 @@
   <div class="formcreate">
     <CreatePro :listmsg="data1"></CreatePro>
     <div class="jump">
-      <div class="revise">修改表单</div>
-      <div class="fill">填写表单</div>
+      <div class="revise">填写表单</div>
     </div>
   </div>
 </template>
