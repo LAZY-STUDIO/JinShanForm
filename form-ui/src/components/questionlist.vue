@@ -41,6 +41,26 @@
         </div>
       </div>
       <div class="quesvalue" v-else-if="rex.type == 'score'">
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 1 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 2 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 3 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 4 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 5 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
         {{ rex.result.value }} 分
       </div>
     </div>
