@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <div class="top">
-      <h1 class="top-name">
-        <i class="iconfont icon-angle-left-o"></i>
-        {{ data.title }}
-      </h1>
-    </div>
+  <MyHeader style="background-color: #fff">
+    <template v-slot:left-img
+      ><i class="iconfont icon-angle-left-o"></i
+    ></template>
+    <template v-slot:left-name>{{ data.title }}</template>
+  </MyHeader>
+  <div style="background-color: #f5f7fa">
     <header style="background-color: #fff">
       <div class="header-inner">
-        <router-link to="/anayse"
+        <router-link to="/datanayse/anayse"
           ><div
             class="tapoption"
             :class="{ tapclick: isclick1 }"
@@ -17,7 +17,7 @@
             数据统计&分析
           </div></router-link
         >
-        <router-link to="/anaypro">
+        <router-link to="/datanayse/anaypro">
           <div
             class="tapoption"
             :class="{ tapclick: isclick2 }"
@@ -26,7 +26,7 @@
             表单问题
           </div></router-link
         >
-        <router-link to="/qr">
+        <router-link to="/datanayse/qr">
           <div
             class="tapoption"
             :class="{ tapclick: isclick3 }"
@@ -45,8 +45,10 @@ let test = 0
 import { defineComponent } from 'vue'
 import { list } from '../services/api'
 import { Onelist, IProblems, GetIlist } from '../types'
+import MyHeader from '../components/MyHeader.vue'
 export default defineComponent({
   name: 'AnAyse',
+  components: { MyHeader },
   data() {
     return {
       isclick1: true,
@@ -75,17 +77,17 @@ export default defineComponent({
       this.isclick1 = false
     },
     async login() {
-        test++
-        let { data } = await list('092bab9d-c0b2-48c1-a649-dff723440591')
-        this.result = data.items
-        this.data = data.info
-        this.y = data.items.length
-      }
+      test++
+      let { data } = await list('22be5695-807d-42a2-a427-5ed36748c0de')
+      this.result = data.items
+      this.data = data.info
+      this.y = data.items.length
     },
+  },
   created() {
     test = 0
     this.login()
-    this.$router.push('anayse')
+    //this.$router.push('anayse')
   },
 })
 </script>

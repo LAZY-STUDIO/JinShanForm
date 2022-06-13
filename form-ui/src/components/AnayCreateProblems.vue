@@ -71,7 +71,7 @@ export default defineComponent({
       else return 'SelectProblem'
     },
     getFormById: async function () {
-      this.id = '092bab9d-c0b2-48c1-a649-dff723440591'
+      this.id = '22be5695-807d-42a2-a427-5ed36748c0de'
       //String(this.$route.query.id)
       const res = await getFormById(this.id)
       console.log(this.listmsg.problems)
