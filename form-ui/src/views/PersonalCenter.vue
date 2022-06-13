@@ -180,7 +180,7 @@ export default defineComponent({
 })
 </script>
 
-<style src="../assets/css/style.css"></style>
+<style src="../assets/css/style.css" scoped></style>
 <style scoped>
 /* @import '../assets/css/style.css'; */
 
