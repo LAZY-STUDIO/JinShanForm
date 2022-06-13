@@ -122,6 +122,24 @@
         :timeDateFormat="item.setting.options[0].title"
         @timeDateFormatChange="item.setting.options[0].title = $event"
         :problemOptions="item.setting.options"
+        @optionTitleChange="
+          (idx, newTitle) =>
+            handleTitleChange(idx, newTitle, item.setting.options)
+        "
+        @delOptionTitle="delOptionTitle($event, item.setting.options)"
+        @addOptionTitle="
+          item.setting.options.push({
+            title: '',
+            status: 1,
+          })
+        "
+        @radioOptionChange="item.result.value.title = $event"
+        @checkboxOptionChange="
+          item.result.value = $event.map((tmp) => ({
+            id: '',
+            title: tmp,
+          }))
+        "
       >
       </component>
       <div class="btn">
@@ -225,20 +243,48 @@ export default defineComponent({
       this.num = 0
       for (let k in this.problems) {
         if (
-          this.problems[k].result?.value &&
-          this.problems[k].type != 'score'
-        ) {
-          this.num++
-        }
-        if (
           this.problems[k].type === 'score' &&
           Number(this.problems[k].result?.value) > -1
+        ) {
+          this.num++
+        } else if (this.problems[k].type === 'multiSelect') {
+          let arr = String(this.problems[k].result?.value).split(',')
+          console.log('arr.length')
+          console.log(arr)
+          console.log(arr.length) //1???
+          if (arr.length) this.num++
+        } else if (
+          this.problems[k].type === 'singleSelect' ||
+          this.problems[k].type === 'pullSelect'
+        ) {
+          let data = Object(this.problems[k].result?.value)
+          if (data.title) this.num++
+          // for (let item in data) {
+          //   let selectFlag = 0
+          //   if (data[item]) {
+          //     selectFlag = 1
+          //   }
+          //   if (selectFlag) this.num++
+          // }
+        } else if (
+          this.problems[k].result?.value &&
+          this.problems[k].type != 'score'
         ) {
           this.num++
         }
         this.total = parseInt(k) + 1
       }
       this.percent = this.num / this.total
+    },
+    handleTitleChange(
+      idx: number,
+      newTitle: string,
+      options: { title: string; status: 1 | 2 }[]
+    ) {
+      options[idx].title = newTitle
+    },
+    delOptionTitle(idx: number, options: []) {
+      options.splice(idx, 1)
     },
     saveEdit() {
       localStorage.setItem('edit', JSON.stringify(this.problems))

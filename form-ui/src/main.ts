@@ -14,7 +14,7 @@ router.beforeEach(function (to, from, next) {
   if (to.path === '/login' || to.path === '/register') {
     next()
   } else {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     if (token) {
       next()
     } else {

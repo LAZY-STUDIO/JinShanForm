@@ -14,6 +14,8 @@
           <div
             class="trigger-date-container"
             @click="showDateFormatMenu = !showDateFormatMenu"
+            @blur="showDateFormatMenu = false"
+            tabindex="0"
           >
             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
               <g fill="none" fill-rule="nonzero">
@@ -58,7 +60,7 @@
           </div>
           <span>{{ dateformatTexts[dateformatIndex] }}</span>
         </div>
-        <div v-else>
+        <div v-else class="datepicker-outer">
           <el-date-picker
             v-model="dateTmp"
             type="datetime"
@@ -471,13 +473,47 @@ export default defineComponent({
   }
 }
 
-:deep(.el-date-editor.el-input.date-choice) {
-  width: 100% !important;
-  border: none !important;
+.datepicker-outer {
+  position: relative;
 
-  .el-input__wrapper {
+  :deep(.el-popper.is-pure.is-light.el-picker__popper) {
+    top: 0 !important;
+    left: 30px !important;
+  }
+
+  :deep(.el-date-editor.el-input.date-choice) {
+    width: 100% !important;
     border: none !important;
-    box-shadow: none;
+
+    .el-input__wrapper {
+      border: none !important;
+      box-shadow: none;
+    }
+  }
+
+  :deep(.el-date-picker) {
+    width: 250px !important;
+  }
+
+  :deep(.el-date-picker__header) {
+    margin: 0 auto !important;
+  }
+
+  :deep(.el-picker-panel__content) {
+    width: 230px !important;
+    margin: 0 auto !important;
+  }
+
+  :deep(.el-date-table th) {
+    padding: 0 !important;
+  }
+
+  :deep(.el-date-table td) {
+    padding: 0 !important;
+  }
+
+  :deep(.el-date-picker__time-header) {
+    display: none;
   }
 }
 

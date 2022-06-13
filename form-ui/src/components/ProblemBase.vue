@@ -6,11 +6,21 @@
     ]"
     tabindex="0"
   >
-    <div class="problem-titie-container">
+    <div
+      :class="[
+        'problem-title-container',
+        !showActions & (problemType === 'multiSelect') ? 'mul-extra-outer' : '',
+      ]"
+    >
       <span class="problem-number">
         <span class="must-star" v-show="required">*</span>
-        {{ problemNumber + 1 }}.</span
-      >
+        {{ problemNumber + 1 }}.
+        <span
+          class="mul-extra"
+          v-if="!showActions & (problemType === 'multiSelect')"
+          >[多选题]</span
+        >
+      </span>
       <el-input
         autofocus
         :id="'problemBase' + problemNumber"
@@ -114,14 +124,29 @@ export default defineComponent({
       }
       return res
     },
+    problemType() {
+      return this.forefatherComponent.problems[this.problemNumber].type
+    },
   },
   methods: {
     copy() {
       const problem = this.forefatherComponent.problems[this.problemNumber]
       this.forefatherComponent.problems.push(problem)
+      ElMessage({
+        message: '复制成功',
+        customClass: 'msg-box-form-title',
+        duration: 1000 * 2,
+        type: 'success',
+      })
     },
     trash() {
       this.forefatherComponent.problems.splice(this.problemNumber, 1)
+      ElMessage({
+        message: '删除成功',
+        customClass: 'msg-box-form-title',
+        duration: 1000 * 2,
+        type: 'success',
+      })
     },
     // 设置所有题目的required
     mustSelect() {
@@ -131,6 +156,12 @@ export default defineComponent({
           required: this.required,
         })
       )
+      ElMessage({
+        message: '设置成功',
+        customClass: 'msg-box-form-title',
+        duration: 1000 * 2,
+        type: 'success',
+      })
     },
   },
   /**
@@ -183,7 +214,7 @@ export default defineComponent({
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
     padding-bottom: 0;
 
-    .hidden-wrap {
+    :deep(.hidden-wrap) {
       display: initial;
     }
   }
@@ -202,12 +233,12 @@ export default defineComponent({
     padding-bottom: 40px;
   }
 
-  .problem-titie-container:hover {
+  .problem-title-container:hover {
     border-bottom: none;
   }
 }
 
-.problem-titie-container {
+.problem-title-container {
   padding: 8px 0 5px 0;
   margin-bottom: 3px;
   color: #3d4757;
@@ -255,7 +286,18 @@ export default defineComponent({
   }
 }
 
-.hidden-wrap {
+.mul-extra-outer {
+  .mul-extra {
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: normal;
+  }
+
+  :deep(.el-textarea__inner) {
+    padding-left: 50px;
+  }
+}
+
+:deep(.hidden-wrap) {
   display: none;
 }
 
