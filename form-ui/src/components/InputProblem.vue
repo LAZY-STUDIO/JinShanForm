@@ -14,6 +14,8 @@
           <div
             class="trigger-date-container"
             @click="showDateFormatMenu = !showDateFormatMenu"
+            @blur="showDateFormatMenu = false"
+            tabindex="0"
           >
             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
               <g fill="none" fill-rule="nonzero">
