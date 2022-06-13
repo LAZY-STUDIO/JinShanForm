@@ -177,19 +177,19 @@ export default defineComponent({
   created() {
     this.fun()
   },
-  mounted() {
-    document.addEventListener(
-      'click',
-      (e) => {
-        let s1: any = this.$refs.s1
-        let s2: any = this.$refs.s2
-        if (!s1.contains(e.target) && !s2.contains(e.target)) {
-          this.show = false
-        }
-      },
-      true
-    )
-  },
+  // mounted() {
+  //   document.addEventListener(
+  //     'click',
+  //     (e) => {
+  //       let s1: any = this.$refs.s1
+  //       let s2: any = this.$refs.s2
+  //       if (!s1.contains(e.target) && !s2.contains(e.target)) {
+  //         this.show = false
+  //       }
+  //     },
+  //     true
+  //   )
+  // },
 })
 </script>
 

@@ -180,8 +180,9 @@ export default defineComponent({
 })
 </script>
 
+<style src="../assets/css/style.css"></style>
 <style scoped>
-@import '../assets/css/style.css';
+/* @import '../assets/css/style.css'; */
 
 .container {
   max-width: 910px;

@@ -1,6 +1,6 @@
 <template>
   <div class="main-box">
-    <div class="side-box" v-if="!flag">
+    <div class="side-box" v-if="!flag && !flagg">
       <div class="side">
         <div class="count">
           <span>已填</span>
@@ -10,12 +10,16 @@
           >
         </div>
         <div class="progress">
-          <el-progress :percentage="percent * 100" :show-text="false" />
+          <el-progress
+            :percentage="percent * 100"
+            :show-text="false"
+            v-if="!isNaN(parseInt(percent * 100))"
+          />
         </div>
-        <img src="../assets/imgs/返回.png" @click="openSide" />
+        <img src="../assets/imgs/返回.png" @click="changeSide" />
       </div>
     </div>
-    <div class="side-content" v-if="flag">
+    <div class="side-content" v-if="flag && !flagg">
       <div class="menu-box">
         <div class="menu">
           <span>目录</span>
@@ -24,14 +28,83 @@
             >/{{ total }}</span
           >
         </div>
-        <span><img src="../assets/imgs/返回2.png" @click="closeSide" /></span>
+        <span><img src="../assets/imgs/返回2.png" @click="changeSide" /></span>
       </div>
       <div class="menu-content" v-for="(item, index) in problems" :key="item">
-        <span>{{ index + 1 }}:{{ item.title }}</span>
-        <span
-          ><img src="../assets/imgs/勾选.png" v-if="item.result.value" />
-          <img src="../assets/imgs/勾选1.png" v-if="!item.result.value"
-        /></span>
+        <a :href="'#problem' + index">
+          <span>{{ index + 1 }}:{{ item.title }}</span>
+          <span
+            ><img
+              src="../assets/imgs/勾选.png"
+              v-if="
+                (item.result.value && item.type != 'score') ||
+                (item.result.value > -1 && item.type === 'score')
+              " />
+            <img
+              src="../assets/imgs/勾选1.png"
+              v-if="
+                !item.result.value ||
+                (item.result.value === -1 && item.type === 'score')
+              "
+          /></span>
+        </a>
+      </div>
+    </div>
+    <div class="header-box" v-if="flagg">
+      <div class="header">
+        <div class="header-left">
+          <div class="header-progress">
+            <span
+              >填写进度(<i>{{ this.num }}</i
+              >/{{ this.total }})</span
+            >
+            <el-progress
+              :percentage="percent * 100"
+              :show-text="false"
+              v-if="!isNaN(parseInt(percent * 100))"
+            />
+          </div>
+        </div>
+        <div class="header-detail">
+          <i>|</i><span @click="changeHeader">详情</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-content">
+      <div class="mask" v-if="flagg && flaggg"></div>
+      <div class="catalogue" :style="{ bottom: height + 'px' }">
+        <div class="title-catalogue">
+          <span>题目目录(共{{ total }}题)</span>
+          <img src="../assets/imgs/下拉.png" @click="changeHeader" />
+        </div>
+        <div class="catalogue-box">
+          <div class="menu">
+            <span>已填</span>
+            <span
+              ><i>{{ num }}</i
+              >/{{ total }}</span
+            >
+          </div>
+        </div>
+        <div class="menu-content" v-for="(item, index) in problems" :key="item">
+          <a :href="'#problem' + index" @click="changeHeader">
+            <span>{{ index + 1 }}:{{ item.title }}</span>
+            <span
+              ><img
+                src="../assets/imgs/勾选.png"
+                v-if="
+                  (item.result.value && item.type != 'score') ||
+                  (item.result.value > -1 && item.type === 'score')
+                " />
+              <img
+                src="../assets/imgs/勾选1.png"
+                v-if="
+                  !item.result.value ||
+                  (item.result.value === -1 && item.type === 'score')
+                "
+            /></span>
+          </a>
+        </div>
       </div>
     </div>
     <div class="fill-form-container" @click="findChange" @keyup="findChange">
@@ -39,19 +112,16 @@
       <div class="subTitle">{{ subTitle }}</div>
       <component
         v-for="(item, index) in problems"
+        :id="'problem' + index"
         :key="item"
         :is="componentType(item.type)"
         :problemType="item.type"
         :problemNumber="index"
         :resultValue="item.result.value"
         @resultValueInput="item.result.value = $event"
-        @dateFormatChange="item.setting.options[0].title = $event"
-        :dateFormat="
-          item.setting.options[0].title === ''
-            ? 'YYYY/MM'
-            : item.setting.options[0].title
-        "
-        @scoreChange="item.result.value = $event"
+        :timeDateFormat="item.setting.options[0].title"
+        @timeDateFormatChange="item.setting.options[0].title = $event"
+        :problemOptions="item.setting.options"
       >
       </component>
       <div class="btn">
@@ -94,8 +164,22 @@ export default defineComponent({
       num: 0,
       total: 0,
       percent: 0,
-      flag: 0,
+      flag: false,
+      flagg: false,
+      flaggg: false,
+      height: -500,
     }
+  },
+  watch: {
+    flagg: {
+      handler(newVal, oldVal) {
+        if (window.innerWidth <= 748) {
+          this.flagg = true
+        }
+        this.changeFlag()
+      },
+      immediate: true,
+    },
   },
   methods: {
     // 判断动态使用的的组件名
@@ -112,7 +196,9 @@ export default defineComponent({
     getFormById: async function () {
       this.id = String(this.$route.query.id)
       const res = await request.getFormById(this.id)
-      // console.log('问题数组')
+      console.log('res')
+      console.log(res)
+      console.log('问题数组')
       this.title = res.data.item.title
       this.subTitle = res.data.item.subTitle
       if (
@@ -122,12 +208,13 @@ export default defineComponent({
         this.problems = JSON.parse(localStorage.getItem('edit') || '[]')
       } else {
         this.problems = res.data.item.problems
+        console.log(this.problems)
       }
     },
     writeForm: async function () {
       console.log('打印问题')
       console.log(this.problems)
-      // await request.writeForm(this.id, this.problems)
+      await request.writeForm(this.id, this.problems)
     },
     submitForm() {
       this.writeForm()
@@ -137,28 +224,48 @@ export default defineComponent({
     findChange() {
       this.num = 0
       for (let k in this.problems) {
-        if (this.problems[k].result?.value) {
+        if (
+          this.problems[k].result?.value &&
+          this.problems[k].type != 'score'
+        ) {
+          this.num++
+        }
+        if (
+          this.problems[k].type === 'score' &&
+          Number(this.problems[k].result?.value) > -1
+        ) {
           this.num++
         }
         this.total = parseInt(k) + 1
-        this.percent = this.num / this.total
       }
+      this.percent = this.num / this.total
     },
     saveEdit() {
       localStorage.setItem('edit', JSON.stringify(this.problems))
       localStorage.setItem('id', this.id)
     },
-    openSide() {
-      this.flag = 1
+    changeSide() {
+      this.flag = !this.flag
       console.log(this.flag)
     },
-    closeSide() {
-      this.flag = 0
-      console.log(this.flag)
+    changeHeader() {
+      this.flaggg = !this.flaggg
+      this.height = -500 - this.height
+    },
+    changeFlag() {
+      addEventListener('resize', () => {
+        let screenWidth = window.innerWidth
+        let result = screenWidth - 748
+        this.flagg = result <= 0 ? true : false
+        return result
+      })
     },
   },
   created() {
     this.getFormById()
+  },
+  beforeUpdate() {
+    this.findChange()
   },
 })
 </script>
@@ -167,15 +274,11 @@ export default defineComponent({
 .main-box {
   margin: auto;
   display: flex;
-  /* width: 900px; */
   justify-content: center;
 }
 .fill-form-container {
-  /* position: relative; */
   width: 776px;
   background-color: #fff;
-  /* margin: auto; */
-  /* overflow: hidden; */
   padding: 50px 88px;
   min-height: calc(100vh - 150px);
 }
@@ -241,7 +344,6 @@ span i {
 .menu {
   display: inline-block;
   width: 180px;
-  /* height: 33px; */
   line-height: 33px;
   font-size: 12px;
   color: #949aae;
@@ -252,6 +354,9 @@ span i {
 .menu-content {
   width: 200px;
   line-height: 35px;
+}
+.menu-content a {
+  display: block;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -283,6 +388,9 @@ span i {
   margin-top: 10px;
   margin-bottom: 30px;
 }
+.header-content {
+  display: none;
+}
 @media screen and (max-width: 748px) {
   .main-box {
     width: 100%;
@@ -292,29 +400,100 @@ span i {
     width: 100%;
     padding: 5% 9%;
   }
-  .side-box {
+  .header-box {
     width: 100%;
+    height: 58px;
     background-color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.65);
   }
-  .side {
-    /* top: 0%;
-    left: 15%; */
-    position: relative;
+  .header {
     width: 70%;
     height: 58px;
     border-radius: 5px;
     background-color: #9e9e9e0d;
     margin: 5px auto;
-    /* flex-direction: row; */
+    display: flex;
+    justify-content: center;
   }
-  .count {
-    flex-direction: row;
-    margin-left: 15%;
-  }
-  .side .el-progress {
-    transform: rotate(0deg);
+  .header-left {
     width: 70%;
+  }
+  .header-content {
+    display: block;
+  }
+  .header-progress {
     margin: 10px auto;
+  }
+  .header-box .header-detail span {
+    margin-left: 2%;
+    color: #409eff;
+  }
+  .header-box .header-detail i {
+    font-style: normal;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #ccc;
+  }
+  .header-detail {
+    width: 50px;
+    line-height: 58px;
+  }
+  .catalogue {
+    position: fixed;
+    width: 100%;
+    padding: 0px 15px;
+    transition: bottom 0.5s;
+    left: 0;
+    border-radius: 10px;
+    background-color: #fff;
+    z-index: 3;
+  }
+  .mask {
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+  }
+  .title-catalogue {
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+  }
+  .title-catalogue img {
+    float: right;
+    height: 20px;
+    margin: 10px 0px;
+  }
+  .menu {
+    color: black;
+    font-weight: 600;
+  }
+  .menu-content {
+    width: 100%;
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+  }
+  .menu-content span {
+    line-height: 40px;
+    color: black;
+  }
+  .btn {
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn button {
+    width: 296.68px;
+    margin-bottom: 20px;
+    margin-left: 0px;
   }
 }
 </style>

@@ -447,6 +447,7 @@ export default defineComponent({
     background-color: #fff;
     box-shadow: 0 4px 16px 0 rgb(192 198 207 / 50%);
     padding: 4px;
+    z-index: 20;
 
     > div {
       padding-left: 10px;
