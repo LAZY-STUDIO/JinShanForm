@@ -91,9 +91,9 @@
                 :problemOptions="item.setting.options"
                 @optionTitleChange="
                   (idx, newTitle) =>
-                    handleTitleChange(idx, newTitle, item.setting.options)
+                    (item.setting.options[idx].title = newTitle)
                 "
-                @delOptionTitle="delOptionTitle($event, item.setting.options)"
+                @delOptionTitle="item.setting.options.splice($event, 1)"
                 @addOptionTitle="
                   item.setting.options.push({
                     title: '',
@@ -103,7 +103,7 @@
                 @radioOptionChange="item.result.value.title = $event"
                 @checkboxOptionChange="
                   item.result.value = $event.map((tmp) => ({
-                    id: '',
+                    id: tmp,
                     title: tmp,
                   }))
                 "
@@ -138,9 +138,10 @@ import {
   getProblemBasicList,
   createForm,
 } from '../services/api'
-import { IProblemType, IProblem, ProblemType } from '../types'
+import { IProblemType, IProblem, ProblemType, IForm } from '../types'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
+import { problemInit, componentType, getUUID } from '../utils/commonUtils'
 
 export default defineComponent({
   name: 'CreateForm',
@@ -168,7 +169,8 @@ export default defineComponent({
       },
       problemTypeList: [] as IProblemType[],
       problemBasicList: [] as IProblem[],
-      status: 1,
+      formId: getUUID(),
+      status: 0,
       title: '',
       subTitle: '',
       problems: [] as IProblem[],
@@ -185,17 +187,7 @@ export default defineComponent({
         scrollbarRef.setScrollTop(Number(createFormMiddleRef.clientHeight))
       }, 500)
     },
-    // 判断动态使用的的组件名
-    componentType(type: string) {
-      if (
-        type === ProblemType.input ||
-        type === ProblemType.date ||
-        type === ProblemType.time ||
-        type === ProblemType.score
-      )
-        return 'InputProblem'
-      else return 'SelectProblem'
-    },
+
     // 数据初始化 todo
     async init() {
       await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
@@ -203,7 +195,8 @@ export default defineComponent({
       // todo: 修改默认值
       const res = this.$route.query.form
       if (res && typeof res === 'string') {
-        const { status, title, subTitle, problems } = JSON.parse(res)
+        const { id, status, title, subTitle, problems } = JSON.parse(res)
+        this.formId = id
         this.status = status
         this.title = title
         this.subTitle = subTitle
@@ -280,8 +273,31 @@ export default defineComponent({
             type: 'error',
           })
         } else {
-          // todo: 创建完成后删除草稿
-          // localStorage.removeItem('form')
+          // 判断是否是草稿
+          if (this.status === 1) {
+            const ustr = sessionStorage.getItem('user')
+            if (ustr) {
+              const { account } = JSON.parse(ustr)
+              const dLstStr = localStorage.getItem(account + 'DraftList')
+              let draftList = [] as IForm[]
+              if (dLstStr) {
+                draftList = JSON.parse(dLstStr)
+              }
+              // 找到当前草稿
+              let idx = -1
+              for (let i = 0; i < draftList.length; ++i) {
+                if (draftList[i].id === this.formId) {
+                  idx = i
+                  break
+                }
+              }
+              draftList.splice(idx, 1)
+              localStorage.setItem(
+                account + 'DraftList',
+                JSON.stringify(draftList)
+              )
+            }
+          }
           ElMessage({
             message: '创建成功',
             customClass: 'msg-box-form-title-success',
@@ -300,6 +316,43 @@ export default defineComponent({
     // 将form保存至localstorage
     saveDraft() {
       // localStorage.setItem('problems', JSON.stringify(this.problems))
+      const ustr = sessionStorage.getItem('user')
+      if (ustr) {
+        const { account } = JSON.parse(ustr)
+        const dLstStr = localStorage.getItem(account + 'DraftList')
+        let draftList = [] as IForm[]
+        if (dLstStr) {
+          draftList = JSON.parse(dLstStr)
+          console.log(draftList)
+        }
+        // 判断是否存在当前草稿
+        let idx = -1
+        for (let i = 0; i < draftList.length; ++i) {
+          if (draftList[i].id === this.formId) {
+            idx = i
+            break
+          }
+        }
+        if (idx === -1) {
+          draftList.push({
+            id: this.formId,
+            ctime: Date.now(),
+            utime: Date.now(),
+            status: 1,
+            author: account,
+            isStar: false,
+            title: this.title,
+            subTitle: this.subTitle,
+            problems: this.problems,
+          })
+        } else {
+          draftList[idx].utime = Date.now()
+          draftList[idx].title = this.title
+          draftList[idx].subTitle = this.subTitle
+          draftList[idx].problems = this.problems
+        }
+        localStorage.setItem(account + 'DraftList', JSON.stringify(draftList))
+      }
       ElMessage({
         message: '草稿保存成功',
         customClass: 'msg-box-form-title-success',
@@ -307,65 +360,8 @@ export default defineComponent({
         type: 'success',
       })
     },
-    problemInit(problem: IProblem, flag = false) {
-      let setting = {
-        options: [{ title: '', status: 1 }] as {
-          title: string
-          status: 1 | 2
-        }[],
-      }
-      let result = {
-        value: '',
-      } as {
-        value:
-          | string
-          | number
-          | {
-              id: string
-              title: string
-            }
-          | {
-              id: string
-              title: string
-            }[]
-      }
-      if (problem.type === ProblemType.input) {
-        result.value = ''
-      } else if (problem.type === ProblemType.score) {
-        result.value = -1
-      } else if (problem.type === ProblemType.date) {
-        setting.options[0].title = 'YYYY/MM'
-      } else if (problem.type === ProblemType.time) {
-        setting.options[0].title = '时刻: 时-分(24小时制)'
-      } else {
-        setting.options.push({
-          title: '',
-          status: 1,
-        })
-        if (problem.type === ProblemType.multiSelect) {
-          result.value = [] as { id: string; title: string }[]
-        } else {
-          result.value = {
-            id: '',
-            title: '',
-          }
-        }
-      }
-      if (!problem.setting) {
-        problem.setting = setting
-      }
-      return !flag
-        ? {
-            setting,
-            result,
-            ...problem,
-          }
-        : {
-            setting,
-            ...problem,
-            result,
-          }
-    },
+    problemInit: problemInit,
+    componentType: componentType,
     addCommonProblem(problemType: IProblemType) {
       this.problems.push(
         this.problemInit({
