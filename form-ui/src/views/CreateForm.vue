@@ -2,7 +2,9 @@
   <div
     :class="['create-form-outer', !options.showActions ? 'preview-set' : '']"
   >
-    <div class="header">新建表单 {{ title }}</div>
+    <div class="header">
+      <my-header></my-header>
+    </div>
     <div class="create-form-container">
       <div class="create-form-left-side" v-show="options.showActions">
         <div class="left-wrap">
@@ -42,7 +44,11 @@
               />
             </div>
             <div
-              :class="['form-subTitle', subTitleCenter ? 'el-text-center' : '']"
+              :class="[
+                'form-subTitle',
+                subTitleCenter ? 'el-text-center' : '',
+                !options.showActions ? 'hidBgst' : '',
+              ]"
               tabindex="0"
             >
               <el-input
@@ -125,6 +131,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ElMessage, ElScrollbar } from 'element-plus'
+import MyHeader from '../components/MyHeader.vue'
 import ProblemList from '../components/ProblemList.vue'
 import {
   getProblemTypeList,
@@ -141,6 +148,7 @@ export default defineComponent({
     ProblemList,
     InputProblem,
     SelectProblem,
+    MyHeader,
   },
   provide() {
     return {
@@ -593,6 +601,17 @@ export default defineComponent({
         background-color: #f2f4f7;
       }
     }
+  }
+}
+
+.hidBgst {
+  box-shadow: none !important;
+  .subTitle-actions {
+    display: none !important;
+  }
+
+  :deep(.el-textarea__inner) {
+    border-bottom: none !important;
   }
 }
 
