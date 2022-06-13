@@ -15,31 +15,53 @@
       </div>
       <div
         class="quesvalue"
-        v-if="
-          !rex.result.value ||
-          !rex.result.value.id ||
-          rex.result.value.length == 0
-        "
+        style="color: #c0c6cf"
+        v-if="!rex.result.value || rex.result.value.length == 0"
       >
         此题未填写
       </div>
-      <div class="quesvalue" v-else-if="rex.type == 'date'">
-        {{ rex.result.value }}
-      </div>
       <div
         class="quesvalue"
-        v-else-if="rex.type == 'input' || rex.type == 'time'"
+        v-else-if="rex.type == 'date' || rex.type == 'time'"
       >
+        {{ rex.result.value }}
+      </div>
+      <div class="quesvalue" v-else-if="rex.type == 'input'">
         {{ rex.result.value }}
       </div>
       <div
         class="quesvalue"
         v-else-if="rex.type == 'singleSelect' || rex.type == 'pullSelect'"
       >
-        {{ rex.setting.options[Number(rex.result.value) - 1].title }}
+        {{ rex.result.value.title }}
       </div>
       <div class="quesvalue" v-else-if="rex.type == 'multiSelect'">
-        {{ getmultresult(rex.result.value) }}
+        <div v-for="x in rex.result.value" :key="x" style="margin: 5px 0px">
+          {{ x.title }}<br />
+        </div>
+      </div>
+      <div class="quesvalue" v-else-if="rex.type == 'score'">
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 1 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 2 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 3 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 4 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        <i
+          class="iconfont icon-star"
+          :style="{ color: rex.result.value >= 5 ? '#f8d61d' : '#c2c2c2' }"
+        ></i>
+        {{ rex.result.value }} 分
       </div>
     </div>
   </div>
