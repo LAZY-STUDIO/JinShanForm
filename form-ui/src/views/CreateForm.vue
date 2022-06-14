@@ -23,12 +23,25 @@
           ></problem-list>
           <problem-list
             :title="'我的常用题'"
+            @addProblem="addTemplateProblem"
             :allowUnfold="true"
-            :dataList="tmpList"
-            ><div class="empty-data">
-              暂无我的常用题, 立即<span class="add-collect">添加</span>
-            </div></problem-list
+            :dataList="starProblems.map((s) => s.problem)"
           >
+            <template v-slot:manage
+              ><div class="star-problem-manage" @click="openDrawer">
+                管理
+              </div></template
+            >
+            <template v-slot:default>
+              <div class="empty-data">
+                暂无我的常用题, 立即<span
+                  class="add-collect"
+                  @click="addStarProblemPage = true"
+                  >添加</span
+                >
+              </div>
+            </template>
+          </problem-list>
         </div>
       </div>
       <el-scrollbar max-height="100vh" ref="scrollbarRef" always>
@@ -107,6 +120,7 @@
                     title: tmp,
                   }))
                 "
+                @addStarProblem="starProblem"
               >
               </component>
             </div>
@@ -125,6 +139,112 @@
       <div class="preview" @click="backToEdit">继续编辑</div>
       <div class="finish-create" @click="finishCreateForm">完成创建</div>
     </div>
+    <div class="drawer-outer">
+      <ex-modal :title="'管理常用题'" :visible="drawer" @close="closeDrawer">
+        <template v-if="!addStarProblemPage">
+          <div class="add-star-text" @click="addStarProblemPage = true">
+            +添加新的常用题
+          </div>
+          <el-scrollbar max-height="400px">
+            <div
+              v-for="item in starProblems"
+              :key="item.id"
+              class="star-problem-item"
+            >
+              <span class="star-item-title">{{ item.problem.title }}</span>
+              <el-popconfirm
+                confirm-button-text="删除"
+                cancel-button-text="取消"
+                confirmButtonType="danger"
+                icon-color="#626AEF"
+                title="确认删除该常用题?"
+                @confirm="deleteStarProblem(item.id)"
+              >
+                <template #reference>
+                  <span class="star-item-delete">删除</span>
+                </template>
+              </el-popconfirm>
+            </div>
+          </el-scrollbar>
+        </template>
+        <template v-else>
+          <div class="add-star-container">
+            <div class="template-list">
+              <div class="add-header-title">选择题型</div>
+              <el-button
+                v-for="item in problemTypeList"
+                :key="item"
+                @click="choiceStarType(item.type)"
+                >{{ item.title }}</el-button
+              >
+            </div>
+            <div class="add-star-component">
+              <component
+                :is="
+                  componentType(this.problems[this.problems.length - 1].type)
+                "
+                :problemNumber="this.problems.length - 1"
+                :problemType="this.problems[this.problems.length - 1].type"
+                :resultValue="
+                  this.problems[this.problems.length - 1].result.value
+                "
+                @resultValueInput="
+                  this.problems[this.problems.length - 1].result.value = $event
+                "
+                :timeDateFormat="
+                  this.problems[this.problems.length - 1].setting.options[0]
+                    .title
+                "
+                @timeDateFormatChange="
+                  this.problems[
+                    this.problems.length - 1
+                  ].setting.options[0].title = $event
+                "
+                :problemOptions="
+                  this.problems[this.problems.length - 1].setting.options
+                "
+                @optionTitleChange="
+                  (idx, newTitle) =>
+                    (this.problems[this.problems.length - 1].setting.options[
+                      idx
+                    ].title = newTitle)
+                "
+                @delOptionTitle="
+                  this.problems[
+                    this.problems.length - 1
+                  ].setting.options.splice($event, 1)
+                "
+                @addOptionTitle="
+                  this.problems[this.problems.length - 1].setting.options.push({
+                    title: '',
+                    status: 1,
+                  })
+                "
+                @radioOptionChange="
+                  this.problems[this.problems.length - 1].result.value.title =
+                    $event
+                "
+                @checkboxOptionChange="
+                  this.problems[this.problems.length - 1].result.value =
+                    $event.map((tmp) => ({
+                      id: tmp,
+                      title: tmp,
+                    }))
+                "
+                @addStarProblem="starProblem"
+              >
+              </component>
+            </div>
+            <div class="actions">
+              <el-button @click="addStarProblemPage = false">取消</el-button>
+              <el-button type="primary" @click="confirmAddStarProblem"
+                >确认</el-button
+              >
+            </div>
+          </div>
+        </template>
+      </ex-modal>
+    </div>
   </div>
 </template>
 
@@ -136,11 +256,21 @@ import ProblemList from '../components/ProblemList.vue'
 import {
   getProblemTypeList,
   getProblemBasicList,
+  listStar,
+  starProblem,
+  cancelProblemStar,
   createForm,
 } from '../services/api'
-import { IProblemType, IProblem, ProblemType, IForm } from '../types'
+import {
+  IProblemType,
+  IProblem,
+  ProblemType,
+  IForm,
+  IStarProblem,
+} from '../types'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
+import ExModal from '../components/ExModal.vue'
 import { problemInit, componentType, getUUID } from '../utils/commonUtils'
 
 export default defineComponent({
@@ -150,6 +280,7 @@ export default defineComponent({
     InputProblem,
     SelectProblem,
     MyHeader,
+    ExModal,
   },
   provide() {
     return {
@@ -159,16 +290,18 @@ export default defineComponent({
   },
   data() {
     return {
-      // 常用题
-      tmpList: [],
+      addStarProblemPage: false,
+      drawer: false,
       titlePlaceholder: '请输入表单标题',
       msgBoxClose: true,
       subTitleCenter: true,
       options: {
         showActions: true,
+        showFooter: true,
       },
       problemTypeList: [] as IProblemType[],
       problemBasicList: [] as IProblem[],
+      starProblems: [] as IStarProblem[],
       formId: getUUID(),
       status: 0,
       title: '',
@@ -190,7 +323,11 @@ export default defineComponent({
 
     // 数据初始化 todo
     async init() {
-      await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
+      await Promise.all([
+        this.getProblemTypes(),
+        this.getProblemBasics(),
+        this.getStarProblemList(),
+      ])
       // 路由传递的form
       // todo: 修改默认值
       const res = this.$route.query.form
@@ -212,6 +349,10 @@ export default defineComponent({
     async getProblemBasics() {
       const res = await getProblemBasicList()
       this.problemBasicList = res.data.basicProblems
+    },
+    async getStarProblemList() {
+      const res = await listStar()
+      this.starProblems = res.data.items
     },
     // 完成表单创建
     // if status ==  1, 删除localstorage的草稿信息
@@ -304,6 +445,7 @@ export default defineComponent({
             duration: 1000 * 2,
             type: 'success',
           })
+          // todo: 跳转
         }
       }
     },
@@ -315,7 +457,6 @@ export default defineComponent({
     },
     // 将form保存至localstorage
     saveDraft() {
-      // localStorage.setItem('problems', JSON.stringify(this.problems))
       const ustr = sessionStorage.getItem('user')
       if (ustr) {
         const { account } = JSON.parse(ustr)
@@ -400,6 +541,79 @@ export default defineComponent({
     tipMsg(limit: number) {
       console.log(limit)
     },
+    async starProblem(idx: number) {
+      await starProblem(this.problems[idx])
+      await this.getStarProblemList()
+      ElMessage({
+        message: '添加成功',
+        customClass: 'msg-box-form-title',
+        duration: 1000 * 2,
+        type: 'success',
+      })
+    },
+    async deleteStarProblem(id: string) {
+      await cancelProblemStar(id)
+      await this.getStarProblemList()
+    },
+    openDrawer() {
+      this.drawer = true
+      this.options.showFooter = false
+      this.problems.push(
+        this.problemInit({
+          title: '',
+          type: ProblemType.singleSelect,
+          required: false,
+          isNew: false,
+        })
+      )
+    },
+    closeDrawer() {
+      this.drawer = false
+      this.options.showFooter = true
+      this.addStarProblemPage = false
+      this.problems.pop()
+    },
+    confirmAddStarProblem() {
+      if (
+        this.problems.filter((problem: IProblem) => {
+          // problem的title
+          let titleFlag = problem.title.trim() === ''
+          let optionFlag = false
+          if (
+            problem.type === ProblemType.singleSelect ||
+            problem.type === ProblemType.multiSelect ||
+            problem.type === ProblemType.pullSelect
+          ) {
+            optionFlag =
+              problem.setting?.options.filter((p) => p.title.trim() === '')
+                .length !== 0
+          }
+          // 找出title为空 或者存在option的title为空的个数
+          return titleFlag || optionFlag
+        }).length === 0
+      ) {
+        this.addStarProblemPage = false
+        this.starProblem(this.problems.length - 1)
+      } else {
+        ElMessage({
+          message: '未填写完整',
+          customClass: 'msg-box-form-title',
+          duration: 1000 * 2,
+          type: 'warning',
+        })
+      }
+    },
+    choiceStarType(type: ProblemType) {
+      this.problems.pop()
+      this.problems.push(
+        this.problemInit({
+          title: '',
+          type: type,
+          required: false,
+          isNew: false,
+        })
+      )
+    },
   },
   created() {
     this.init()
@@ -450,7 +664,7 @@ export default defineComponent({
   .header {
     height: 56px;
     position: fixed;
-    z-index: 999;
+    z-index: 10;
     background: #fff;
     top: 0;
     bottom: 0;
@@ -703,6 +917,72 @@ export default defineComponent({
     :deep(el-scrollbar__bar.is-vertical) {
       top: 76px;
     }
+  }
+}
+
+.star-problem-manage {
+  color: #1488ed;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.drawer-outer {
+  .add-star-text {
+    color: #1488ed;
+    font-size: 14px;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+
+  .star-problem-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 42px;
+    border: 1px solid #e2e6ed;
+
+    .star-item-title {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      white-space: nowrap;
+      word-break: keep-all;
+      text-overflow: ellipsis;
+      margin-left: 20px;
+    }
+
+    .star-item-delete {
+      color: #1488ed;
+      margin-right: 30px;
+      cursor: pointer;
+    }
+  }
+}
+
+.add-star-container {
+  .add-header-title {
+    margin-top: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .add-star-component {
+    margin-top: 20px;
+  }
+
+  .template-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 10px;
+  }
+
+  .actions {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
   }
 }
 </style>

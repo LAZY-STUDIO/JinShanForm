@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     forefatherComponent: CreateForm
     options: {
       showActions: boolean
+      showFooter: boolean
     }
   }
 }

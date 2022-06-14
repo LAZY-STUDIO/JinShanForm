@@ -52,6 +52,13 @@ export interface IProblem extends IProblemType {
   }
 }
 
+export interface IStarProblem {
+  id: string
+  uId: string
+  status: number
+  problem: IProblem
+}
+
 //未修改的获取题目
 export interface GetIlist {
   info: IProblems

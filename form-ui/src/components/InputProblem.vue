@@ -1,5 +1,8 @@
 <template>
-  <problem-base :problemNumber="problemNumber">
+  <problem-base
+    :problemNumber="problemNumber"
+    @addStarProblem="$emit('addStarProblem', $event)"
+  >
     <template v-slot:default>
       <template v-if="problemType === 'input'">
         <el-input
@@ -332,7 +335,7 @@ export default defineComponent({
   },
   inject: ['options'],
   // 答案输入事件
-  emits: ['resultValueInput', 'timeDateFormatChange'],
+  emits: ['resultValueInput', 'timeDateFormatChange', 'addStarProblem'],
   props: {
     problemNumber: {
       type: Number,

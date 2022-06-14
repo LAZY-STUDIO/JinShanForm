@@ -1,5 +1,8 @@
 <template>
-  <problem-base :problemNumber="problemNumber">
+  <problem-base
+    :problemNumber="problemNumber"
+    @addStarProblem="$emit('addStarProblem', $event)"
+  >
     <template v-slot:default>
       <template v-if="showActions">
         <div class="group-outer">
@@ -181,6 +184,7 @@ export default defineComponent({
     'addOptionTitle',
     'radioOptionChange',
     'checkboxOptionChange',
+    'addStarProblem',
   ],
   props: {
     problemNumber: {
