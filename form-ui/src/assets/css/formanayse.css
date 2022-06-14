@@ -31,10 +31,6 @@ a {
     color: black;
 }
 
-header {
-    border-bottom: 1px solid #e7e9eb;
-}
-
 .header-inner {
     max-width: 900px;
     margin: auto;
