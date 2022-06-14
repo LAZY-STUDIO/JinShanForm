@@ -439,7 +439,7 @@ export default defineComponent({
     },
     async showDetail(id: string) {
       let iform = this.formList.filter((form) => form.id === id)
-      if (iform[0].status === 1) {
+      if (iform[0].status === 1 || iform[0].status === 2) {
         this.$router.push('/')
       } else {
         this.$router.push({

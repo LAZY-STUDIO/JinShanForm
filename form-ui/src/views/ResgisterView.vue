@@ -72,7 +72,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { register } from '../services/api'
-
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   data() {
     return {
@@ -121,9 +121,18 @@ export default defineComponent({
       )
       console.log(res)
       if (res.stat != 'ok') {
-        alert(res.msg)
+        // alert(res.msg)
+        ElMessage({
+          message: res.msg,
+          duration: 2000,
+          type: 'error',
+        })
       } else {
-        alert('注册成功，为您跳转到登录页面')
+        ElMessage({
+          message: '注册成功，为您跳转到登录页面',
+          duration: 2000,
+          type: 'success',
+        })
         this.$router.push({
           name: 'LoginView',
         })

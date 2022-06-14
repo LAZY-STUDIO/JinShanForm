@@ -152,7 +152,7 @@ export default defineComponent({
         return '收集中'
       } else if (num === 4) {
         return '已结束'
-      } else if (num === 5) {
+      } else if (num === 5 || num === 15) {
         return '已回收'
       }
     },
