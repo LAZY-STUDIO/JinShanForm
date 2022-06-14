@@ -2,7 +2,7 @@
   <div class="qrcodes">
     <QRcode></QRcode>
     <div class="download"><a class="link" @click="down()">下载二维码</a></div>
-    <div class="copy" @click="copyLink('anayse')">复制链接</div>
+    <div class="copy" @click="copyLink('datanayse')">复制链接</div>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default defineComponent({
   methods: {
     copyLink(val: string) {
       console.log(val, '复制链接')
-      let url = val
+      let url = window.location.origin + '/' + val
       let inputNode = document.createElement('input')
       inputNode.value = url
       document.body.appendChild(inputNode)

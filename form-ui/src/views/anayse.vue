@@ -43,8 +43,8 @@
 <script lang="ts">
 let test = 0
 import { defineComponent } from 'vue'
-import { list } from '../services/api'
-import { Onelist, IProblems, GetIlist } from '../types'
+import { list1 } from '../services/api'
+import { Onelist, IProblems1, GetIlist1 } from '../types'
 import MyHeader from '../components/MyHeader.vue'
 export default defineComponent({
   name: 'AnAyse',
@@ -56,7 +56,7 @@ export default defineComponent({
       isclick3: false,
       listname: '',
       result: [{}] as Onelist[],
-      data: {} as IProblems,
+      data: {} as IProblems1,
       y: 0,
     }
   },
@@ -78,16 +78,17 @@ export default defineComponent({
     },
     async login() {
       test++
-      let { data } = await list('22be5695-807d-42a2-a427-5ed36748c0de')
+      let { data } = await list1('22be5695-807d-42a2-a427-5ed36748c0de')
       this.result = data.items
       this.data = data.info
       this.y = data.items.length
     },
   },
   created() {
+    console.log(this.$route.query.id)
     test = 0
     this.login()
-    //this.$router.push('anayse')
+    this.$router.push('/datanayse/anayse')
   },
 })
 </script>

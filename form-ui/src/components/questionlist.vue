@@ -68,12 +68,12 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Onelist, IProblems } from '../types'
+import { Onelist, IProblems1 } from '../types'
 export default defineComponent({
   name: 'QuesList',
   props: {
     data2: { type: Object as PropType<Onelist>, required: true },
-    listmsg: { type: Object as PropType<IProblems>, required: true },
+    listmsg: { type: Object as PropType<IProblems1>, required: true },
   },
   data() {
     return {

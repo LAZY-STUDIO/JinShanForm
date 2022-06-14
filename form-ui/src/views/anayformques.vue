@@ -8,7 +8,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Onelist, IProblems } from '../types'
+import { Onelist, IProblems1 } from '../types'
 import CreatePro from '../components/AnayCreateProblems.vue'
 let test = 0
 export default defineComponent({
@@ -18,7 +18,7 @@ export default defineComponent({
   },
   props: {
     result1: { type: Object as PropType<Onelist> },
-    data1: { type: Object as PropType<IProblems> },
+    data1: { type: Object as PropType<IProblems1> },
     y: Number,
   },
 })

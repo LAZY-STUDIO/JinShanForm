@@ -14,7 +14,7 @@
 <script lang="ts">
 import VueQr from 'vue-qr/src/packages/vue-qr.vue'
 import { defineComponent, PropType } from 'vue'
-import { list } from '../services/api'
+import { list1 } from '../services/api'
 export default defineComponent({
   name: 'QRcode',
   components: {
@@ -22,14 +22,14 @@ export default defineComponent({
   },
   data() {
     return {
-      targets: 'http://localhost:8080/anayse',
+      targets: window.location.origin,
       listname: '',
       times: '123',
     }
   },
   methods: {
     async getdata() {
-      let { data } = await list('22be5695-807d-42a2-a427-5ed36748c0de')
+      let { data } = await list1('22be5695-807d-42a2-a427-5ed36748c0de')
       this.listname = data.info.title
     },
   },
