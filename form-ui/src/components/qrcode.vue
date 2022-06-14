@@ -20,6 +20,7 @@ export default defineComponent({
   components: {
     VueQr,
   },
+  props: { id: String },
   data() {
     return {
       targets: window.location.origin,
@@ -29,7 +30,7 @@ export default defineComponent({
   },
   methods: {
     async getdata() {
-      let { data } = await list1('22be5695-807d-42a2-a427-5ed36748c0de')
+      let { data } = await list1(this.id!)
       this.listname = data.info.title
     },
   },

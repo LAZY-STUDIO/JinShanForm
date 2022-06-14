@@ -1,6 +1,6 @@
 <template>
   <div class="qrcodes">
-    <QRcode></QRcode>
+    <QRcode :id="ids"></QRcode>
     <div class="download"><a class="link" @click="down()">下载二维码</a></div>
     <div class="copy" @click="copyLink('datanayse')">复制链接</div>
   </div>
@@ -14,6 +14,7 @@ export default defineComponent({
   components: {
     QRcode,
   },
+  props: { ids: String },
   methods: {
     copyLink(val: string) {
       console.log(val, '复制链接')
