@@ -131,6 +131,7 @@ export default defineComponent({
 }
 .user-img img {
   width: 30px;
+  height: 30px;
 }
 .logout {
   position: absolute;

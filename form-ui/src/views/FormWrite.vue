@@ -1,4 +1,15 @@
 <template>
+  <div class="headerNavigtion">
+    <MyHeader>
+      <template #left-img>
+        <img src="../assets/imgs/logo.svg" />
+      </template>
+      <template #left-name> 金山表单 </template>
+      <template #right></template>
+    </MyHeader>
+  </div>
+  <div class="fix-box"></div>
+
   <div class="main-box">
     <div class="side-box" v-if="!flag && !flagg">
       <div class="side">
@@ -36,16 +47,10 @@
           <span
             ><img
               src="../assets/imgs/勾选.png"
-              v-if="
-                (item.result.value && item.type != 'score') ||
-                (item.result.value > -1 && item.type === 'score')
-              " />
+              v-if="numArr.indexOf(index) >= 0" />
             <img
               src="../assets/imgs/勾选1.png"
-              v-if="
-                !item.result.value ||
-                (item.result.value === -1 && item.type === 'score')
-              "
+              v-if="numArr.indexOf(index) < 0"
           /></span>
         </a>
       </div>
@@ -92,22 +97,21 @@
             <span
               ><img
                 src="../assets/imgs/勾选.png"
-                v-if="
-                  (item.result.value && item.type != 'score') ||
-                  (item.result.value > -1 && item.type === 'score')
-                " />
+                v-if="numArr.indexOf(index) >= 0" />
               <img
                 src="../assets/imgs/勾选1.png"
-                v-if="
-                  !item.result.value ||
-                  (item.result.value === -1 && item.type === 'score')
-                "
+                v-if="numArr.indexOf(index) < 0"
             /></span>
           </a>
         </div>
       </div>
     </div>
-    <div class="fill-form-container" @click="findChange" @keyup="findChange">
+    <div
+      class="fill-form-container"
+      @click="findChange"
+      @keyup="findChange"
+      @change="findChange"
+    >
       <div class="title">{{ title }}</div>
       <div class="subTitle">{{ subTitle }}</div>
       <component
@@ -155,14 +159,16 @@ import { defineComponent } from 'vue'
 import * as request from '../services/api'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
+import MyHeader from '@/components/MyHeader.vue'
 import { IProblem, ProblemType } from '../types'
-import { json } from 'stream/consumers'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: 'FormWrite',
   components: {
     InputProblem,
     SelectProblem,
+    MyHeader,
   },
   provide() {
     return {
@@ -186,6 +192,7 @@ export default defineComponent({
       flagg: false,
       flaggg: false,
       height: -500,
+      numArr: [] as Array<number>,
     }
   },
   watch: {
@@ -229,52 +236,73 @@ export default defineComponent({
         console.log(this.problems)
       }
     },
-    writeForm: async function () {
-      console.log('打印问题')
-      console.log(this.problems)
-      await request.writeForm(this.id, this.problems)
+    submitForm: async function () {
+      // console.log('打印问题')
+      // console.log(this.problems)
+      const res = await request.writeForm(this.id, this.problems)
+      if (res.stat === 'ok') {
+        ElMessage({
+          message: '填写成功',
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'success',
+        })
+        this.$router.push('/')
+      } else {
+        ElMessage({
+          message: res.msg,
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'error',
+        })
+      }
     },
-    submitForm() {
-      this.writeForm()
-      alert('填写成功')
-      this.$router.push('/')
-    },
+    // submitForm() {
+    //   this.writeForm()
+    //   // alert('填写成功')
+    //   this.$router.push('/')
+    // },
+
+    // 检验value
     findChange() {
       this.num = 0
+      this.numArr = []
       for (let k in this.problems) {
         if (
           this.problems[k].type === 'score' &&
           Number(this.problems[k].result?.value) > -1
         ) {
           this.num++
+          this.numArr.push(Number(k))
         } else if (this.problems[k].type === 'multiSelect') {
           let arr = String(this.problems[k].result?.value).split(',')
-          console.log('arr.length')
-          console.log(arr)
-          console.log(arr.length) //1???
-          if (arr.length) this.num++
+          if (JSON.stringify(arr) != '[""]') {
+            this.num++
+            this.numArr.push(Number(k))
+          }
         } else if (
           this.problems[k].type === 'singleSelect' ||
           this.problems[k].type === 'pullSelect'
         ) {
           let data = Object(this.problems[k].result?.value)
-          if (data.title) this.num++
-          // for (let item in data) {
-          //   let selectFlag = 0
-          //   if (data[item]) {
-          //     selectFlag = 1
-          //   }
-          //   if (selectFlag) this.num++
-          // }
+          if (data.title) {
+            this.num++
+            this.numArr.push(Number(k))
+          }
         } else if (
           this.problems[k].result?.value &&
           this.problems[k].type != 'score'
         ) {
           this.num++
+          this.numArr.push(Number(k))
         }
         this.total = parseInt(k) + 1
       }
       this.percent = this.num / this.total
+      // console.log(this.numArr)
+      // console.log(this.numArr.indexOf(0))
+      // console.log(this.numArr.indexOf(1))
+      // console.log(this.numArr.indexOf(2))
     },
     handleTitleChange(
       idx: number,
@@ -317,6 +345,20 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.headerNavigtion {
+  height: 56px;
+  position: fixed;
+  z-index: 999;
+  background: #fff;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.fix-box {
+  height: 56px;
+  margin-bottom: 20px;
+}
 .main-box {
   margin: auto;
   display: flex;
@@ -438,6 +480,12 @@ span i {
   display: none;
 }
 @media screen and (max-width: 748px) {
+  .headerNavigtion {
+    width: 100%;
+  }
+  .fix-box {
+    margin-bottom: 0px;
+  }
   .main-box {
     width: 100%;
     flex-direction: column;

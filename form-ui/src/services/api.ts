@@ -43,7 +43,7 @@ interface FormRes extends BaseRes {
     // 注意了，这里是item,不要乱取名字
   }
 }
-interface FormWriteRes {
+interface FormWriteRes extends BaseRes {
   formId: string
   problems: IProblem[]
 }

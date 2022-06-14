@@ -10,10 +10,9 @@
   </div>
   <div class="container">
     <div class="mainInfo">
-      <!-- <div class="avatar-box"> -->
-      <img :src="user.avatar" class="img-circle" />
-      <!-- <div class="img-circle ifshow"><span>修改头像</span></div> -->
-      <!-- </div> -->
+      <div class="avatar">
+        <img :src="user.avatar" class="img-circle" />
+      </div>
       <div class="avatar-username">
         <p>{{ user.nickname }}</p>
       </div>
@@ -105,6 +104,7 @@
 </template>
 
 <script lang="ts">
+import { ElMessage } from 'element-plus'
 import { defineComponent } from 'vue'
 import * as request from '../services/api'
 import { UserRes } from '../services/api'
@@ -127,15 +127,27 @@ export default defineComponent({
   },
   methods: {
     logout: async function () {
-      await request.logout()
-      alert('退出成功')
-      this.$router.push('/login')
+      const res = await request.logout()
+      if (res.stat === 'ok') {
+        ElMessage({
+          message: '退出成功',
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'success',
+        })
+        this.$router.push('/login')
+      } else {
+        ElMessage({
+          message: res.msg,
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'error',
+        })
+      }
     },
     getPersonalInfo: async function () {
       this.info = await request.getPersonalInfo()
-      // console.log(this.info)
       this.user = this.info.data.user
-      // console.log(this.user)
     },
     handleCloseClick() {
       this.visible = false
@@ -154,24 +166,59 @@ export default defineComponent({
       this.visible = true
     },
     setPwd: async function () {
-      // console.log(this.oldPwd)
-      // console.log(this.newPwd)
-      // console.log(this.confirmPwd)
       this.handleCloseClick()
       if (this.oldPwd && this.newPwd && this.confirmPwd) {
-        await request.changePwd(this.oldPwd, this.newPwd, this.confirmPwd)
-        alert('修改成功')
+        const res = await request.changePwd(
+          this.oldPwd,
+          this.newPwd,
+          this.confirmPwd
+        )
+        if (res.stat === 'ok') {
+          ElMessage({
+            message: '修改成功',
+            customClass: 'msg-box-form-title-success',
+            duration: 1000 * 2,
+            type: 'success',
+          })
+          this.$router.push('/login')
+        } else {
+          ElMessage({
+            message: res.msg,
+            customClass: 'msg-box-form-title-success',
+            duration: 1000 * 2,
+            type: 'error',
+          })
+        }
+      } else {
+        ElMessage({
+          message: '密码不能为空',
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'error',
+        })
       }
     },
     setUserInfo: async function () {
-      // console.log(this.nickname)
-      // console.log(this.avatarUrl)
       this.handleCloseClick()
       if (this.nickname || this.avatarUrl) {
-        await request.setInfo(this.nickname, this.avatarUrl)
-        alert('修改成功')
+        const res = await request.setInfo(this.nickname, this.avatarUrl)
+        if (res.stat === 'ok') {
+          ElMessage({
+            message: '修改成功',
+            customClass: 'msg-box-form-title-success',
+            duration: 1000 * 2,
+            type: 'success',
+          })
+          this.getPersonalInfo()
+        } else {
+          ElMessage({
+            message: res.msg,
+            customClass: 'msg-box-form-title-success',
+            duration: 1000 * 2,
+            type: 'error',
+          })
+        }
       }
-      // this.getUserInfo()
     },
   },
   created() {
@@ -180,10 +227,8 @@ export default defineComponent({
 })
 </script>
 
-<style src="../assets/css/style.css"></style>
+<style src="../assets/css/style.css" scoped></style>
 <style scoped>
-/* @import '../assets/css/style.css'; */
-
 .container {
   max-width: 910px;
   min-width: 650px;
@@ -228,30 +273,25 @@ export default defineComponent({
   color: #969696;
   cursor: pointer;
 }
-/* .box {
-  height: 48px;
-} */
 .mainInfo {
-  /* width: 80%; */
-  /* margin: auto; */
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
   padding: 30px 0px;
   background: #fff url(//qn.cache.wpscdn.cn/s1/avatar-bg.7d147f4.png) no-repeat
     100% 100%;
 }
-.avatar-box {
+/* .avatar-box {
   position: relative;
-}
+} */
 /* .avatar-box .ifshow:hover {
   opacity: 0.5;
 } */
+.avatar,
 .img-circle {
   width: 80px;
   height: 80px;
-  border-radius: 50px;
+  border-radius: 40px;
 }
 /* .ifshow {
   position: absolute;
@@ -265,7 +305,6 @@ export default defineComponent({
   font-weight: 700;
   font-size: 14px;
 }*/
-
 .avatar-userid {
   color: #666;
   line-height: 16px;
@@ -287,7 +326,6 @@ export default defineComponent({
 .set {
   margin-top: 30px;
   margin-bottom: 30px;
-  /* height: 32px; */
   line-height: 32px;
 }
 .set {

@@ -85,7 +85,7 @@ export default defineComponent({
           },
         })
         test++
-        let { data } = await list('bf1cc9b2-0b5a-490b-8af9-16eb70d396e8')
+        let { data } = await list('3e28fe60-6b97-44a7-84af-166ac87f7b9f')
         this.result = data.items
         this.data = data.info
         this.y = data.items.length

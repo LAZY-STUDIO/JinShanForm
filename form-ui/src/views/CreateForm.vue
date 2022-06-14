@@ -103,7 +103,7 @@
                 @radioOptionChange="item.result.value.title = $event"
                 @checkboxOptionChange="
                   item.result.value = $event.map((tmp) => ({
-                    id: '',
+                    id: '1',
                     title: tmp,
                   }))
                 "
@@ -346,13 +346,16 @@ export default defineComponent({
           result.value = [] as { id: string; title: string }[]
         } else {
           result.value = {
-            id: '',
+            id: '1',
             title: '',
           }
         }
       }
       if (!problem.setting) {
         problem.setting = setting
+      }
+      if (!problem.result) {
+        problem.result = result
       }
       return !flag
         ? {
