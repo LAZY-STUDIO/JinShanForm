@@ -8,24 +8,82 @@
         <div
           :class="form.isStar ? 'form-star form-isstar' : 'form-star'"
           @click="showStar"
+          @click.stop
         >
           <i class="iconfont icon-star-empty"></i>
         </div>
         <div class="btns">
-          <el-button class="btn" v-if="form.status === 2" @click="onStart"
+          <el-button
+            class="btn"
+            type="warning"
+            plain
+            v-if="form.status === 2"
+            @click="onStart"
+            @click.stop
             >发布</el-button
           >
-          <el-button class="btn" v-if="form.status === 2">编辑</el-button>
-          <el-button class="btn" v-if="form.status === 3" @click="goWrite"
+          <el-button
+            class="btn"
+            type="primary"
+            plain
+            v-if="form.status === 1"
+            @click="onChange"
+            @click.stop
+            >编辑</el-button
+          >
+          <el-button
+            class="btn"
+            type="warning"
+            plain
+            v-if="form.status === 3"
+            @click="goWrite"
+            @click.stop
             >分享</el-button
           >
-          <el-button class="btn" v-if="form.status === 3 || form.status === 4"
+          <el-button
+            class="btn"
+            type="success"
+            plain
+            v-if="form.status === 3 || form.status === 4"
+            @click.stop
             >查看结果</el-button
           >
-          <el-button class="btn" v-if="form.status === 3" @click="onEnd"
+          <el-button
+            class="btn"
+            type="primary"
+            plain
+            v-if="form.status === 3"
+            @click="onEnd"
+            @click.stop
             >停止</el-button
           >
-          <el-button class="btn" @click="onDelete">删除</el-button>
+          <el-button
+            class="btn"
+            type="danger"
+            plain
+            @click="onDelete"
+            @click.stop
+            v-if="form.status !== 5 && form.status !== 15"
+            >删除</el-button
+          >
+          <el-button
+            class="btn"
+            type="success"
+            plain
+            v-if="form.status === 5 || form.status === 15"
+            @click="onReview"
+            @click.stop
+            >恢复</el-button
+          >
+          <el-button
+            class="btn"
+            type="danger"
+            plain
+            v-if="form.status === 5 || form.status === 15"
+            @click="onMove"
+            @click.stop
+            >彻底删除</el-button
+          >
         </div>
       </div>
     </div>
@@ -43,6 +101,9 @@ export default defineComponent({
     onDelete: { type: Function as PropType<() => void>, required: true },
     onStart: { type: Function as PropType<() => void>, required: true },
     onEnd: { type: Function as PropType<() => void>, required: true },
+    onMove: { type: Function as PropType<() => void>, required: true },
+    onReview: { type: Function as PropType<() => void>, required: true },
+    onChange: { type: Function as PropType<() => void>, required: true },
   },
   methods: {
     //该方法用于给日期、时间补零
@@ -78,12 +139,16 @@ export default defineComponent({
       }
     },
     getStatus(num: number) {
-      if (num === 2) {
+      if (num === 1) {
         return '草稿'
+      } else if (num === 2) {
+        return '未发布'
       } else if (num === 3) {
         return '收集中'
       } else if (num === 4) {
         return '已结束'
+      } else if (num === 5) {
+        return '已回收'
       }
     },
     showStar() {
@@ -109,7 +174,7 @@ export default defineComponent({
   height: 50px;
   border: 1px solid #e7e9eb;
   margin: 20px auto;
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -120,8 +185,6 @@ export default defineComponent({
 }
 .list-simple .dosth {
   width: 40%;
-  /* display: flex;
-  align-items: center; */
   text-align: center;
 }
 .dosth-detail {
@@ -146,6 +209,6 @@ export default defineComponent({
   width: 50px;
   height: 20px;
   font-size: 12px;
-  color: black;
+  /* color: black; */
 }
 </style>

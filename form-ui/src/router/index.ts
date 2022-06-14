@@ -50,17 +50,17 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/anayse.vue'),
     children: [
       {
-        path: '/anayse',
+        path: 'anayse',
         name: 'anayse',
         component: () => import('../views/datanayse.vue'),
       },
       {
-        path: '/qr',
+        path: 'qr',
         name: 'qr',
         component: QR,
       },
       {
-        path: '/anaypro',
+        path: 'anaypro',
         name: 'anaypro',
         component: import('../views/anayformques.vue'),
       },

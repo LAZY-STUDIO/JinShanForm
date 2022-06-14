@@ -1,50 +1,54 @@
 <template>
-  <div class="top">
-    <h1 class="top-name">
-      <i class="iconfont icon-angle-left-o"></i>
-      {{ data.title }}
-    </h1>
+  <MyHeader style="background-color: #fff">
+    <template v-slot:left-img
+      ><i class="iconfont icon-angle-left-o"></i
+    ></template>
+    <template v-slot:left-name>{{ data.title }}</template>
+  </MyHeader>
+  <div style="background-color: #f5f7fa">
+    <header style="background-color: #fff">
+      <div class="header-inner">
+        <router-link to="/datanayse/anayse"
+          ><div
+            class="tapoption"
+            :class="{ tapclick: isclick1 }"
+            @click="tapclick1"
+          >
+            数据统计&分析
+          </div></router-link
+        >
+        <router-link to="/datanayse/anaypro">
+          <div
+            class="tapoption"
+            :class="{ tapclick: isclick2 }"
+            @click="tapclick2"
+          >
+            表单问题
+          </div></router-link
+        >
+        <router-link to="/datanayse/qr">
+          <div
+            class="tapoption"
+            :class="{ tapclick: isclick3 }"
+            @click="tapclick3"
+          >
+            分享
+          </div></router-link
+        >
+      </div>
+    </header>
+    <router-view :data1="data" :result1="result" :y="y" :key="$route.path" />
   </div>
-  <header style="background-color: #fff">
-    <div class="header-inner">
-      <router-link to="/anayse"
-        ><div
-          class="tapoption"
-          :class="{ tapclick: isclick1 }"
-          @click="tapclick1"
-        >
-          数据统计&分析
-        </div></router-link
-      >
-      <router-link to="/anaypro">
-        <div
-          class="tapoption"
-          :class="{ tapclick: isclick2 }"
-          @click="tapclick2"
-        >
-          表单问题
-        </div></router-link
-      >
-      <router-link to="/qr">
-        <div
-          class="tapoption"
-          :class="{ tapclick: isclick3 }"
-          @click="tapclick3"
-        >
-          分享
-        </div></router-link
-      >
-    </div>
-  </header>
-  <router-view :data1="data" :result1="result" :y="y" />
 </template>
 <script lang="ts">
 let test = 0
 import { defineComponent } from 'vue'
 import { list } from '../services/api'
 import { Onelist, IProblems, GetIlist } from '../types'
+import MyHeader from '../components/MyHeader.vue'
 export default defineComponent({
   name: 'AnAyse',
+  components: { MyHeader },
   data() {
     return {
       isclick1: true,
@@ -73,29 +77,17 @@ export default defineComponent({
       this.isclick1 = false
     },
     async login() {
-      if (test == 0) {
-        await fetch('/api/auth/login', {
-          method: 'POST',
-          body: JSON.stringify({
-            account: 'leibuyun',
-            pwd: '123456',
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        test++
-        let { data } = await list('3e28fe60-6b97-44a7-84af-166ac87f7b9f')
-        this.result = data.items
-        this.data = data.info
-        this.y = data.items.length
-      }
+      test++
+      let { data } = await list('22be5695-807d-42a2-a427-5ed36748c0de')
+      this.result = data.items
+      this.data = data.info
+      this.y = data.items.length
     },
   },
   created() {
     test = 0
     this.login()
-    this.$router.push('anayse')
+    //this.$router.push('anayse')
   },
 })
 </script>

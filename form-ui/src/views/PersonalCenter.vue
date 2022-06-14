@@ -104,16 +104,15 @@
 </template>
 
 <script lang="ts">
+import { IUser } from '@/types'
 import { ElMessage } from 'element-plus'
 import { defineComponent } from 'vue'
 import * as request from '../services/api'
-import { UserRes } from '../services/api'
 export default defineComponent({
   name: 'PersonalCenter',
   data() {
     return {
-      info: {} as UserRes,
-      user: {},
+      user: {} as IUser,
       input: '',
       visible: false,
       oldPwd: '',
@@ -146,8 +145,8 @@ export default defineComponent({
       }
     },
     getPersonalInfo: async function () {
-      this.info = await request.getPersonalInfo()
-      this.user = this.info.data.user
+      this.user = JSON.parse(sessionStorage.user)
+      console.log(this.user)
     },
     handleCloseClick() {
       this.visible = false
@@ -174,6 +173,8 @@ export default defineComponent({
           this.confirmPwd
         )
         if (res.stat === 'ok') {
+          this.user.pwd = this.newPwd
+          sessionStorage.setItem('user', JSON.stringify(this.user))
           ElMessage({
             message: '修改成功',
             customClass: 'msg-box-form-title-success',
@@ -203,6 +204,9 @@ export default defineComponent({
       if (this.nickname || this.avatarUrl) {
         const res = await request.setInfo(this.nickname, this.avatarUrl)
         if (res.stat === 'ok') {
+          this.user.nickname = this.nickname
+          this.user.avatar = this.avatarUrl
+          sessionStorage.setItem('user', JSON.stringify(this.user))
           ElMessage({
             message: '修改成功',
             customClass: 'msg-box-form-title-success',

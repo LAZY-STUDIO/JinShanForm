@@ -29,7 +29,7 @@ export default defineComponent({
   },
   methods: {
     async getdata() {
-      let { data } = await list('30f9a946-f3c1-4538-ab77-56e326b4c5c7')
+      let { data } = await list('22be5695-807d-42a2-a427-5ed36748c0de')
       this.listname = data.info.title
     },
   },
