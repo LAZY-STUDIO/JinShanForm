@@ -2,10 +2,10 @@ import * as request from './request'
 import {
   IProblemType,
   IProblem,
-  IStarProblem,
-  Getmsg,
   IForm,
+  IStarProblem,
   IUser,
+  Getmsg1,
 } from '../types'
 
 interface BaseRes {
@@ -56,7 +56,7 @@ interface FormRes extends BaseRes {
     // 注意了，这里是item,不要乱取名字
   }
 }
-interface FormWriteRes {
+interface FormWriteRes extends BaseRes {
   formId: string
   problems: IProblem[]
 }
@@ -241,6 +241,11 @@ export function listStar() {
 }
 
 //获取表单填写详情
+/*
 export function list(num: string) {
   return request.get<Getmsg>('/api/form/formResult/' + num)
+}*/
+
+export function list1(num: string) {
+  return request.get<Getmsg1>('/api/form/formResult/' + num)
 }

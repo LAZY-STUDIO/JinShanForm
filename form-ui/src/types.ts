@@ -59,7 +59,27 @@ export interface IStarProblem {
   problem: IProblem
 }
 
+export interface Getmsg1 {
+  data: GetIlist1
+  stat: boolean
+}
+export interface GetIlist1 {
+  info: IProblems1
+  items: Onelist[]
+}
+export interface IProblems1 {
+  id: string
+  ctime: number
+  utime: number
+  status: number
+  author: string
+  isStar: boolean
+  title: string
+  subTitle: string
+  problems: IProblem[]
+}
 //未修改的获取题目
+/*
 export interface GetIlist {
   info: IProblems
   items: Onelist[]
@@ -67,7 +87,7 @@ export interface GetIlist {
 export interface Getmsg {
   data: GetIlist
   stat: boolean
-}
+}*/
 export interface Onelist {
   id: string
   formAuthor: string
@@ -95,6 +115,7 @@ export interface Value {
         title: string
       }[]
 }
+/*
 export interface IProblems {
   id: string
   ctime: number
@@ -114,7 +135,7 @@ export interface Problem {
   id: string
   setting?: Option
   result: Result[]
-}
+}*/
 export interface Option {
   options: Choice[]
 }

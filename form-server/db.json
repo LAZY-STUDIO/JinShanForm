@@ -1406,7 +1406,7 @@
     {
       "id": "3fddd017-e54b-4905-b07c-b271955cf2e5",
       "uId": "1c788ac2-4214-4000-9fc7-36a0ed878980",
-      "status": 2,
+      "status": 1,
       "problem": {
         "setting": {
           "options": [
@@ -1765,6 +1765,86 @@
         },
         "title": "时间",
         "type": "time",
+        "required": false,
+        "isNew": false
+      }
+    },
+    {
+      "id": "cb428dac-3002-48dd-aeca-67ab0ba3d635",
+      "uId": "1c788ac2-4214-4000-9fc7-36a0ed878980",
+      "status": 2,
+      "problem": {
+        "setting": {
+          "options": [
+            {
+              "title": "dsds",
+              "status": 1
+            },
+            {
+              "title": "ds",
+              "status": 1
+            }
+          ]
+        },
+        "result": {
+          "value": {
+            "id": "tmp",
+            "title": ""
+          }
+        },
+        "title": "dsds",
+        "type": "pullSelect",
+        "required": false,
+        "isNew": false
+      }
+    },
+    {
+      "id": "86c3b2ed-8759-430e-a860-f18183c0b426",
+      "uId": "1c788ac2-4214-4000-9fc7-36a0ed878980",
+      "status": 2,
+      "problem": {
+        "setting": {
+          "options": [
+            {
+              "title": "1",
+              "status": 1
+            },
+            {
+              "title": "2",
+              "status": 1
+            }
+          ]
+        },
+        "result": {
+          "value": {
+            "id": "tmp",
+            "title": ""
+          }
+        },
+        "title": "1",
+        "type": "singleSelect",
+        "required": false,
+        "isNew": false
+      }
+    },
+    {
+      "id": "ed4beab7-26cd-430e-b35a-64112f8c8541",
+      "uId": "1c788ac2-4214-4000-9fc7-36a0ed878980",
+      "status": 2,
+      "problem": {
+        "setting": {
+          "options": [
+            {
+              "title": "",
+              "status": 1
+            }
+          ]
+        },
+        "result": {
+          "value": ""
+        },
+        "title": "qwer",
+        "type": "input",
         "required": false,
         "isNew": false
       }

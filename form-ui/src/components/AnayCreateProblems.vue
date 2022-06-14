@@ -30,14 +30,14 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Onelist, IProblems, ProblemType, IProblem } from '../types'
+import { Onelist, IProblems1, ProblemType, IProblem } from '../types'
 import { getFormById } from '../services/api'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
 export default defineComponent({
   name: 'CreatePro',
   props: {
-    listmsg: { type: Object as PropType<IProblems>, required: true },
+    listmsg: { type: Object as PropType<IProblems1>, required: true },
   },
   components: {
     InputProblem,
@@ -71,12 +71,11 @@ export default defineComponent({
       else return 'SelectProblem'
     },
     getFormById: async function () {
-      this.id = '22be5695-807d-42a2-a427-5ed36748c0de'
+      //this.id = '22be5695-807d-42a2-a427-5ed36748c0de'
       //String(this.$route.query.id)
-      const res = await getFormById(this.id)
-      console.log(this.listmsg.problems)
+      //const res = await getFormById(this.id)
       // console.log('问题数组')
-      this.problems = res.data.item.problems
+      this.problems = this.listmsg.problems //res.data.item.problems
       // console.log(this.problems)
     },
     Alerts(str) {

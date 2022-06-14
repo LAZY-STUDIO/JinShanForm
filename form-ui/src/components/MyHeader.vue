@@ -10,19 +10,20 @@
         </h1>
       </div>
       <slot name="right">
-        <div class="user" tabindex="0">
+        <div
+          class="user"
+          tabindex="0"
+          @click="howshow = !howshow"
+          @blur="howshow = false"
+        >
           <div class="user-img">
             <img :src="userSrc" width="30px" />
           </div>
           <p class="user-title">{{ user.account }}</p>
-          <div class="logout">
+          <div class="logout" v-show="howshow">
             <div>{{ user.account }}</div>
-            <div @click="goPersonal">
-              <a href="/personal">个人中心</a>
-            </div>
-            <div @click="goout">
-              <a href="/login">退出登录</a>
-            </div>
+            <div @click="goPersonal" @click.stop>个人中心</div>
+            <div @click="goout">退出登录</div>
           </div>
         </div>
       </slot>
@@ -39,7 +40,7 @@ export default defineComponent({
   data() {
     return {
       user: {} as IUser,
-      // howshow: false,
+      howshow: false,
       userSrc: '',
     }
   },
@@ -69,33 +70,23 @@ export default defineComponent({
   created() {
     this.init()
   },
-  // computed: {
-  //   monitor() {
-  //     return store.getters.show
-  //   },
-  // },
-  // watch: {
-  //   monitor() {
-  //     // console.log(newval)
-  //     if (store.getters.show === 1) {
-  //       this.howshow = false
-  //     }
-  //     console.log('okay')
-  //     store.commit('showAction', 0)
-  //   },
-  // },
 })
 </script>
 
 <style scoped>
 .head_c {
   display: flex;
+  position: fixed;
   height: 56px;
   width: 100%;
   justify-content: space-between;
   align-items: center;
   padding: 0 18px;
+  margin-bottom: 56px;
   border-bottom: 1px solid #e7e9eb;
+  background-color: white;
+  clear: both;
+  z-index: 9999;
 }
 .logo {
   width: 110px;
@@ -131,6 +122,7 @@ export default defineComponent({
 }
 .user-img img {
   width: 30px;
+  height: 30px;
 }
 .logout {
   position: absolute;
@@ -144,6 +136,7 @@ export default defineComponent({
   text-align: center;
   font-size: 12px;
   display: none;
+  box-shadow: 0 2px 12px 0 rgb(56 56 56 / 20%);
 }
 /* .nologout {
   display: none;

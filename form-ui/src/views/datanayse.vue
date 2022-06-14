@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import QuesList from '../components/questionlist.vue'
-import { Onelist, IProblems } from '../types'
+import { Onelist, IProblems1 } from '../types'
 let test = 0
 export default defineComponent({
   name: 'DataAnayse',
@@ -31,7 +31,7 @@ export default defineComponent({
   },
   props: {
     result1: { type: Object as PropType<Onelist> },
-    data1: { type: Object as PropType<IProblems> },
+    data1: { type: Object as PropType<IProblems1> },
     y: Number,
   },
   data() {
@@ -49,8 +49,6 @@ export default defineComponent({
   },
   created() {
     this.x = 0
-    console.log(this.data1)
-    console.log(this.result1)
   },
 })
 </script>

@@ -574,24 +574,24 @@ export default defineComponent({
       this.problems.pop()
     },
     confirmAddStarProblem() {
+      const problem = this.problems[this.problems.length - 1]
+      // problem的title
+      let titleFlag = problem.title.trim() !== ''
+      let optionFlag = true
       if (
-        this.problems.filter((problem: IProblem) => {
-          // problem的title
-          let titleFlag = problem.title.trim() === ''
-          let optionFlag = false
-          if (
-            problem.type === ProblemType.singleSelect ||
-            problem.type === ProblemType.multiSelect ||
-            problem.type === ProblemType.pullSelect
-          ) {
-            optionFlag =
-              problem.setting?.options.filter((p) => p.title.trim() === '')
-                .length !== 0
-          }
-          // 找出title为空 或者存在option的title为空的个数
-          return titleFlag || optionFlag
-        }).length === 0
+        problem.type === ProblemType.singleSelect ||
+        problem.type === ProblemType.multiSelect ||
+        problem.type === ProblemType.pullSelect
       ) {
+        optionFlag =
+          problem.setting?.options.filter((p) => p.title.trim() === '')
+            .length === 0
+        // 找出title为空 或者存在option的title为空的个数
+      }
+      const flag = titleFlag && optionFlag
+      console.log(titleFlag)
+      console.log(optionFlag)
+      if (flag) {
         this.addStarProblemPage = false
         this.starProblem(this.problems.length - 1)
       } else {
