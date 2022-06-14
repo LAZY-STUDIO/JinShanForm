@@ -129,6 +129,7 @@ import {
 import FormList from '../components/FormList.vue'
 import MyHeader from '../components/MyHeader.vue'
 import { isBoolean } from '@vueuse/core'
+import { json } from 'stream/consumers'
 export default defineComponent({
   data() {
     return {
@@ -153,17 +154,40 @@ export default defineComponent({
       return data.user
     },
     async getList(account: string) {
-      // let draft= account+'draftList'
+      // if(this)
+      console.log(this.formList)
+
+      console.log(this.deleteForm)
       let dLstStr = localStorage.getItem(account + 'DraftList')
       let draftList = [] as IForm[]
       if (dLstStr) {
         draftList = JSON.parse(dLstStr)
       }
-      console.log(draftList)
       this.drafts = draftList
       const { data } = await getFormList(account)
-      // this.formList = data.items
       this.formList = [...draftList, ...data.items]
+      let DeleteStr = localStorage.getItem(this.user.account + 'Delete')
+      if (DeleteStr) {
+        this.deleteForm = JSON.parse(DeleteStr)
+        console.log(this.deleteForm)
+        // let flag = 0
+        // while (flag < this.deleteForm.length) {
+        //   for (let i = 0; i < this.formList.length; i++) {
+        //     if (this.deleteForm[flag].id === this.formList[i].id) {
+        //       this.formList.splice(i, 1)
+        //       i--
+        //     }
+        //   }
+        //   flag++
+        // }
+        this.formList = this.formList.filter(
+          (form) =>
+            this.deleteForm.filter((iform) => iform.id === form.id).length === 0
+        )
+      }
+      console.log(this.formList)
+      // console.log(this.deleteForm)
+      this.noDeleteForm = this.formList
       this.currentForm = this.formList.slice(
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
@@ -214,7 +238,11 @@ export default defineComponent({
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
       )
-      console.log(this.noDeleteForm)
+      // console.log(this.noDeleteForm)
+      localStorage.setItem(
+        this.user.account + 'Delete',
+        JSON.stringify(this.deleteForm)
+      )
     },
     //恢复表单
     async formReview(id: string) {
@@ -252,6 +280,10 @@ export default defineComponent({
           i--
         }
       }
+      localStorage.setItem(
+        this.user.account + 'Delete',
+        JSON.stringify(this.deleteForm)
+      )
       this.currentForm = this.deleteForm
     },
     //表单标星
@@ -271,13 +303,11 @@ export default defineComponent({
     //表单取消标星
     async formCancelStar(id: string) {
       await cancelStar(id)
-      // this.fun()
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
           this.formList[i].isStar = false
         }
       }
-      // this.formList = this.noDeleteForm
       this.currentForm = this.formList.slice(
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
@@ -371,6 +401,9 @@ export default defineComponent({
     },
   },
   created() {
+    if (this.deleteForm.length !== 0) {
+      console.log('1' + this.deleteForm)
+    }
     this.fun()
   },
 })
@@ -387,7 +420,6 @@ export default defineComponent({
   box-sizing: border-box;
   background-color: #fff;
   padding: 20px 16px;
-  /* padding-top: 20px; */
   margin-top: 56px;
   border-right: 1px solid #e7e9eb;
   display: flex;
