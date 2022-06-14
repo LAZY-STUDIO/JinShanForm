@@ -1,5 +1,12 @@
 import * as request from './request'
-import { IProblemType, IProblem, IForm, IUser, Getmsg1 } from '../types'
+import {
+  IProblemType,
+  IProblem,
+  IForm,
+  IStarProblem,
+  IUser,
+  Getmsg1,
+} from '../types'
 
 interface BaseRes {
   stat: string
@@ -24,9 +31,15 @@ interface ProblemBasicListRes extends BaseRes {
   }
 }
 
-interface CreateFormRes extends BaseRes {
+interface CreateRes extends BaseRes {
   data: {
     id: string
+  }
+}
+
+interface ListStarProblemRes extends BaseRes {
+  data: {
+    items: IStarProblem[]
   }
 }
 
@@ -43,7 +56,7 @@ interface FormRes extends BaseRes {
     // 注意了，这里是item,不要乱取名字
   }
 }
-interface FormWriteRes {
+interface FormWriteRes extends BaseRes {
   formId: string
   problems: IProblem[]
 }
@@ -195,11 +208,36 @@ export function createForm(
   subTitle: string,
   problems: IProblem[]
 ) {
-  return request.post<CreateFormRes>('/api/form/create', {
+  return request.post<CreateRes>('/api/form/create', {
     title,
     subTitle,
     problems,
   })
+}
+
+/**
+ * 收藏题目
+ * @param problem
+ * @returns
+ */
+export function starProblem(problem: IProblem) {
+  return request.post<CreateRes>('/api/problem/star', { problem })
+}
+
+/**
+ * 取消收藏题目
+ * @param id
+ * @returns
+ */
+export function cancelProblemStar(id: string) {
+  return request.post<BaseRes>('/api/problem/cancelStar', { id })
+}
+
+/**
+ * 获取收藏题目列表
+ */
+export function listStar() {
+  return request.post<ListStarProblemRes>('/api/problem/listStar')
 }
 
 //获取表单填写详情

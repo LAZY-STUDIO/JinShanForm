@@ -23,7 +23,7 @@ export default defineComponent({
   props: { id: String },
   data() {
     return {
-      targets: window.location.origin,
+      targets: window.location.origin + '/write?id=' + this.id,
       listname: '',
       times: '123',
     }

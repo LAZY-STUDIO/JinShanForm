@@ -36,7 +36,7 @@
     <slot></slot>
     <div class="hidden-wrap" v-if="showActions">
       <slot name="slot-actions"></slot>
-      <div class="problem-buttons">
+      <div class="problem-buttons" v-show="showFooter">
         <span class="problem-type">{{ problemTypeName }}</span>
         <div class="split-div"></div>
         <div @click="copy" class="copy-button">复制</div>
@@ -69,7 +69,18 @@
             style="cursor: pointer"
           />
         </el-tooltip>
-        <img src="../assets/imgs/operation.svg" class="operation-icon" />
+        <el-tooltip
+          popper-class="tooltip-box"
+          effect="light"
+          placement="bottom-start"
+        >
+          <template #content
+            ><div class="action-star-problem" @click="starProblemValid">
+              将此题添加为常用题
+            </div></template
+          >
+          <img src="../assets/imgs/operation.svg" class="operation-icon" />
+        </el-tooltip>
       </div>
     </div>
   </div>
@@ -78,20 +89,25 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ElMessage } from 'element-plus'
-import { IProblemType, ProblemType } from '@/types'
+import { IProblem, IProblemType, ProblemType } from '@/types'
 
 export default defineComponent({
   name: 'ProblemBase',
   data() {
     return {
-      title: this.forefatherComponent.problems[this.problemNumber].title,
-      required: this.forefatherComponent.problems[this.problemNumber].required,
+      title: this.forefatherComponent.problems[this.problemNumber]
+        .title as string,
+      required: this.forefatherComponent.problems[this.problemNumber]
+        .required as boolean,
       msgBoxClose: true,
     }
   },
   computed: {
     showActions() {
       return this.options.showActions
+    },
+    showFooter() {
+      return this.options.showFooter
     },
     mustSelectText() {
       return '设置所有题目为' + (this.required ? '必填' : '非必填') + '项'
@@ -163,6 +179,35 @@ export default defineComponent({
         type: 'success',
       })
     },
+    async starProblemValid() {
+      // todo: 校验问题是否全部填写完整
+      let flag = true
+      const problem = this.forefatherComponent.problems[
+        this.problemNumber
+      ] as IProblem
+      if (this.title.trim() === '') flag = false
+      const pType = problem.type
+      if (
+        pType === ProblemType.singleSelect ||
+        pType === ProblemType.multiSelect ||
+        pType === ProblemType.pullSelect
+      ) {
+        if (
+          problem.setting?.options.filter((op) => op.title === '').length !== 0
+        )
+          flag = false
+      }
+      if (!flag) {
+        ElMessage({
+          message: '问题不能为空，请输入',
+          customClass: 'msg-box-form-title',
+          duration: 1000 * 2,
+          type: 'warning',
+        })
+      } else {
+        this.$emit('addStarProblem', this.problemNumber)
+      }
+    },
   },
   /**
    * todo: 根据pageFrom决定ProblemBase的状态
@@ -170,6 +215,7 @@ export default defineComponent({
    * showForm: input
    */
   inject: ['forefatherComponent', 'options'],
+  emits: ['addStarProblem'],
   props: {
     problemNumber: {
       type: Number,
@@ -376,6 +422,20 @@ export default defineComponent({
 
   &:hover {
     background-color: #f2f2f2;
+  }
+}
+
+// 添加常用题
+.action-star-problem {
+  padding: 0 16px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  color: #3d4757;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f9fafd;
   }
 }
 </style>

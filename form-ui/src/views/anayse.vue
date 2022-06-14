@@ -1,7 +1,8 @@
 <template>
   <MyHeader style="background-color: #fff">
     <template v-slot:left-img
-      ><i class="iconfont icon-angle-left-o"></i
+      ><router-link to="/"
+        ><i class="iconfont icon-angle-left-o"></i></router-link
     ></template>
     <template v-slot:left-name>{{ data.title }}</template>
   </MyHeader>

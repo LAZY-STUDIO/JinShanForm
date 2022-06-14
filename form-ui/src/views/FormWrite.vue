@@ -1,150 +1,161 @@
 <template>
-  <div class="main-box">
-    <div class="side-box" v-if="!flag && !flagg">
-      <div class="side">
-        <div class="count">
-          <span>已填</span>
-          <span
-            ><i>{{ num }}</i
-            >/{{ total }}</span
-          >
-        </div>
-        <div class="progress">
-          <el-progress
-            :percentage="percent * 100"
-            :show-text="false"
-            v-if="!isNaN(parseInt(percent * 100))"
-          />
-        </div>
-        <img src="../assets/imgs/返回.png" @click="changeSide" />
-      </div>
+  <div id="bg">
+    <div class="headerNavigtion">
+      <MyHeader>
+        <template #left-img>
+          <img src="../assets/imgs/logo.svg" />
+        </template>
+        <template #left-name> 金山表单 </template>
+        <template #right></template>
+      </MyHeader>
     </div>
-    <div class="side-content" v-if="flag && !flagg">
-      <div class="menu-box">
-        <div class="menu">
-          <span>目录</span>
-          <span
-            ><i>{{ num }}</i
-            >/{{ total }}</span
-          >
-        </div>
-        <span><img src="../assets/imgs/返回2.png" @click="changeSide" /></span>
-      </div>
-      <div class="menu-content" v-for="(item, index) in problems" :key="item">
-        <a :href="'#problem' + index">
-          <span>{{ index + 1 }}:{{ item.title }}</span>
-          <span
-            ><img
-              src="../assets/imgs/勾选.png"
-              v-if="
-                (item.result.value && item.type != 'score') ||
-                (item.result.value > -1 && item.type === 'score')
-              " />
-            <img
-              src="../assets/imgs/勾选1.png"
-              v-if="
-                !item.result.value ||
-                (item.result.value === -1 && item.type === 'score')
-              "
-          /></span>
-        </a>
-      </div>
-    </div>
-    <div class="header-box" v-if="flagg">
-      <div class="header">
-        <div class="header-left">
-          <div class="header-progress">
-            <span
-              >填写进度(<i>{{ this.num }}</i
-              >/{{ this.total }})</span
-            >
-            <el-progress
-              :percentage="percent * 100"
-              :show-text="false"
-              v-if="!isNaN(parseInt(percent * 100))"
-            />
-          </div>
-        </div>
-        <div class="header-detail">
-          <i>|</i><span @click="changeHeader">详情</span>
-        </div>
-      </div>
-    </div>
-    <div class="header-content">
-      <div class="mask" v-if="flagg && flaggg"></div>
-      <div class="catalogue" :style="{ bottom: height + 'px' }">
-        <div class="title-catalogue">
-          <span>题目目录(共{{ total }}题)</span>
-          <img src="../assets/imgs/下拉.png" @click="changeHeader" />
-        </div>
-        <div class="catalogue-box">
-          <div class="menu">
+    <div class="fix-box"></div>
+
+    <div class="main-box">
+      <div class="side-box" v-if="!flag && !flagg">
+        <div class="side">
+          <div class="count">
             <span>已填</span>
             <span
               ><i>{{ num }}</i
               >/{{ total }}</span
             >
           </div>
+          <div class="progress">
+            <el-progress
+              :percentage="percent * 100"
+              :show-text="false"
+              v-if="!isNaN(parseInt(percent * 100))"
+            />
+          </div>
+          <img src="../assets/imgs/返回.png" @click="changeSide" />
+        </div>
+      </div>
+      <div class="side-content" v-if="flag && !flagg">
+        <div class="menu-box">
+          <div class="menu">
+            <span>目录</span>
+            <span
+              ><i>{{ num }}</i
+              >/{{ total }}</span
+            >
+          </div>
+          <span
+            ><img src="../assets/imgs/返回2.png" @click="changeSide"
+          /></span>
         </div>
         <div class="menu-content" v-for="(item, index) in problems" :key="item">
-          <a :href="'#problem' + index" @click="changeHeader">
+          <a :href="'#problem' + index">
             <span>{{ index + 1 }}:{{ item.title }}</span>
             <span
               ><img
                 src="../assets/imgs/勾选.png"
-                v-if="
-                  (item.result.value && item.type != 'score') ||
-                  (item.result.value > -1 && item.type === 'score')
-                " />
+                v-if="numArr.indexOf(index) >= 0" />
               <img
                 src="../assets/imgs/勾选1.png"
-                v-if="
-                  !item.result.value ||
-                  (item.result.value === -1 && item.type === 'score')
-                "
+                v-if="numArr.indexOf(index) < 0"
             /></span>
           </a>
         </div>
       </div>
-    </div>
-    <div class="fill-form-container" @click="findChange" @keyup="findChange">
-      <div class="title">{{ title }}</div>
-      <div class="subTitle">{{ subTitle }}</div>
-      <component
-        v-for="(item, index) in problems"
-        :id="'problem' + index"
-        :key="item"
-        :is="componentType(item.type)"
-        :problemType="item.type"
-        :problemNumber="index"
-        :resultValue="item.result.value"
-        @resultValueInput="item.result.value = $event"
-        :timeDateFormat="item.setting.options[0].title"
-        @timeDateFormatChange="item.setting.options[0].title = $event"
-        :problemOptions="item.setting.options"
-        @optionTitleChange="
-          (idx, newTitle) =>
-            handleTitleChange(idx, newTitle, item.setting.options)
-        "
-        @delOptionTitle="delOptionTitle($event, item.setting.options)"
-        @addOptionTitle="
-          item.setting.options.push({
-            title: '',
-            status: 1,
-          })
-        "
-        @radioOptionChange="item.result.value.title = $event"
-        @checkboxOptionChange="
-          item.result.value = $event.map((tmp) => ({
-            id: '',
-            title: tmp,
-          }))
-        "
+      <div class="header-box" v-if="flagg">
+        <div class="header">
+          <div class="header-left">
+            <div class="header-progress">
+              <span
+                >填写进度(<i>{{ this.num }}</i
+                >/{{ this.total }})</span
+              >
+              <el-progress
+                :percentage="percent * 100"
+                :show-text="false"
+                v-if="!isNaN(parseInt(percent * 100))"
+              />
+            </div>
+          </div>
+          <div class="header-detail">
+            <i>|</i><span @click="changeHeader">详情</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-content">
+        <div class="mask" v-if="flagg && flaggg"></div>
+        <div class="catalogue" :style="{ bottom: height + 'px' }">
+          <div class="title-catalogue">
+            <span>题目目录(共{{ total }}题)</span>
+            <img src="../assets/imgs/下拉.png" @click="changeHeader" />
+          </div>
+          <div class="catalogue-box">
+            <div class="menu">
+              <span>已填</span>
+              <span
+                ><i>{{ num }}</i
+                >/{{ total }}</span
+              >
+            </div>
+          </div>
+          <div
+            class="menu-content"
+            v-for="(item, index) in problems"
+            :key="item"
+          >
+            <a :href="'#problem' + index" @click="changeHeader">
+              <span>{{ index + 1 }}:{{ item.title }}</span>
+              <span
+                ><img
+                  src="../assets/imgs/勾选.png"
+                  v-if="numArr.indexOf(index) >= 0" />
+                <img
+                  src="../assets/imgs/勾选1.png"
+                  v-if="numArr.indexOf(index) < 0"
+              /></span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="fill-form-container"
+        @click="findChange"
+        @keyup="findChange"
+        @change="findChange"
       >
-      </component>
-      <div class="btn">
-        <el-button @click="saveEdit">保存草稿</el-button>
-        <el-button @click="submitForm" type="primary">提交表单</el-button>
+        <div class="title">{{ title }}</div>
+        <div class="subTitle">{{ subTitle }}</div>
+        <component
+          v-for="(item, index) in problems"
+          :id="'problem' + index"
+          :key="item"
+          :is="componentType(item.type)"
+          :problemType="item.type"
+          :problemNumber="index"
+          :resultValue="item.result.value"
+          @resultValueInput="item.result.value = $event"
+          :timeDateFormat="item.setting.options[0].title"
+          @timeDateFormatChange="item.setting.options[0].title = $event"
+          :problemOptions="item.setting.options"
+          @optionTitleChange="
+            (idx, newTitle) => (item.setting.options[idx].title = newTitle)
+          "
+          @delOptionTitle="item.setting.options.splice($event, 1)"
+          @addOptionTitle="
+            item.setting.options.push({
+              title: '',
+              status: 1,
+            })
+          "
+          @radioOptionChange="item.result.value.title = $event"
+          @checkboxOptionChange="
+            item.result.value = $event.map((tmp) => ({
+              id: tmp,
+              title: tmp,
+            }))
+          "
+        >
+        </component>
+        <div class="btn">
+          <el-button @click="saveEdit">保存草稿</el-button>
+          <el-button @click="submitForm" type="primary">提交表单</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -155,14 +166,16 @@ import { defineComponent } from 'vue'
 import * as request from '../services/api'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
-import { IProblem, ProblemType } from '../types'
-import { json } from 'stream/consumers'
+import MyHeader from '@/components/MyHeader.vue'
+import { IForm, IProblem, ProblemType } from '../types'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: 'FormWrite',
   components: {
     InputProblem,
     SelectProblem,
+    MyHeader,
   },
   provide() {
     return {
@@ -185,7 +198,9 @@ export default defineComponent({
       flag: false,
       flagg: false,
       flaggg: false,
+      status: 0,
       height: -500,
+      numArr: [] as Array<number>,
     }
   },
   watch: {
@@ -211,84 +226,172 @@ export default defineComponent({
         return 'InputProblem'
       else return 'SelectProblem'
     },
+    checkDraft() {
+      const ustr = sessionStorage.getItem('user')
+      if (ustr) {
+        const { account } = JSON.parse(ustr)
+        const editDLstStr = localStorage.getItem(account + 'editDraftList')
+        let editDraftList = [] as IForm[]
+        if (editDLstStr) {
+          editDraftList = JSON.parse(editDLstStr)
+        }
+        // 找到当前草稿
+        let idx = -1
+        for (let i = 0; i < editDraftList.length; ++i) {
+          if (editDraftList[i].id === this.id) {
+            idx = i
+            break
+          }
+        }
+        console.log('idx')
+        console.log(idx)
+        return idx
+      }
+    },
     getFormById: async function () {
       this.id = String(this.$route.query.id)
       const res = await request.getFormById(this.id)
-      console.log('res')
-      console.log(res)
-      console.log('问题数组')
       this.title = res.data.item.title
       this.subTitle = res.data.item.subTitle
-      if (
-        localStorage.getItem('edit') &&
-        localStorage.getItem('id') === this.id
-      ) {
-        this.problems = JSON.parse(localStorage.getItem('edit') || '[]')
-      } else {
-        this.problems = res.data.item.problems
-        console.log(this.problems)
+      // 判断是否是草稿
+      const ustr = sessionStorage.getItem('user')
+      if (ustr) {
+        const { account } = JSON.parse(ustr)
+        const editDLstStr = localStorage.getItem(account + 'editDraftList')
+        let editDraftList = [] as IForm[]
+        if (editDLstStr) {
+          editDraftList = JSON.parse(editDLstStr)
+        }
+        // 找到当前表单填写草稿
+        let idx = -1
+        for (let i = 0; i < editDraftList.length; ++i) {
+          if (editDraftList[i].id === this.id) {
+            idx = i
+            break
+          }
+        }
+        if (idx >= 0) {
+          this.problems = editDraftList[idx].problems
+          this.status = editDraftList[idx].status
+        } else {
+          this.problems = res.data.item.problems
+        }
       }
     },
-    writeForm: async function () {
-      console.log('打印问题')
-      console.log(this.problems)
-      await request.writeForm(this.id, this.problems)
+    submitForm: async function () {
+      const res = await request.writeForm(this.id, this.problems)
+      if (res.stat === 'ok') {
+        if (this.status === 1) {
+          const ustr = sessionStorage.getItem('user')
+          if (ustr) {
+            const { account } = JSON.parse(ustr)
+            const editDLstStr = localStorage.getItem(account + 'editDraftList')
+            let editDraftList = [] as IForm[]
+            if (editDLstStr) {
+              editDraftList = JSON.parse(editDLstStr)
+            }
+            // 找到当前草稿
+            let idx = -1
+            for (let i = 0; i < editDraftList.length; ++i) {
+              if (editDraftList[i].id === this.id) {
+                idx = i
+                break
+              }
+            }
+            editDraftList.splice(idx, 1)
+            localStorage.setItem(
+              account + 'editDraftList',
+              JSON.stringify(editDraftList)
+            )
+          }
+        }
+        ElMessage({
+          message: '填写成功',
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'success',
+        })
+        this.$router.push('/')
+      } else {
+        ElMessage({
+          message: res.msg,
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'error',
+        })
+      }
     },
-    submitForm() {
-      this.writeForm()
-      alert('填写成功')
-      this.$router.push('/')
-    },
+
+    // 检验value
     findChange() {
       this.num = 0
+      this.numArr = []
       for (let k in this.problems) {
         if (
           this.problems[k].type === 'score' &&
           Number(this.problems[k].result?.value) > -1
         ) {
           this.num++
+          this.numArr.push(Number(k))
         } else if (this.problems[k].type === 'multiSelect') {
           let arr = String(this.problems[k].result?.value).split(',')
-          console.log('arr.length')
-          console.log(arr)
-          console.log(arr.length) //1???
-          if (arr.length) this.num++
+          if (JSON.stringify(arr) != '[""]') {
+            this.num++
+            this.numArr.push(Number(k))
+          }
         } else if (
           this.problems[k].type === 'singleSelect' ||
           this.problems[k].type === 'pullSelect'
         ) {
           let data = Object(this.problems[k].result?.value)
-          if (data.title) this.num++
-          // for (let item in data) {
-          //   let selectFlag = 0
-          //   if (data[item]) {
-          //     selectFlag = 1
-          //   }
-          //   if (selectFlag) this.num++
-          // }
+          if (data.title) {
+            this.num++
+            this.numArr.push(Number(k))
+          }
         } else if (
           this.problems[k].result?.value &&
           this.problems[k].type != 'score'
         ) {
           this.num++
+          this.numArr.push(Number(k))
         }
         this.total = parseInt(k) + 1
       }
       this.percent = this.num / this.total
     },
-    handleTitleChange(
-      idx: number,
-      newTitle: string,
-      options: { title: string; status: 1 | 2 }[]
-    ) {
-      options[idx].title = newTitle
-    },
-    delOptionTitle(idx: number, options: []) {
-      options.splice(idx, 1)
-    },
+    // 保存草稿
     saveEdit() {
-      localStorage.setItem('edit', JSON.stringify(this.problems))
-      localStorage.setItem('id', this.id)
+      const ustr = sessionStorage.getItem('user')
+      if (ustr) {
+        const { account } = JSON.parse(ustr)
+        const editDLstStr = localStorage.getItem(account + 'editDraftList')
+        let editDraftList = [] as { id; status; problems }[]
+        if (editDLstStr) {
+          editDraftList = JSON.parse(editDLstStr)
+          console.log(editDraftList)
+        }
+        // 找到当前草稿
+        let idx = -1
+        for (let i = 0; i < editDraftList.length; ++i) {
+          if (editDraftList[i].id === this.id) {
+            idx = i
+            break
+          }
+        }
+        if (idx === -1) {
+          editDraftList.push({
+            id: this.id,
+            status: 1,
+            problems: this.problems,
+          })
+        } else {
+          editDraftList[idx].problems = this.problems
+        }
+        localStorage.setItem(
+          account + 'editDraftList',
+          JSON.stringify(editDraftList)
+        )
+      }
     },
     changeSide() {
       this.flag = !this.flag
@@ -317,6 +420,23 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#bg {
+  background-color: #f5f5f9;
+}
+.headerNavigtion {
+  height: 56px;
+  position: fixed;
+  z-index: 999;
+  background: #fff;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.fix-box {
+  height: 56px;
+  margin-bottom: 20px;
+}
 .main-box {
   margin: auto;
   display: flex;
@@ -438,6 +558,10 @@ span i {
   display: none;
 }
 @media screen and (max-width: 748px) {
+  .headerNavigtion,
+  .fix-box {
+    display: none;
+  }
   .main-box {
     width: 100%;
     flex-direction: column;
