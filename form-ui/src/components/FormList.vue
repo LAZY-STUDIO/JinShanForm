@@ -201,7 +201,6 @@ export default defineComponent({
   line-height: 12px;
   font-size: 12px;
   color: #767c85;
-  /* margin-right: 4px; */
 }
 .list-simple .dosth {
   width: 40%;
@@ -229,6 +228,5 @@ export default defineComponent({
   width: 50px;
   height: 20px;
   font-size: 12px;
-  /* color: black; */
 }
 </style>

@@ -150,14 +150,14 @@ export default defineComponent({
   },
   methods: {
     async getUser() {
-      const { data } = await getUserInfo()
-      return data.user
+      let userStr = sessionStorage.getItem('user')
+      let user = {} as IUser
+      if (userStr) {
+        user = JSON.parse(userStr)
+      }
+      return user
     },
     async getList(account: string) {
-      // if(this)
-      console.log(this.formList)
-
-      console.log(this.deleteForm)
       let dLstStr = localStorage.getItem(account + 'DraftList')
       let draftList = [] as IForm[]
       if (dLstStr) {
@@ -169,7 +169,6 @@ export default defineComponent({
       let DeleteStr = localStorage.getItem(this.user.account + 'Delete')
       if (DeleteStr) {
         this.deleteForm = JSON.parse(DeleteStr)
-        console.log(this.deleteForm)
         // let flag = 0
         // while (flag < this.deleteForm.length) {
         //   for (let i = 0; i < this.formList.length; i++) {
@@ -185,14 +184,11 @@ export default defineComponent({
             this.deleteForm.filter((iform) => iform.id === form.id).length === 0
         )
       }
-      console.log(this.formList)
-      // console.log(this.deleteForm)
       this.noDeleteForm = this.formList
       this.currentForm = this.formList.slice(
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
       )
-      console.log(this.formList)
     },
     async fun() {
       this.user = await this.getUser()
@@ -219,10 +215,35 @@ export default defineComponent({
     },
     //删除表单
     async formDelete(id: string) {
-      console.log(this.formList)
       if (this.noDeleteForm) this.noDeleteForm = []
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
+          //存oldId
+          const oldStr = localStorage.getItem(this.user.account + 'oldId')
+          let oldList = [] as { id: string; old: number }[]
+          if (oldStr) {
+            oldList = JSON.parse(oldStr)
+          }
+          let idx = -1
+          for (let i = 0; i < oldList.length; i++) {
+            if (oldList[i].id === id) {
+              idx = i
+              break
+            }
+          }
+          if (idx === -1) {
+            oldList.push({
+              id: id,
+              old: this.formList[i].status,
+            })
+          } else {
+            oldList[idx].old = this.formList[i].status
+          }
+          localStorage.setItem(
+            this.user.account + 'oldId',
+            JSON.stringify(oldList)
+          )
+          //判断是否为草稿
           if (this.formList[i].status === 1) {
             this.formList[i].status = 15
           } else {
@@ -238,7 +259,6 @@ export default defineComponent({
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
       )
-      // console.log(this.noDeleteForm)
       localStorage.setItem(
         this.user.account + 'Delete',
         JSON.stringify(this.deleteForm)
@@ -248,13 +268,27 @@ export default defineComponent({
     async formReview(id: string) {
       for (let i = 0; i < this.deleteForm.length; i++) {
         if (this.deleteForm[i].id === id) {
-          this.deleteForm[i].status = 2
+          const oldStr = localStorage.getItem(this.user.account + 'oldId')
+          let oldList = [] as { id: string; old: number }[]
+          if (oldStr) {
+            oldList = JSON.parse(oldStr)
+          }
+          for (let j = 0; j < oldList.length; j++) {
+            if (oldList[j].id === id) {
+              this.deleteForm[i].status = oldList[j].old
+              break
+            }
+          }
           this.noDeleteForm.push(this.deleteForm[i])
           this.deleteForm.splice(i, 1)
           i--
         }
       }
       this.currentForm = this.deleteForm
+      localStorage.setItem(
+        this.user.account + 'Delete',
+        JSON.stringify(this.deleteForm)
+      )
     },
     //彻底删除
     async formMove(id: string) {
@@ -262,7 +296,6 @@ export default defineComponent({
       for (let i = 0; i < this.deleteForm.length; i++) {
         if (this.deleteForm[i].id === id) {
           if (this.deleteForm[i].status === 15) {
-            console.log(111)
             let idx = -1
             for (let j = 0; j < this.drafts.length; j++) {
               if (this.drafts[j].id === id) {
@@ -292,9 +325,27 @@ export default defineComponent({
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
           this.formList[i].isStar = true
+          if (this.formList[i].status === 1) {
+            let dLstStr = localStorage.getItem(this.user.account + 'DraftList')
+            let draftList = [] as IForm[]
+            if (dLstStr) {
+              draftList = JSON.parse(dLstStr)
+            }
+            console.log(draftList)
+            draftList.forEach((form) => {
+              if (form.id === id) {
+                form.isStar = true
+              }
+            })
+            console.log(draftList)
+            this.drafts = draftList
+            localStorage.setItem(
+              this.user.account + 'DraftList',
+              JSON.stringify(this.drafts)
+            )
+          }
         }
       }
-      // this.formList = this.noDeleteForm
       this.currentForm = this.formList.slice(
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
@@ -306,6 +357,23 @@ export default defineComponent({
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
           this.formList[i].isStar = false
+          if (this.formList[i].status === 1) {
+            let dLstStr = localStorage.getItem(this.user.account + 'DraftList')
+            let draftList = [] as IForm[]
+            if (dLstStr) {
+              draftList = JSON.parse(dLstStr)
+            }
+            draftList.forEach((form) => {
+              if (form.id === id) {
+                form.isStar = false
+              }
+            })
+            this.drafts = draftList
+            localStorage.setItem(
+              this.user.account + 'DraftList',
+              JSON.stringify(this.drafts)
+            )
+          }
         }
       }
       this.currentForm = this.formList.slice(
@@ -325,25 +393,19 @@ export default defineComponent({
           }
         }
         this.currentForm = this.formList.slice(0, 3)
-        console.log(this.noDeleteForm)
       } else {
         this.showOnlyStar = false
-        console.log(this.deleteForm)
-        console.log(this.noDeleteForm)
 
         let flag = 1
         for (let i = 0; i < this.deleteForm.length; i++) {
           if (this.deleteForm[i].id == this.formList[0].id) {
             this.formList = this.deleteForm
-            console.log(1)
-            console.log(this.formList)
             flag = 0
             break
           }
         }
         if (flag) {
           this.formList = this.noDeleteForm
-          console.log(this.formList)
         }
         this.currentForm = this.formList.slice(0, 3)
       }
@@ -376,22 +438,24 @@ export default defineComponent({
       )
     },
     async showDetail(id: string) {
-      this.$router.push({
-        path: '/datanayse/anayse',
-        query: {
-          id: id,
-        },
-      })
+      let iform = this.formList.filter((form) => form.id === id)
+      if (iform[0].status === 1) {
+        this.$router.push('/')
+      } else {
+        this.$router.push({
+          path: '/datanayse/anayse',
+          query: {
+            id: id,
+          },
+        })
+      }
     },
     goList() {
-      console.log(this.deleteForm)
       if (this.deleteForm.length !== 0) {
         this.formList = this.noDeleteForm
         this.currentForm = this.formList.slice(0, 3)
       } else {
-        console.log('1111')
         this.fun()
-        console.log(this.formList)
         this.currentForm = this.formList.slice(0, 3)
       }
     },
@@ -401,9 +465,6 @@ export default defineComponent({
     },
   },
   created() {
-    if (this.deleteForm.length !== 0) {
-      console.log('1' + this.deleteForm)
-    }
     this.fun()
   },
 })
