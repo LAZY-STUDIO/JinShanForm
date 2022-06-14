@@ -92,6 +92,7 @@ export default defineComponent({
   },
   created() {
     console.log(this.$route.query.id)
+    console.log(this.$route.query.id)
     this.login()
     this.$router.push('/datanayse/anayse')
   },
