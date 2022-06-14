@@ -206,11 +206,31 @@
 import { defineComponent, PropType } from 'vue'
 import ProblemBase from './ProblemBase.vue'
 import { ElScrollbar } from 'element-plus'
+import { ProblemType } from '@/types'
 
 export default defineComponent({
   name: 'InputProblem',
   components: {
     ProblemBase,
+  },
+  mounted() {
+    if (this.problemType === ProblemType.time) {
+      //
+      if (this.timeformatTmp === '时刻: 时-分(24小时制)') {
+        if (this.resultValue !== '') {
+          this.hVal = Number((this.resultValue as string).split(':')[0])
+          this.mVal = Number((this.resultValue as string).split(':')[1])
+          this.timeHMText =
+            this.timeItemText(String(this.hVal)) +
+            ':' +
+            this.timeItemText(String(this.mVal))
+        }
+      } else {
+        this.hVal = Number((this.resultValue as string).split(':')[0])
+        this.mVal = Number((this.resultValue as string).split(':')[1])
+        this.sVal = Number((this.resultValue as string).split(':')[2])
+      }
+    }
   },
   // todo: 数据校验
   data() {
@@ -224,7 +244,7 @@ export default defineComponent({
       dateformatTexts: ['年 月', '年 月 日', '年 月 日 时 分'],
       showDateFormatMenu: false,
       dateformatIndex: 0,
-      dateTmp: new Date(),
+      dateTmp: this.resultValue as string,
       showCalendar: false,
       // 时间题
       timeformatTexts: ['时刻: 时-分(24小时制)', '时长: 时-分-秒'],

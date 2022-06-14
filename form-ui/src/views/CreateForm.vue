@@ -3,7 +3,28 @@
     :class="['create-form-outer', !options.showActions ? 'preview-set' : '']"
   >
     <div class="header">
-      <my-header></my-header>
+      <my-header>
+        <template v-slot:left-img
+          ><svg
+            width="16"
+            height="16"
+            xmlns="http://www.w3.org/2000/svg"
+            style="cursor: pointer; margin-right: 20px"
+            @click="$router.go(-1)"
+          >
+            <path
+              d="M6.36 7.922l4.564 4.44-1.172 1.26L4 7.872l.162-.162-.01-.01L9.892 2l1.22 1.23L6.36 7.922z"
+              fill="#A0ACBF"
+            ></path></svg
+        ></template>
+        <template v-slot:left-name
+          ><div style="display: flex; justify-content: center; gap: 20px">
+            <img
+              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjRweCIgaGVpZ2h0PSIyNHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+5paH5qGj5qC85byP5Zu+5qCHL+ihqOWNlS8yNDwvdGl0bGU+CiAgICA8ZGVmcz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSIgaWQ9ImxpbmVhckdyYWRpZW50LTEiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMzBBOEZGIiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMjdDRjEiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8L2RlZnM+CiAgICA8ZyBpZD0i5paH5qGj5qC85byP5Zu+5qCHL+ihqOWNlS8yNCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IuihqOWNlSI+CiAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtMTkiIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMSkiIHg9IjAiIHk9IjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgcng9IjIiPjwvcmVjdD4KICAgICAgICAgICAgPGcgaWQ9Iue8lue7hC0xOCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNC43MTg3NTAsIDUuNTYyNTAwKSIgZmlsbD0iI0ZGRkZGRiI+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTMuMjUsMC40NTAwNjgxOTQgQzEzLjgxMDUwMzMsMC40NTAwNjgxOTQgMTQuMjY2NTY1NSwwLjg5NzIzMzUyOSAxNC4yODA5MDI0LDEuNDU0Mjc5OTkgTDE0LjI4MTI1LDEuNDgxMzE4MTkgTDE0LjI4MTI1LDEyLjQwODQxMzIgQzE0LjI4MTI1LDEyLjk2ODkxNjUgMTMuODM0MDg0NywxMy40MjQ5Nzg3IDEzLjI3NzAzODIsMTMuNDM5MzE1NyBMMi4yOTEzMTk5NSwxMy40Mzk2NjMyIEMxLjczMDgxNjY4LDEzLjQzOTY2MzIgMS4yNzQ3NTQ0NiwxMi45OTI0OTc5IDEuMjYwNDE3NTIsMTIuNDM1NDUxNCBMMS4yNjAwNjk5NSw2LjQ0NDg2NTcxIEwzLjI2OTA5NzAyLDYuNDQ0ODY1NzEgTDMuMjY5MDk3MDIsMTEuNDMyODU5MSBMMTIuMjgxMTg2OSwxMS40MzI4NTkxIEwxMi4yODExODY5LDIuNDYwODg3MyBMOS4xMTI1LDIuNDYwODg3MyBMNy40NTAyNTI4NCw0Ljk5NjY2Nzg4IEM3LjI4NDE5Njk0LDUuMjYxNzc3NTcgNi45OTcyOTE4Miw1LjQyNjAyMTc5IDYuNjg1OTQ2MTUsNS40MzYwMjgxNiBMNi42NTU3NDI4Niw1LjQzNjUxMzIzIEwwLjIwMjkxNjA2Niw1LjQzNjA2ODE5IEwxLjM0ODkxNjA3LDMuNDQ5MDY4MTkgTDYuMjQwNDY4NzUsMy40NDkzNDEzOCBMNy45MDI4NTYxOCwwLjg4OTkxMzU0NiBDOC4wNjg5MTIwNywwLjYyNDgwMzg2MiA4LjM1NTgxNzE5LDAuNDYwNTU5NjM2IDguNjY3MTYyODcsMC40NTA1NTMyNjkgTDEzLjI1LDAuNDUwMDY4MTk0IFoiIGlkPSLlvaLnirbnu5PlkIgiIGZpbGwtcnVsZT0ibm9uemVybyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTUuODA3NzM5NTgsMC40Mzc1IEw1LjgwNzI1LDAuNDcyNSBMNC42NzYyNSwyLjQzMDUgTDEuMjgxMjUsMi40MzA1IEwyLjQzMjI1LDAuNDM3NSBMNS44MDc3Mzk1OCwwLjQzNzUgWiIgaWQ9IuW9oueKtue7k+WQiCI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
+            /><span>{{ title }}</span>
+          </div></template
+        >
+      </my-header>
     </div>
     <div class="create-form-container">
       <div class="create-form-left-side" v-show="options.showActions">
@@ -36,7 +57,7 @@
               <div class="empty-data">
                 暂无我的常用题, 立即<span
                   class="add-collect"
-                  @click="addStarProblemPage = true"
+                  @click="openDrawer"
                   >添加</span
                 >
               </div>
@@ -445,7 +466,7 @@ export default defineComponent({
             duration: 1000 * 2,
             type: 'success',
           })
-          // todo: 跳转
+          this.$router.push('/datanayse/qr?id=' + res.data.id)
         }
       }
     },
@@ -457,6 +478,14 @@ export default defineComponent({
     },
     // 将form保存至localstorage
     saveDraft() {
+      if (this.title.trim() === '') {
+        return ElMessage({
+          message: '至少填写表单名称',
+          customClass: 'msg-box-form-title',
+          duration: 1000 * 2,
+          type: 'warning',
+        })
+      }
       const ustr = sessionStorage.getItem('user')
       if (ustr) {
         const { account } = JSON.parse(ustr)
@@ -589,8 +618,6 @@ export default defineComponent({
         // 找出title为空 或者存在option的title为空的个数
       }
       const flag = titleFlag && optionFlag
-      console.log(titleFlag)
-      console.log(optionFlag)
       if (flag) {
         this.addStarProblemPage = false
         this.starProblem(this.problems.length - 1)

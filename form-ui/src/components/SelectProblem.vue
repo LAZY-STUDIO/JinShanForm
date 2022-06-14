@@ -109,11 +109,16 @@
 import { defineComponent, PropType } from 'vue'
 import ProblemBase from './ProblemBase.vue'
 import { ElMessage } from 'element-plus'
+import { ProblemType } from '@/types'
 
 export default defineComponent({
   name: 'SelectProblem',
   mounted() {
-    console.log(this.resultValue)
+    if (this.problemType === ProblemType.multiSelect) {
+      this.checkboxTmp = (
+        this.resultValue as { id: string; title: string }[]
+      ).map((item) => item.title)
+    }
   },
   components: {
     ProblemBase,
@@ -124,7 +129,7 @@ export default defineComponent({
         id: string
         title: string
       },
-      checkboxTmp: [],
+      checkboxTmp: [] as string[],
       titleOptionList: this.problemOptions.map(
         (item) => item.title
       ) as string[],
