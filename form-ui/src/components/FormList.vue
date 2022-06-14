@@ -2,7 +2,7 @@
   <div class="list-simple">
     <div class="form-title">
       <span class="small-type">表单</span>
-      {{ form.title }}
+      <span class="small-title">{{ form.title }}</span>
     </div>
     <div>{{ formatMsToDate(form.ctime) }}</div>
     <div>{{ getStatus(form.status) }}</div>
@@ -189,18 +189,31 @@ export default defineComponent({
   text-align: center;
 }
 .form-title {
-  padding-left: 0px;
-  text-align: left;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 .small-type {
   background: rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   display: inline-block;
+  position: absolute;
+  left: 11%;
   padding: 2px 6px;
   text-align: center;
   line-height: 12px;
   font-size: 12px;
   color: #767c85;
+}
+.form-title .small-title {
+  width: 60%;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: absolute;
+  left: 35%;
 }
 .list-simple .dosth {
   width: 40%;
