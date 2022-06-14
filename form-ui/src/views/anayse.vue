@@ -1,50 +1,70 @@
 <template>
-  <MyHeader style="background-color: #fff">
-    <template v-slot:left-img
-      ><router-link to="/"
-        ><i class="iconfont icon-angle-left-o"></i></router-link
-    ></template>
-    <template v-slot:left-name>{{ data.title }}</template>
-  </MyHeader>
-  <div style="background-color: #f5f7fa">
-    <div style="background-color: #fff; display: block; padding-top: 60px">
-      <div class="header-inner">
-        <router-link to="/datanayse/anayse"
-          ><div
-            class="tapoption"
-            :class="{ tapclick: isclick1 }"
-            @click="tapclick1"
+  <div
+    style="
+      background-color: #f5f7fa;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    "
+  >
+    <MyHeader style="background-color: #fff">
+      <template v-slot:left-img
+        ><router-link to="/"
+          ><i class="iconfont icon-angle-left-o"></i></router-link
+      ></template>
+      <template v-slot:left-name>{{ data.title }}</template>
+    </MyHeader>
+    <div
+      style="
+        background-color: #f5f7fa;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      "
+    >
+      <div style="background-color: #fff; display: block; padding-top: 60px">
+        <div class="header-inner">
+          <router-link to="/datanayse/anayse"
+            ><div
+              class="tapoption"
+              :class="{ tapclick: isclick1 }"
+              @click="tapclick1"
+            >
+              数据统计&分析
+            </div></router-link
           >
-            数据统计&分析
-          </div></router-link
-        >
-        <router-link to="/datanayse/anaypro">
-          <div
-            class="tapoption"
-            :class="{ tapclick: isclick2 }"
-            @click="tapclick2"
+          <router-link to="/datanayse/anaypro">
+            <div
+              class="tapoption"
+              :class="{ tapclick: isclick2 }"
+              @click="tapclick2"
+            >
+              表单问题
+            </div></router-link
           >
-            表单问题
-          </div></router-link
-        >
-        <router-link to="/datanayse/qr">
-          <div
-            class="tapoption"
-            :class="{ tapclick: isclick3 }"
-            @click="tapclick3"
+          <router-link to="/datanayse/qr">
+            <div
+              class="tapoption"
+              :class="{ tapclick: isclick3 }"
+              @click="tapclick3"
+            >
+              分享
+            </div></router-link
           >
-            分享
-          </div></router-link
-        >
+        </div>
       </div>
+      <router-view
+        :data1="data"
+        :result1="result"
+        :y="y"
+        :ids="id"
+        :key="$route.path"
+        style="flex: 1"
+        :isok="isok"
+      />
     </div>
-    <router-view
-      :data1="data"
-      :result1="result"
-      :y="y"
-      :ids="id"
-      :key="$route.path"
-    />
   </div>
 </template>
 <script lang="ts">
@@ -65,6 +85,7 @@ export default defineComponent({
       data: {} as IProblems1,
       y: 0,
       id: String(this.$route.query.id),
+      isok: 1,
     }
   },
   methods: {
@@ -88,12 +109,20 @@ export default defineComponent({
       this.result = data.items
       this.data = data.info
       this.y = data.items.length
+      if (this.y == 0) {
+        this.$router.push('/datanayse/qr')
+        this.isclick3 = true
+        this.isclick2 = false
+        this.isclick1 = false
+        this.isok = 0
+      }
     },
   },
   created() {
     console.log(this.$route.query.id)
+    console.log(this.$route.query.id)
     this.login()
-    this.$router.push('/datanayse/anayse')
+    //this.$router.push('/datanayse/anayse')
   },
 })
 </script>

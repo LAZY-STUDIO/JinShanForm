@@ -377,7 +377,7 @@ export default defineComponent({
     },
     async showDetail(id: string) {
       this.$router.push({
-        path: '/datanayse',
+        path: '/datanayse/anayse',
         query: {
           id: id,
         },
