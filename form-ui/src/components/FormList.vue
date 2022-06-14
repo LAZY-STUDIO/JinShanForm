@@ -1,6 +1,9 @@
 <template>
   <div class="list-simple">
-    <div>{{ form.title }}</div>
+    <div class="form-title">
+      <span class="small-type">表单</span>
+      {{ form.title }}
+    </div>
     <div>{{ formatMsToDate(form.ctime) }}</div>
     <div>{{ getStatus(form.status) }}</div>
     <div class="dosth">
@@ -45,6 +48,7 @@
             type="success"
             plain
             v-if="form.status === 3 || form.status === 4"
+            @click="onShow"
             @click.stop
             >查看结果</el-button
           >
@@ -104,6 +108,7 @@ export default defineComponent({
     onMove: { type: Function as PropType<() => void>, required: true },
     onReview: { type: Function as PropType<() => void>, required: true },
     onChange: { type: Function as PropType<() => void>, required: true },
+    onShow: { type: Function as PropType<() => void>, required: true },
   },
   methods: {
     //该方法用于给日期、时间补零
@@ -182,6 +187,21 @@ export default defineComponent({
 .list-simple div {
   width: 20%;
   text-align: center;
+}
+.form-title {
+  padding-left: 0px;
+  text-align: left;
+}
+.small-type {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: inline-block;
+  padding: 2px 6px;
+  text-align: center;
+  line-height: 12px;
+  font-size: 12px;
+  color: #767c85;
+  /* margin-right: 4px; */
 }
 .list-simple .dosth {
   width: 40%;

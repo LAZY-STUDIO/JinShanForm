@@ -91,6 +91,11 @@
             await formChange(form.id)
           }
         "
+        :onShow="
+          async () => {
+            await showDetail(form.id)
+          }
+        "
       ></FormList>
       <div class="block">
         <el-pagination
@@ -340,9 +345,9 @@ export default defineComponent({
         val * this.pageSize
       )
     },
-    showDetail(id: string) {
+    async showDetail(id: string) {
       this.$router.push({
-        path: '/anayse',
+        path: '/datanayse',
         query: {
           id: id,
         },
