@@ -1,5 +1,5 @@
 import * as request from './request'
-import { IProblemType, IProblem, Getmsg, IForm, IUser } from '../types'
+import { IProblemType, IProblem, IForm, IUser, Getmsg1 } from '../types'
 
 interface BaseRes {
   stat: string
@@ -203,6 +203,11 @@ export function createForm(
 }
 
 //获取表单填写详情
+/*
 export function list(num: string) {
   return request.get<Getmsg>('/api/form/formResult/' + num)
+}*/
+
+export function list1(num: string) {
+  return request.get<Getmsg1>('/api/form/formResult/' + num)
 }
