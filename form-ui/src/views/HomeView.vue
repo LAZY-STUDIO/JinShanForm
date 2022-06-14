@@ -342,7 +342,7 @@ export default defineComponent({
     },
     showDetail(id: string) {
       this.$router.push({
-        path: '/anayse',
+        path: '/datanayse',
         query: {
           id: id,
         },
