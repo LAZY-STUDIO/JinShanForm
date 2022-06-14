@@ -89,7 +89,6 @@ export default defineComponent({
   z-index: 9999;
 }
 .logo {
-  width: 110px;
   line-height: 20px;
   display: flex;
   justify-content: space-between;
