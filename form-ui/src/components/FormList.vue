@@ -1,6 +1,9 @@
 <template>
   <div class="list-simple">
-    <div>{{ form.title }}</div>
+    <div class="form-title">
+      <span class="small-type">表单</span>
+      <span class="small-title">{{ form.title }}</span>
+    </div>
     <div>{{ formatMsToDate(form.ctime) }}</div>
     <div>{{ getStatus(form.status) }}</div>
     <div class="dosth">
@@ -44,6 +47,7 @@
             type="success"
             plain
             v-if="form.status === 3 || form.status === 4"
+            @click="onShow"
             @click.stop
             >查看结果</el-button
           >
@@ -103,6 +107,7 @@ export default defineComponent({
     onMove: { type: Function as PropType<() => void>, required: true },
     onReview: { type: Function as PropType<() => void>, required: true },
     onChange: { type: Function as PropType<() => void>, required: true },
+    onShow: { type: Function as PropType<() => void>, required: true },
   },
   methods: {
     //该方法用于给日期、时间补零
@@ -146,7 +151,7 @@ export default defineComponent({
         return '收集中'
       } else if (num === 4) {
         return '已结束'
-      } else if (num === 5) {
+      } else if (num === 5 || num === 15) {
         return '已回收'
       }
     },
@@ -178,6 +183,33 @@ export default defineComponent({
   width: 20%;
   text-align: center;
 }
+.form-title {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.small-type {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: inline-block;
+  position: absolute;
+  left: 11%;
+  padding: 2px 6px;
+  text-align: center;
+  line-height: 12px;
+  font-size: 12px;
+  color: #767c85;
+}
+.form-title .small-title {
+  width: 60%;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: absolute;
+  left: 35%;
+}
 .list-simple .dosth {
   width: 40%;
   text-align: center;
@@ -204,6 +236,5 @@ export default defineComponent({
   width: 50px;
   height: 20px;
   font-size: 12px;
-  /* color: black; */
 }
 </style>

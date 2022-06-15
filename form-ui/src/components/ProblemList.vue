@@ -1,6 +1,7 @@
 <template>
   <div class="title-wrap">
     <div class="title">{{ title }}</div>
+    <slot name="manage" v-if="dataList.length > 0"></slot>
     <i
       :class="['iconfont', showList ? 'icon-angle-up' : 'icon-angle-down']"
       v-if="allowUnfold && dataList.length !== 0"
@@ -11,6 +12,7 @@
   <div class="data-list" v-show="showList">
     <div
       v-for="data in dataList"
+      :class="allowIcon ? 'icon-flex-div' : ''"
       :key="data"
       @click="$emit('addProblem', data)"
     >
@@ -82,13 +84,20 @@ export default defineComponent({
   font-size: 12px;
   margin-bottom: 16px;
 
-  & > div {
-    border: 1px solid #e7e9eb;
-    cursor: pointer;
+  .icon-flex-div {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  & > div {
+    border: 1px solid #e7e9eb;
+    cursor: pointer;
     white-space: nowrap;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 
     img {
       width: 16px;

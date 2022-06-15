@@ -51,6 +51,14 @@ export interface IProblem extends IProblemType {
         }[]
   }
 }
+
+export interface IStarProblem {
+  id: string
+  uId: string
+  status: number
+  problem: IProblem
+}
+
 export interface Getmsg1 {
   data: GetIlist1
   stat: boolean

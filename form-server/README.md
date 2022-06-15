@@ -573,11 +573,9 @@ Body: {
 - 取消收藏题目
 
 ```ts
-URL: /api/belmopr / cancelStar
+URL: /api/problem/cancelStar
 Method: POST
 Body: {
 	id: string
 }
 ```
-
->>>>>>> 9acbb3e94413816ae28b185cd132257f5573859e

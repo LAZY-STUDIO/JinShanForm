@@ -83,6 +83,10 @@ export default defineComponent({
         alert(res.msg)
       } else {
         const user = await this.getUser()
+        if (user.avatar === '') {
+          user.avatar =
+            'https://img2.baidu.com/it/u=3150609636,3981665520&fm=253&fmt=auto&app=138&f=JPEG?w=212&h=211'
+        }
         store.commit('setUser', user)
         sessionStorage.setItem('token', 'Bearer xxxx')
         sessionStorage.setItem('user', JSON.stringify(user))

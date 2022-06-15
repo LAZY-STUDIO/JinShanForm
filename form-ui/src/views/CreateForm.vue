@@ -3,7 +3,28 @@
     :class="['create-form-outer', !options.showActions ? 'preview-set' : '']"
   >
     <div class="header">
-      <my-header></my-header>
+      <my-header>
+        <template v-slot:left-img
+          ><svg
+            width="16"
+            height="16"
+            xmlns="http://www.w3.org/2000/svg"
+            style="cursor: pointer; margin-right: 20px"
+            @click="$router.go(-1)"
+          >
+            <path
+              d="M6.36 7.922l4.564 4.44-1.172 1.26L4 7.872l.162-.162-.01-.01L9.892 2l1.22 1.23L6.36 7.922z"
+              fill="#A0ACBF"
+            ></path></svg
+        ></template>
+        <template v-slot:left-name
+          ><div style="display: flex; justify-content: center; gap: 20px">
+            <img
+              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjRweCIgaGVpZ2h0PSIyNHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+5paH5qGj5qC85byP5Zu+5qCHL+ihqOWNlS8yNDwvdGl0bGU+CiAgICA8ZGVmcz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSIgaWQ9ImxpbmVhckdyYWRpZW50LTEiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMzBBOEZGIiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMxMjdDRjEiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8L2RlZnM+CiAgICA8ZyBpZD0i5paH5qGj5qC85byP5Zu+5qCHL+ihqOWNlS8yNCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IuihqOWNlSI+CiAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtMTkiIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMSkiIHg9IjAiIHk9IjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgcng9IjIiPjwvcmVjdD4KICAgICAgICAgICAgPGcgaWQ9Iue8lue7hC0xOCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNC43MTg3NTAsIDUuNTYyNTAwKSIgZmlsbD0iI0ZGRkZGRiI+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTMuMjUsMC40NTAwNjgxOTQgQzEzLjgxMDUwMzMsMC40NTAwNjgxOTQgMTQuMjY2NTY1NSwwLjg5NzIzMzUyOSAxNC4yODA5MDI0LDEuNDU0Mjc5OTkgTDE0LjI4MTI1LDEuNDgxMzE4MTkgTDE0LjI4MTI1LDEyLjQwODQxMzIgQzE0LjI4MTI1LDEyLjk2ODkxNjUgMTMuODM0MDg0NywxMy40MjQ5Nzg3IDEzLjI3NzAzODIsMTMuNDM5MzE1NyBMMi4yOTEzMTk5NSwxMy40Mzk2NjMyIEMxLjczMDgxNjY4LDEzLjQzOTY2MzIgMS4yNzQ3NTQ0NiwxMi45OTI0OTc5IDEuMjYwNDE3NTIsMTIuNDM1NDUxNCBMMS4yNjAwNjk5NSw2LjQ0NDg2NTcxIEwzLjI2OTA5NzAyLDYuNDQ0ODY1NzEgTDMuMjY5MDk3MDIsMTEuNDMyODU5MSBMMTIuMjgxMTg2OSwxMS40MzI4NTkxIEwxMi4yODExODY5LDIuNDYwODg3MyBMOS4xMTI1LDIuNDYwODg3MyBMNy40NTAyNTI4NCw0Ljk5NjY2Nzg4IEM3LjI4NDE5Njk0LDUuMjYxNzc3NTcgNi45OTcyOTE4Miw1LjQyNjAyMTc5IDYuNjg1OTQ2MTUsNS40MzYwMjgxNiBMNi42NTU3NDI4Niw1LjQzNjUxMzIzIEwwLjIwMjkxNjA2Niw1LjQzNjA2ODE5IEwxLjM0ODkxNjA3LDMuNDQ5MDY4MTkgTDYuMjQwNDY4NzUsMy40NDkzNDEzOCBMNy45MDI4NTYxOCwwLjg4OTkxMzU0NiBDOC4wNjg5MTIwNywwLjYyNDgwMzg2MiA4LjM1NTgxNzE5LDAuNDYwNTU5NjM2IDguNjY3MTYyODcsMC40NTA1NTMyNjkgTDEzLjI1LDAuNDUwMDY4MTk0IFoiIGlkPSLlvaLnirbnu5PlkIgiIGZpbGwtcnVsZT0ibm9uemVybyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTUuODA3NzM5NTgsMC40Mzc1IEw1LjgwNzI1LDAuNDcyNSBMNC42NzYyNSwyLjQzMDUgTDEuMjgxMjUsMi40MzA1IEwyLjQzMjI1LDAuNDM3NSBMNS44MDc3Mzk1OCwwLjQzNzUgWiIgaWQ9IuW9oueKtue7k+WQiCI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
+            /><span>{{ title }}</span>
+          </div></template
+        >
+      </my-header>
     </div>
     <div class="create-form-container">
       <div class="create-form-left-side" v-show="options.showActions">
@@ -23,12 +44,25 @@
           ></problem-list>
           <problem-list
             :title="'我的常用题'"
+            @addProblem="addTemplateProblem"
             :allowUnfold="true"
-            :dataList="tmpList"
-            ><div class="empty-data">
-              暂无我的常用题, 立即<span class="add-collect">添加</span>
-            </div></problem-list
+            :dataList="starProblems.map((s) => s.problem)"
           >
+            <template v-slot:manage
+              ><div class="star-problem-manage" @click="openDrawer">
+                管理
+              </div></template
+            >
+            <template v-slot:default>
+              <div class="empty-data">
+                暂无我的常用题, 立即<span
+                  class="add-collect"
+                  @click="openDrawer"
+                  >添加</span
+                >
+              </div>
+            </template>
+          </problem-list>
         </div>
       </div>
       <el-scrollbar max-height="100vh" ref="scrollbarRef" always>
@@ -107,6 +141,7 @@
                     title: tmp,
                   }))
                 "
+                @addStarProblem="starProblem"
               >
               </component>
             </div>
@@ -125,6 +160,112 @@
       <div class="preview" @click="backToEdit">继续编辑</div>
       <div class="finish-create" @click="finishCreateForm">完成创建</div>
     </div>
+    <div class="drawer-outer">
+      <ex-modal :title="'管理常用题'" :visible="drawer" @close="closeDrawer">
+        <template v-if="!addStarProblemPage">
+          <div class="add-star-text" @click="addStarProblemPage = true">
+            +添加新的常用题
+          </div>
+          <el-scrollbar max-height="400px">
+            <div
+              v-for="item in starProblems"
+              :key="item.id"
+              class="star-problem-item"
+            >
+              <span class="star-item-title">{{ item.problem.title }}</span>
+              <el-popconfirm
+                confirm-button-text="删除"
+                cancel-button-text="取消"
+                confirmButtonType="danger"
+                icon-color="#626AEF"
+                title="确认删除该常用题?"
+                @confirm="deleteStarProblem(item.id)"
+              >
+                <template #reference>
+                  <span class="star-item-delete">删除</span>
+                </template>
+              </el-popconfirm>
+            </div>
+          </el-scrollbar>
+        </template>
+        <template v-else>
+          <div class="add-star-container">
+            <div class="template-list">
+              <div class="add-header-title">选择题型</div>
+              <el-button
+                v-for="item in problemTypeList"
+                :key="item"
+                @click="choiceStarType(item.type)"
+                >{{ item.title }}</el-button
+              >
+            </div>
+            <div class="add-star-component">
+              <component
+                :is="
+                  componentType(this.problems[this.problems.length - 1].type)
+                "
+                :problemNumber="this.problems.length - 1"
+                :problemType="this.problems[this.problems.length - 1].type"
+                :resultValue="
+                  this.problems[this.problems.length - 1].result.value
+                "
+                @resultValueInput="
+                  this.problems[this.problems.length - 1].result.value = $event
+                "
+                :timeDateFormat="
+                  this.problems[this.problems.length - 1].setting.options[0]
+                    .title
+                "
+                @timeDateFormatChange="
+                  this.problems[
+                    this.problems.length - 1
+                  ].setting.options[0].title = $event
+                "
+                :problemOptions="
+                  this.problems[this.problems.length - 1].setting.options
+                "
+                @optionTitleChange="
+                  (idx, newTitle) =>
+                    (this.problems[this.problems.length - 1].setting.options[
+                      idx
+                    ].title = newTitle)
+                "
+                @delOptionTitle="
+                  this.problems[
+                    this.problems.length - 1
+                  ].setting.options.splice($event, 1)
+                "
+                @addOptionTitle="
+                  this.problems[this.problems.length - 1].setting.options.push({
+                    title: '',
+                    status: 1,
+                  })
+                "
+                @radioOptionChange="
+                  this.problems[this.problems.length - 1].result.value.title =
+                    $event
+                "
+                @checkboxOptionChange="
+                  this.problems[this.problems.length - 1].result.value =
+                    $event.map((tmp) => ({
+                      id: tmp,
+                      title: tmp,
+                    }))
+                "
+                @addStarProblem="starProblem"
+              >
+              </component>
+            </div>
+            <div class="actions">
+              <el-button @click="addStarProblemPage = false">取消</el-button>
+              <el-button type="primary" @click="confirmAddStarProblem"
+                >确认</el-button
+              >
+            </div>
+          </div>
+        </template>
+      </ex-modal>
+    </div>
   </div>
 </template>
 
@@ -136,11 +277,21 @@ import ProblemList from '../components/ProblemList.vue'
 import {
   getProblemTypeList,
   getProblemBasicList,
+  listStar,
+  starProblem,
+  cancelProblemStar,
   createForm,
 } from '../services/api'
-import { IProblemType, IProblem, ProblemType, IForm } from '../types'
+import {
+  IProblemType,
+  IProblem,
+  ProblemType,
+  IForm,
+  IStarProblem,
+} from '../types'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
+import ExModal from '../components/ExModal.vue'
 import { problemInit, componentType, getUUID } from '../utils/commonUtils'
 
 export default defineComponent({
@@ -150,6 +301,7 @@ export default defineComponent({
     InputProblem,
     SelectProblem,
     MyHeader,
+    ExModal,
   },
   provide() {
     return {
@@ -159,16 +311,18 @@ export default defineComponent({
   },
   data() {
     return {
-      // 常用题
-      tmpList: [],
+      addStarProblemPage: false,
+      drawer: false,
       titlePlaceholder: '请输入表单标题',
       msgBoxClose: true,
       subTitleCenter: true,
       options: {
         showActions: true,
+        showFooter: true,
       },
       problemTypeList: [] as IProblemType[],
       problemBasicList: [] as IProblem[],
+      starProblems: [] as IStarProblem[],
       formId: getUUID(),
       status: 0,
       title: '',
@@ -190,7 +344,11 @@ export default defineComponent({
 
     // 数据初始化 todo
     async init() {
-      await Promise.all([this.getProblemTypes(), this.getProblemBasics()])
+      await Promise.all([
+        this.getProblemTypes(),
+        this.getProblemBasics(),
+        this.getStarProblemList(),
+      ])
       // 路由传递的form
       // todo: 修改默认值
       const res = this.$route.query.form
@@ -212,6 +370,10 @@ export default defineComponent({
     async getProblemBasics() {
       const res = await getProblemBasicList()
       this.problemBasicList = res.data.basicProblems
+    },
+    async getStarProblemList() {
+      const res = await listStar()
+      this.starProblems = res.data.items
     },
     // 完成表单创建
     // if status ==  1, 删除localstorage的草稿信息
@@ -304,6 +466,7 @@ export default defineComponent({
             duration: 1000 * 2,
             type: 'success',
           })
+          this.$router.push('/datanayse/qr?id=' + res.data.id)
         }
       }
     },
@@ -315,7 +478,14 @@ export default defineComponent({
     },
     // 将form保存至localstorage
     saveDraft() {
-      // localStorage.setItem('problems', JSON.stringify(this.problems))
+      if (this.title.trim() === '') {
+        return ElMessage({
+          message: '至少填写表单名称',
+          customClass: 'msg-box-form-title',
+          duration: 1000 * 2,
+          type: 'warning',
+        })
+      }
       const ustr = sessionStorage.getItem('user')
       if (ustr) {
         const { account } = JSON.parse(ustr)
@@ -400,6 +570,77 @@ export default defineComponent({
     tipMsg(limit: number) {
       console.log(limit)
     },
+    async starProblem(idx: number) {
+      await starProblem(this.problems[idx])
+      await this.getStarProblemList()
+      ElMessage({
+        message: '添加成功',
+        customClass: 'msg-box-form-title',
+        duration: 1000 * 2,
+        type: 'success',
+      })
+    },
+    async deleteStarProblem(id: string) {
+      await cancelProblemStar(id)
+      await this.getStarProblemList()
+    },
+    openDrawer() {
+      this.drawer = true
+      this.options.showFooter = false
+      this.problems.push(
+        this.problemInit({
+          title: '',
+          type: ProblemType.singleSelect,
+          required: false,
+          isNew: false,
+        })
+      )
+    },
+    closeDrawer() {
+      this.drawer = false
+      this.options.showFooter = true
+      this.addStarProblemPage = false
+      this.problems.pop()
+    },
+    confirmAddStarProblem() {
+      const problem = this.problems[this.problems.length - 1]
+      // problem的title
+      let titleFlag = problem.title.trim() !== ''
+      let optionFlag = true
+      if (
+        problem.type === ProblemType.singleSelect ||
+        problem.type === ProblemType.multiSelect ||
+        problem.type === ProblemType.pullSelect
+      ) {
+        optionFlag =
+          problem.setting?.options.filter((p) => p.title.trim() === '')
+            .length === 0
+        // 找出title为空 或者存在option的title为空的个数
+      }
+      const flag = titleFlag && optionFlag
+      if (flag) {
+        this.addStarProblemPage = false
+        this.starProblem(this.problems.length - 1)
+      } else {
+        ElMessage({
+          message: '未填写完整',
+          customClass: 'msg-box-form-title',
+          duration: 1000 * 2,
+          type: 'warning',
+        })
+      }
+    },
+    choiceStarType(type: ProblemType) {
+      this.problems.pop()
+      this.problems.push(
+        this.problemInit({
+          title: '',
+          type: type,
+          required: false,
+          isNew: false,
+        })
+      )
+    },
   },
   created() {
     this.init()
@@ -450,7 +691,7 @@ export default defineComponent({
   .header {
     height: 56px;
     position: fixed;
-    z-index: 999;
+    z-index: 10;
     background: #fff;
     top: 0;
     bottom: 0;
@@ -703,6 +944,72 @@ export default defineComponent({
     :deep(el-scrollbar__bar.is-vertical) {
       top: 76px;
     }
+  }
+}
+
+.star-problem-manage {
+  color: #1488ed;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.drawer-outer {
+  .add-star-text {
+    color: #1488ed;
+    font-size: 14px;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+
+  .star-problem-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 42px;
+    border: 1px solid #e2e6ed;
+
+    .star-item-title {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      white-space: nowrap;
+      word-break: keep-all;
+      text-overflow: ellipsis;
+      margin-left: 20px;
+    }
+
+    .star-item-delete {
+      color: #1488ed;
+      margin-right: 30px;
+      cursor: pointer;
+    }
+  }
+}
+
+.add-star-container {
+  .add-header-title {
+    margin-top: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .add-star-component {
+    margin-top: 20px;
+  }
+
+  .template-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 10px;
+  }
+
+  .actions {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
   }
 }
 </style>

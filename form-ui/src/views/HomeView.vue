@@ -91,6 +91,11 @@
             await formChange(form.id)
           }
         "
+        :onShow="
+          async () => {
+            await showDetail(form.id)
+          }
+        "
       ></FormList>
       <div class="block">
         <el-pagination
@@ -124,6 +129,7 @@ import {
 import FormList from '../components/FormList.vue'
 import MyHeader from '../components/MyHeader.vue'
 import { isBoolean } from '@vueuse/core'
+import { json } from 'stream/consumers'
 export default defineComponent({
   data() {
     return {
@@ -144,26 +150,45 @@ export default defineComponent({
   },
   methods: {
     async getUser() {
-      const { data } = await getUserInfo()
-      return data.user
+      let userStr = sessionStorage.getItem('user')
+      let user = {} as IUser
+      if (userStr) {
+        user = JSON.parse(userStr)
+      }
+      return user
     },
     async getList(account: string) {
-      // let draft= account+'draftList'
       let dLstStr = localStorage.getItem(account + 'DraftList')
       let draftList = [] as IForm[]
       if (dLstStr) {
         draftList = JSON.parse(dLstStr)
       }
-      console.log(draftList)
       this.drafts = draftList
       const { data } = await getFormList(account)
-      // this.formList = data.items
       this.formList = [...draftList, ...data.items]
+      let DeleteStr = localStorage.getItem(this.user.account + 'Delete')
+      if (DeleteStr) {
+        this.deleteForm = JSON.parse(DeleteStr)
+        // let flag = 0
+        // while (flag < this.deleteForm.length) {
+        //   for (let i = 0; i < this.formList.length; i++) {
+        //     if (this.deleteForm[flag].id === this.formList[i].id) {
+        //       this.formList.splice(i, 1)
+        //       i--
+        //     }
+        //   }
+        //   flag++
+        // }
+        this.formList = this.formList.filter(
+          (form) =>
+            this.deleteForm.filter((iform) => iform.id === form.id).length === 0
+        )
+      }
+      this.noDeleteForm = this.formList
       this.currentForm = this.formList.slice(
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
       )
-      console.log(this.formList)
     },
     async fun() {
       this.user = await this.getUser()
@@ -190,10 +215,35 @@ export default defineComponent({
     },
     //删除表单
     async formDelete(id: string) {
-      console.log(this.formList)
       if (this.noDeleteForm) this.noDeleteForm = []
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
+          //存oldId
+          const oldStr = localStorage.getItem(this.user.account + 'oldId')
+          let oldList = [] as { id: string; old: number }[]
+          if (oldStr) {
+            oldList = JSON.parse(oldStr)
+          }
+          let idx = -1
+          for (let i = 0; i < oldList.length; i++) {
+            if (oldList[i].id === id) {
+              idx = i
+              break
+            }
+          }
+          if (idx === -1) {
+            oldList.push({
+              id: id,
+              old: this.formList[i].status,
+            })
+          } else {
+            oldList[idx].old = this.formList[i].status
+          }
+          localStorage.setItem(
+            this.user.account + 'oldId',
+            JSON.stringify(oldList)
+          )
+          //判断是否为草稿
           if (this.formList[i].status === 1) {
             this.formList[i].status = 15
           } else {
@@ -209,19 +259,36 @@ export default defineComponent({
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
       )
-      console.log(this.noDeleteForm)
+      localStorage.setItem(
+        this.user.account + 'Delete',
+        JSON.stringify(this.deleteForm)
+      )
     },
     //恢复表单
     async formReview(id: string) {
       for (let i = 0; i < this.deleteForm.length; i++) {
         if (this.deleteForm[i].id === id) {
-          this.deleteForm[i].status = 2
+          const oldStr = localStorage.getItem(this.user.account + 'oldId')
+          let oldList = [] as { id: string; old: number }[]
+          if (oldStr) {
+            oldList = JSON.parse(oldStr)
+          }
+          for (let j = 0; j < oldList.length; j++) {
+            if (oldList[j].id === id) {
+              this.deleteForm[i].status = oldList[j].old
+              break
+            }
+          }
           this.noDeleteForm.push(this.deleteForm[i])
           this.deleteForm.splice(i, 1)
           i--
         }
       }
       this.currentForm = this.deleteForm
+      localStorage.setItem(
+        this.user.account + 'Delete',
+        JSON.stringify(this.deleteForm)
+      )
     },
     //彻底删除
     async formMove(id: string) {
@@ -229,7 +296,6 @@ export default defineComponent({
       for (let i = 0; i < this.deleteForm.length; i++) {
         if (this.deleteForm[i].id === id) {
           if (this.deleteForm[i].status === 15) {
-            console.log(111)
             let idx = -1
             for (let j = 0; j < this.drafts.length; j++) {
               if (this.drafts[j].id === id) {
@@ -247,6 +313,10 @@ export default defineComponent({
           i--
         }
       }
+      localStorage.setItem(
+        this.user.account + 'Delete',
+        JSON.stringify(this.deleteForm)
+      )
       this.currentForm = this.deleteForm
     },
     //表单标星
@@ -255,9 +325,27 @@ export default defineComponent({
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
           this.formList[i].isStar = true
+          if (this.formList[i].status === 1) {
+            let dLstStr = localStorage.getItem(this.user.account + 'DraftList')
+            let draftList = [] as IForm[]
+            if (dLstStr) {
+              draftList = JSON.parse(dLstStr)
+            }
+            console.log(draftList)
+            draftList.forEach((form) => {
+              if (form.id === id) {
+                form.isStar = true
+              }
+            })
+            console.log(draftList)
+            this.drafts = draftList
+            localStorage.setItem(
+              this.user.account + 'DraftList',
+              JSON.stringify(this.drafts)
+            )
+          }
         }
       }
-      // this.formList = this.noDeleteForm
       this.currentForm = this.formList.slice(
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
@@ -266,13 +354,28 @@ export default defineComponent({
     //表单取消标星
     async formCancelStar(id: string) {
       await cancelStar(id)
-      // this.fun()
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
           this.formList[i].isStar = false
+          if (this.formList[i].status === 1) {
+            let dLstStr = localStorage.getItem(this.user.account + 'DraftList')
+            let draftList = [] as IForm[]
+            if (dLstStr) {
+              draftList = JSON.parse(dLstStr)
+            }
+            draftList.forEach((form) => {
+              if (form.id === id) {
+                form.isStar = false
+              }
+            })
+            this.drafts = draftList
+            localStorage.setItem(
+              this.user.account + 'DraftList',
+              JSON.stringify(this.drafts)
+            )
+          }
         }
       }
-      // this.formList = this.noDeleteForm
       this.currentForm = this.formList.slice(
         (this.currentPage - 1) * this.pageSize,
         this.currentPage * this.pageSize
@@ -290,25 +393,19 @@ export default defineComponent({
           }
         }
         this.currentForm = this.formList.slice(0, 3)
-        console.log(this.noDeleteForm)
       } else {
         this.showOnlyStar = false
-        console.log(this.deleteForm)
-        console.log(this.noDeleteForm)
 
         let flag = 1
         for (let i = 0; i < this.deleteForm.length; i++) {
           if (this.deleteForm[i].id == this.formList[0].id) {
             this.formList = this.deleteForm
-            console.log(1)
-            console.log(this.formList)
             flag = 0
             break
           }
         }
         if (flag) {
           this.formList = this.noDeleteForm
-          console.log(this.formList)
         }
         this.currentForm = this.formList.slice(0, 3)
       }
@@ -340,23 +437,25 @@ export default defineComponent({
         val * this.pageSize
       )
     },
-    showDetail(id: string) {
-      this.$router.push({
-        path: '/datanayse',
-        query: {
-          id: id,
-        },
-      })
+    async showDetail(id: string) {
+      let iform = this.formList.filter((form) => form.id === id)
+      if (iform[0].status === 1 || iform[0].status === 2) {
+        this.$router.push('/')
+      } else {
+        this.$router.push({
+          path: '/datanayse/anayse',
+          query: {
+            id: id,
+          },
+        })
+      }
     },
     goList() {
-      console.log(this.deleteForm)
       if (this.deleteForm.length !== 0) {
         this.formList = this.noDeleteForm
         this.currentForm = this.formList.slice(0, 3)
       } else {
-        console.log('1111')
         this.fun()
-        console.log(this.formList)
         this.currentForm = this.formList.slice(0, 3)
       }
     },
@@ -382,7 +481,6 @@ export default defineComponent({
   box-sizing: border-box;
   background-color: #fff;
   padding: 20px 16px;
-  /* padding-top: 20px; */
   margin-top: 56px;
   border-right: 1px solid #e7e9eb;
   display: flex;
