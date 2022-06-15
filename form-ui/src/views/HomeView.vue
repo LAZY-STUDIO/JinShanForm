@@ -91,11 +91,6 @@
             await formChange(form.id)
           }
         "
-        :onShow="
-          async () => {
-            await showDetail(form.id)
-          }
-        "
       ></FormList>
       <div class="block">
         <el-pagination
@@ -106,7 +101,7 @@
           :total="formList.length"
           layout="prev, pager, next,total"
           background
-          hide-on-single-page
+          v-show="formList.length !== 0"
         />
       </div>
     </div>
@@ -121,15 +116,13 @@ import {
   getFormList,
   makeStar,
   cancelStar,
-  getUserInfo,
   deleteForm,
   startForm,
   endForm,
 } from '../services/api'
 import FormList from '../components/FormList.vue'
 import MyHeader from '../components/MyHeader.vue'
-import { isBoolean } from '@vueuse/core'
-import { json } from 'stream/consumers'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   data() {
     return {
@@ -439,7 +432,15 @@ export default defineComponent({
     },
     async showDetail(id: string) {
       let iform = this.formList.filter((form) => form.id === id)
-      if (iform[0].status === 1 || iform[0].status === 2) {
+      if (iform[0].status === 1) {
+        this.$router.push('/')
+      } else if (iform[0].status === 2) {
+        ElMessage({
+          message: '请先发布',
+          duration: 1000,
+          type: 'error',
+          customClass: 'msg-box-form-title',
+        })
         this.$router.push('/')
       } else {
         this.$router.push({
@@ -571,4 +572,8 @@ export default defineComponent({
   position: absolute;
   right: 5%;
 }
+
+/* .global-messageZindex {
+  z-index: 12000 !important;
+} */
 </style>

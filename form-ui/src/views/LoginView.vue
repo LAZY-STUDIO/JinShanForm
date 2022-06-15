@@ -1,8 +1,8 @@
 <template>
-  <div class="head_c">
-    <span class="login"></span>
-  </div>
   <div class="login-main">
+    <div class="head_c">
+      <span class="login"></span>
+    </div>
     <div class="login-wrapper">
       <div class="header">登录</div>
       <el-form :model="formData" :rules="rule" ref="form" class="demo-ruleForm">
@@ -24,6 +24,7 @@
             placeholder="密码"
             class="form-same"
             clearable
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -43,9 +44,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import store from '@/store/index'
-import { ElMessage } from 'element-plus'
 import { login } from '../services/api'
 import { getUserInfo } from '../services/api'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   data() {
     return {
@@ -83,15 +84,15 @@ export default defineComponent({
       if (res.stat != 'ok') {
         ElMessage({
           message: res.msg,
-          customClass: 'msg-box-form-title-success',
-          duration: 1000 * 2,
+          duration: 2000,
           type: 'error',
+          customClass: 'msg-box-form-title',
         })
       } else {
         const user = await this.getUser()
         if (user.avatar === '') {
           user.avatar =
-            'https://img2.baidu.com/it/u=3150609636,3981665520&fm=253&fmt=auto&app=138&f=JPEG?w=212&h=211'
+            'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp.qqan.com%2Fup%2F2020-6%2F2020061117234392390.jpg&refer=http%3A%2F%2Fp.qqan.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1657875322&t=7af0ec2407cce8f44ff8e28224ee10f9'
         }
         store.commit('setUser', user)
         sessionStorage.setItem('token', 'Bearer xxxx')
@@ -116,6 +117,7 @@ export default defineComponent({
   height: 56px;
   width: 100%;
   margin: 0 auto;
+  background-color: white;
   align-items: center;
 }
 .login {
