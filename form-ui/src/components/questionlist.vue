@@ -69,6 +69,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { Onelist, IProblems1 } from '../types'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   name: 'QuesList',
   props: {
