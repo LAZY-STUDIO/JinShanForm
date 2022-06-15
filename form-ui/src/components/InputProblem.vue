@@ -203,7 +203,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
 import ProblemBase from './ProblemBase.vue'
 import { ElScrollbar } from 'element-plus'
 import { ProblemType } from '@/types'

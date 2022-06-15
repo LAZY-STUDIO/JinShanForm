@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import CreateForm from '../views/CreateForm.vue'
-import FillForm from '../views/FillForm.vue'
-import IndexPage from '../views/Index.vue'
 import QR from '../views/Qrcode.vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
@@ -28,11 +26,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/createForm',
     name: 'CreateForm',
     component: CreateForm,
-  },
-  {
-    path: '/fillForm',
-    name: 'FillForm',
-    component: FillForm,
   },
   {
     path: '/personal',

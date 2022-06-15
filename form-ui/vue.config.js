@@ -9,4 +9,10 @@ module.exports = defineConfig({
       },
     },
   },
+  chainWebpack(config) {
+    config.plugin('html').tap((args) => {
+      args[0].title = '金山表单'
+      return args
+    })
+  },
 })

@@ -466,7 +466,7 @@ export default defineComponent({
             duration: 1000 * 2,
             type: 'success',
           })
-          this.$router.push('/datanayse/qr?id=' + res.data.id)
+          this.$router.push('/')
         }
       }
     },
