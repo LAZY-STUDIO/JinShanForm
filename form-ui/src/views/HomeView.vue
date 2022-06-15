@@ -101,7 +101,7 @@
           :total="formList.length"
           layout="prev, pager, next,total"
           background
-          hide-on-single-page
+          v-show="formList.length !== 0"
         />
       </div>
     </div>
@@ -116,7 +116,6 @@ import {
   getFormList,
   makeStar,
   cancelStar,
-  getUserInfo,
   deleteForm,
   startForm,
   endForm,
@@ -440,7 +439,7 @@ export default defineComponent({
           message: '请先发布',
           duration: 1000,
           type: 'error',
-          customClass: 'global-messageZindex',
+          customClass: 'msg-box-form-title',
         })
         this.$router.push('/')
       } else {

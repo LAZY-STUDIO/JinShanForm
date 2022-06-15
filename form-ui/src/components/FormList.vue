@@ -245,7 +245,7 @@ export default defineComponent({
 }
 
 .dosth .btns {
-  margin-left: 180px;
+  margin-left: 220%;
   display: flex;
   justify-content: center;
 }

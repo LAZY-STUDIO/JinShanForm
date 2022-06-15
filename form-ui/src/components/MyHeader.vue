@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
 import { IUser } from '../types'
 import { logout } from '../services/api'
 export default defineComponent({
