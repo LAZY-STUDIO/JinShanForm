@@ -114,8 +114,8 @@
       </div>
       <div
         class="fill-form-container"
-        @click="findChange"
         @keyup="findChange"
+        @click="findChange"
         @change="findChange"
       >
         <div class="title">{{ title }}</div>
@@ -127,12 +127,9 @@
           />
           <CustomModal :visible="visiable" :title="'邀请填写'">
             <qrcode :id="id"></qrcode>
-            <!-- <div class="download"> -->
             <el-button type="primary" @click="down()" class="saveCodeBtn"
               >保存二维码</el-button
             >
-            <!-- <a class="link" ></a> -->
-            <!-- </div> -->
             <div class="copylink">
               <el-input v-model="link" disabled class="inputBtn" />
               <el-button
@@ -214,6 +211,7 @@ export default defineComponent({
     return {
       options: {
         showActions: false,
+        showFooter: false,
       },
       title: '',
       subTitle: '',
@@ -422,6 +420,12 @@ export default defineComponent({
           account + 'editDraftList',
           JSON.stringify(editDraftList)
         )
+        ElMessage({
+          message: '保存成功',
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'success',
+        })
       }
     },
     changeSide() {
