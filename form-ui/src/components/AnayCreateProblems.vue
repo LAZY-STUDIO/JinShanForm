@@ -30,8 +30,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Onelist, IProblems1, ProblemType, IProblem } from '../types'
-import { getFormById } from '../services/api'
+import { IProblems1, ProblemType, IProblem } from '../types'
 import InputProblem from '../components/InputProblem.vue'
 import SelectProblem from '../components/SelectProblem.vue'
 import { ElMessage } from 'element-plus'

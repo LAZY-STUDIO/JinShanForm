@@ -23,7 +23,6 @@
 import { defineComponent, PropType } from 'vue'
 import QuesList from '../components/questionlist.vue'
 import { Onelist, IProblems1 } from '../types'
-let test = 0
 export default defineComponent({
   name: 'DataAnayse',
   components: {
@@ -41,10 +40,10 @@ export default defineComponent({
   },
   methods: {
     pageup() {
-      if (this.x > 0) this.x--
+      if (this.x! > 0) this.x--
     },
     pagedown() {
-      if (this.x < this.y! - 1) this.x++
+      if (this.x! < this.y! - 1) this.x++
     },
   },
   created() {
