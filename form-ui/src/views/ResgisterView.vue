@@ -42,29 +42,6 @@
           >
         </el-form-item>
       </el-form>
-      <!-- <div class="form-wrapper">
-        <el-input
-          v-model="account"
-          placeholder="用户名"
-          clearable
-          class="form-same"
-        />
-        <el-input
-          v-model="pwd"
-          placeholder="密码"
-          clearable
-          class="form-same"
-        />
-        <el-input
-          v-model="confirmPwd"
-          placeholder="确认密码"
-          clearable
-          class="form-same"
-        />
-        <el-button type="primary" class="form-same btn" @click="registerSub"
-          >注册</el-button
-        >
-      </div> -->
     </div>
   </div>
 </template>

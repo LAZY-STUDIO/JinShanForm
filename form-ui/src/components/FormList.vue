@@ -39,7 +39,7 @@
             type="warning"
             plain
             v-if="form.status === 3"
-            @click="goWrite"
+            @click="goShare(form.id)"
             @click.stop
             >分享</el-button
           >
@@ -48,7 +48,7 @@
             type="success"
             plain
             v-if="form.status === 3 || form.status === 4"
-            @click="onShow"
+            @click="showDetails(form.id)"
             @click.stop
             >查看结果</el-button
           >
@@ -108,7 +108,6 @@ export default defineComponent({
     onMove: { type: Function as PropType<() => void>, required: true },
     onReview: { type: Function as PropType<() => void>, required: true },
     onChange: { type: Function as PropType<() => void>, required: true },
-    onShow: { type: Function as PropType<() => void>, required: true },
   },
   methods: {
     //该方法用于给日期、时间补零
@@ -165,9 +164,22 @@ export default defineComponent({
         this.onStar()
       }
     },
-    goWrite() {
+    goShare(id: string) {
       console.log(this.form.id)
-      this.$router.push({ path: '/write', query: { id: this.form.id } })
+      this.$router.push({
+        path: '/datanayse/qr',
+        query: {
+          id: id,
+        },
+      })
+    },
+    showDetails(id: string) {
+      this.$router.push({
+        path: '/datanayse/anayse',
+        query: {
+          id: id,
+        },
+      })
     },
   },
 })
