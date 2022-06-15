@@ -43,6 +43,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import store from '@/store/index'
+import { ElMessage } from 'element-plus'
 import { login } from '../services/api'
 import { getUserInfo } from '../services/api'
 export default defineComponent({
@@ -80,7 +81,12 @@ export default defineComponent({
       const res = await login(this.formData.account, this.formData.pwd)
       console.log(res)
       if (res.stat != 'ok') {
-        alert(res.msg)
+        ElMessage({
+          message: res.msg,
+          customClass: 'msg-box-form-title-success',
+          duration: 1000 * 2,
+          type: 'error',
+        })
       } else {
         const user = await this.getUser()
         if (user.avatar === '') {
