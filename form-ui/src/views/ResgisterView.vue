@@ -1,8 +1,8 @@
 <template>
-  <div class="head_c">
-    <span class="login"></span>
-  </div>
   <div class="login-main">
+    <div class="head_c">
+      <span class="login"></span>
+    </div>
     <div class="login-wrapper">
       <div class="header">注册</div>
       <el-form :model="formData" :rules="rule" ref="form" class="demo-ruleForm">
@@ -24,6 +24,7 @@
             placeholder="密码"
             class="form-same"
             clearable
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item prop="confirmPwd">
@@ -34,6 +35,7 @@
             placeholder="确认密码"
             class="form-same"
             clearable
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -98,17 +100,18 @@ export default defineComponent({
       )
       console.log(res)
       if (res.stat != 'ok') {
-        // alert(res.msg)
         ElMessage({
           message: res.msg,
           duration: 2000,
           type: 'error',
+          customClass: 'msg-box-form-title',
         })
       } else {
         ElMessage({
           message: '注册成功，为您跳转到登录页面',
           duration: 2000,
           type: 'success',
+          customClass: 'msg-box-form-title',
         })
         this.$router.push({
           name: 'LoginView',
@@ -129,6 +132,7 @@ export default defineComponent({
   display: flex;
   height: 56px;
   width: 100%;
+  background-color: white;
   margin: 0 auto;
   align-items: center;
 }

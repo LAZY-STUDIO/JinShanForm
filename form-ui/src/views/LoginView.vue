@@ -1,8 +1,8 @@
 <template>
-  <div class="head_c">
-    <span class="login"></span>
-  </div>
   <div class="login-main">
+    <div class="head_c">
+      <span class="login"></span>
+    </div>
     <div class="login-wrapper">
       <div class="header">登录</div>
       <el-form :model="formData" :rules="rule" ref="form" class="demo-ruleForm">
@@ -24,6 +24,7 @@
             placeholder="密码"
             class="form-same"
             clearable
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -45,6 +46,7 @@ import { defineComponent } from 'vue'
 import store from '@/store/index'
 import { login } from '../services/api'
 import { getUserInfo } from '../services/api'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   data() {
     return {
@@ -80,7 +82,12 @@ export default defineComponent({
       const res = await login(this.formData.account, this.formData.pwd)
       console.log(res)
       if (res.stat != 'ok') {
-        alert(res.msg)
+        ElMessage({
+          message: res.msg,
+          duration: 2000,
+          type: 'error',
+          customClass: 'msg-box-form-title',
+        })
       } else {
         const user = await this.getUser()
         if (user.avatar === '') {
@@ -110,6 +117,7 @@ export default defineComponent({
   height: 56px;
   width: 100%;
   margin: 0 auto;
+  background-color: white;
   align-items: center;
 }
 .login {

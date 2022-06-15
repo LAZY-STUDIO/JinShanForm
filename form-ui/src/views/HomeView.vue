@@ -101,7 +101,7 @@
           :total="formList.length"
           layout="prev, pager, next,total"
           background
-          hide-on-single-page
+          v-show="formList.length !== 0"
         />
       </div>
     </div>
@@ -116,14 +116,13 @@ import {
   getFormList,
   makeStar,
   cancelStar,
-  getUserInfo,
   deleteForm,
   startForm,
   endForm,
 } from '../services/api'
 import FormList from '../components/FormList.vue'
 import MyHeader from '../components/MyHeader.vue'
-// import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   data() {
     return {
@@ -436,12 +435,12 @@ export default defineComponent({
       if (iform[0].status === 1) {
         this.$router.push('/')
       } else if (iform[0].status === 2) {
-        // ElMessage({
-        //   message: '请先发布',
-        //   duration: 1000,
-        //   type: 'error',
-        //   customClass: 'global-messageZindex',
-        // })
+        ElMessage({
+          message: '请先发布',
+          duration: 1000,
+          type: 'error',
+          customClass: 'msg-box-form-title',
+        })
         this.$router.push('/')
       } else {
         this.$router.push({

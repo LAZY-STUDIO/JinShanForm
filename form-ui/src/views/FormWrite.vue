@@ -30,33 +30,40 @@
           <img src="../assets/imgs/返回.png" @click="changeSide" />
         </div>
       </div>
-      <div class="side-content" v-if="flag && !flagg">
-        <div class="menu-box">
-          <div class="menu">
-            <span>目录</span>
+      <div class="sideContentBox" v-if="flag && !flagg">
+        <div class="side-content">
+          <div class="menu-box">
+            <div class="menu">
+              <span>目录</span>
+              <span
+                ><i>{{ num }}</i
+                >/{{ total }}</span
+              >
+            </div>
             <span
-              ><i>{{ num }}</i
-              >/{{ total }}</span
-            >
-          </div>
-          <span
-            ><img src="../assets/imgs/返回2.png" @click="changeSide"
-          /></span>
-        </div>
-        <div class="menu-content" v-for="(item, index) in problems" :key="item">
-          <a :href="'#problem' + index">
-            <span>{{ index + 1 }}:{{ item.title }}</span>
-            <span
-              ><img
-                src="../assets/imgs/勾选.png"
-                v-if="numArr.indexOf(index) >= 0" />
-              <img
-                src="../assets/imgs/勾选1.png"
-                v-if="numArr.indexOf(index) < 0"
+              ><img src="../assets/imgs/返回2.png" @click="changeSide"
             /></span>
-          </a>
+          </div>
+          <div
+            class="menu-content"
+            v-for="(item, index) in problems"
+            :key="item"
+          >
+            <a :href="'#problem' + index">
+              <span>{{ index + 1 }}:{{ item.title }}</span>
+              <span
+                ><img
+                  src="../assets/imgs/勾选.png"
+                  v-if="numArr.indexOf(index) >= 0" />
+                <img
+                  src="../assets/imgs/勾选1.png"
+                  v-if="numArr.indexOf(index) < 0"
+              /></span>
+            </a>
+          </div>
         </div>
       </div>
+
       <div class="header-box" v-if="flagg">
         <div class="header">
           <div class="header-left">
@@ -335,12 +342,12 @@ export default defineComponent({
           }
         }
         ElMessage({
-          message: '填写成功',
+          message: '表单填写成功',
           customClass: 'msg-box-form-title-success',
           duration: 1000 * 2,
           type: 'success',
+          onClose: () => this.$router.push('/'),
         })
-        this.$router.push('/')
       } else {
         ElMessage({
           message: res.msg,
@@ -421,7 +428,7 @@ export default defineComponent({
           JSON.stringify(editDraftList)
         )
         ElMessage({
-          message: '保存成功',
+          message: '草稿保存成功',
           customClass: 'msg-box-form-title-success',
           duration: 1000 * 2,
           type: 'success',
@@ -485,6 +492,11 @@ export default defineComponent({
   scroll-behavior: smooth;
   height: 1000px;
   overflow-y: scroll;
+}
+.side img,
+.side-content img,
+.share-form img {
+  cursor: pointer;
 }
 .headerNavigtion {
   height: 56px;
@@ -556,7 +568,6 @@ export default defineComponent({
   width: 48px;
   height: 209px;
   border-radius: 25px;
-  /* left: -10%; */
   top: 50%;
   background-color: #fff;
   flex-direction: column;
@@ -774,9 +785,6 @@ span i {
   }
   .menu-content {
     width: 100%;
-    /* display: flex;
-    justify-content: space-between;
-    align-items: center; */
   }
   .menu-content span {
     line-height: 40px;
@@ -790,6 +798,14 @@ span i {
     width: 296.68px;
     margin-bottom: 20px;
     margin-left: 0px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .sideContentBox {
+    width: 260px;
+  }
+  .side-content {
+    position: fixed;
   }
 }
 </style>
