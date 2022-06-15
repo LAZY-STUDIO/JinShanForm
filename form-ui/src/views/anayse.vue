@@ -68,7 +68,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { list1 } from '../services/api'
-import { Onelist, IProblems1, GetIlist1 } from '../types'
+import { Onelist, IProblems1 } from '../types'
 import { ElMessage } from 'element-plus'
 import MyHeader from '../components/MyHeader.vue'
 export default defineComponent({
@@ -119,7 +119,7 @@ export default defineComponent({
       this.data = data.info
       this.y = data.items.length
       if (this.y == 0) {
-        this.$router.push('/datanayse/qr')
+        this.$router.replace('/datanayse/qr')
         this.isclick3 = true
         this.isclick2 = false
         this.isclick1 = false
@@ -128,8 +128,15 @@ export default defineComponent({
     },
   },
   created() {
-    console.log(this.$route.query.id)
-    console.log(this.$route.query.id)
+    // console.log(this.$route.query.id)
+    // console.log(this.$route.query.id)
+    let url = window.location.href.split('/')
+    let url1 = url[4].split('?')
+    if (url1[0] == 'qr') {
+      this.isclick3 = true
+      this.isclick2 = false
+      this.isclick1 = false
+    }
     this.login()
     //this.$router.push('/datanayse/anayse')
   },

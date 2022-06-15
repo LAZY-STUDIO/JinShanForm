@@ -13,7 +13,7 @@
 </template>
 <script lang="ts">
 import VueQr from 'vue-qr/src/packages/vue-qr.vue'
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
 import { list1 } from '../services/api'
 export default defineComponent({
   name: 'QRcode',

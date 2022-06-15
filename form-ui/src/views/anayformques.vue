@@ -10,7 +10,6 @@
 import { defineComponent, PropType } from 'vue'
 import { Onelist, IProblems1 } from '../types'
 import CreatePro from '../components/AnayCreateProblems.vue'
-let test = 0
 export default defineComponent({
   name: 'AnayFormques',
   components: {
