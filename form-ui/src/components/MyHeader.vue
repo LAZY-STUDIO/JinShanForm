@@ -98,7 +98,7 @@ export default defineComponent({
   margin: 0.67em 0;
 }
 .user {
-  width: 100px;
+  /* width: 100px; */
   line-height: 20px;
   display: flex;
   justify-content: space-between;
@@ -112,6 +112,7 @@ export default defineComponent({
 .user-img {
   width: 30px;
   height: 30px;
+  margin-right: 10px;
   border-radius: 15px;
   overflow: hidden;
 }
@@ -133,9 +134,6 @@ export default defineComponent({
   display: none;
   box-shadow: 0 2px 12px 0 rgb(56 56 56 / 20%);
 }
-/* .nologout {
-  display: none;
-} */
 .logout div {
   height: 30px;
   line-height: 30px;
