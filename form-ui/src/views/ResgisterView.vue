@@ -42,29 +42,6 @@
           >
         </el-form-item>
       </el-form>
-      <!-- <div class="form-wrapper">
-        <el-input
-          v-model="account"
-          placeholder="用户名"
-          clearable
-          class="form-same"
-        />
-        <el-input
-          v-model="pwd"
-          placeholder="密码"
-          clearable
-          class="form-same"
-        />
-        <el-input
-          v-model="confirmPwd"
-          placeholder="确认密码"
-          clearable
-          class="form-same"
-        />
-        <el-button type="primary" class="form-same btn" @click="registerSub"
-          >注册</el-button
-        >
-      </div> -->
     </div>
   </div>
 </template>
@@ -72,7 +49,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { register } from '../services/api'
-
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   data() {
     return {
@@ -121,9 +98,18 @@ export default defineComponent({
       )
       console.log(res)
       if (res.stat != 'ok') {
-        alert(res.msg)
+        // alert(res.msg)
+        ElMessage({
+          message: res.msg,
+          duration: 2000,
+          type: 'error',
+        })
       } else {
-        alert('注册成功，为您跳转到登录页面')
+        ElMessage({
+          message: '注册成功，为您跳转到登录页面',
+          duration: 2000,
+          type: 'success',
+        })
         this.$router.push({
           name: 'LoginView',
         })

@@ -17,7 +17,7 @@
           @blur="howshow = false"
         >
           <div class="user-img">
-            <img :src="userSrc" width="30px" />
+            <img :src="user.avatar" width="30px" />
           </div>
           <p class="user-title">{{ user.account }}</p>
           <div class="logout" v-show="howshow">
@@ -34,29 +34,25 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { IUser } from '../types'
-import { getUserInfo, logout } from '../services/api'
-// import store from '@/store/index'
+import { logout } from '../services/api'
 export default defineComponent({
   data() {
     return {
       user: {} as IUser,
       howshow: false,
-      userSrc: '',
     }
   },
   methods: {
     async getUser() {
-      const { data } = await getUserInfo()
-      return data.user
+      let userStr = sessionStorage.getItem('user')
+      let user = {} as IUser
+      if (userStr) {
+        user = JSON.parse(userStr)
+      }
+      return user
     },
     async init() {
       this.user = await this.getUser()
-      if (this.user.avatar === '') {
-        this.userSrc =
-          'https://img2.baidu.com/it/u=3150609636,3981665520&fm=253&fmt=auto&app=138&f=JPEG?w=212&h=211'
-      } else {
-        this.userSrc = this.user.avatar
-      }
     },
     async goout() {
       sessionStorage.removeItem('token')
@@ -102,7 +98,7 @@ export default defineComponent({
   margin: 0.67em 0;
 }
 .user {
-  width: 100px;
+  /* width: 100px; */
   line-height: 20px;
   display: flex;
   justify-content: space-between;
@@ -116,6 +112,7 @@ export default defineComponent({
 .user-img {
   width: 30px;
   height: 30px;
+  margin-right: 10px;
   border-radius: 15px;
   overflow: hidden;
 }
@@ -137,9 +134,6 @@ export default defineComponent({
   display: none;
   box-shadow: 0 2px 12px 0 rgb(56 56 56 / 20%);
 }
-/* .nologout {
-  display: none;
-} */
 .logout div {
   height: 30px;
   line-height: 30px;

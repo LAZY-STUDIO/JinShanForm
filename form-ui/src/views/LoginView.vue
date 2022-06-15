@@ -83,6 +83,10 @@ export default defineComponent({
         alert(res.msg)
       } else {
         const user = await this.getUser()
+        if (user.avatar === '') {
+          user.avatar =
+            'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp.qqan.com%2Fup%2F2020-6%2F2020061117234392390.jpg&refer=http%3A%2F%2Fp.qqan.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1657875322&t=7af0ec2407cce8f44ff8e28224ee10f9'
+        }
         store.commit('setUser', user)
         sessionStorage.setItem('token', 'Bearer xxxx')
         sessionStorage.setItem('user', JSON.stringify(user))
