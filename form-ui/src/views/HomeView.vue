@@ -123,7 +123,7 @@ import {
 } from '../services/api'
 import FormList from '../components/FormList.vue'
 import MyHeader from '../components/MyHeader.vue'
-// import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   data() {
     return {
@@ -436,12 +436,12 @@ export default defineComponent({
       if (iform[0].status === 1) {
         this.$router.push('/')
       } else if (iform[0].status === 2) {
-        // ElMessage({
-        //   message: '请先发布',
-        //   duration: 1000,
-        //   type: 'error',
-        //   customClass: 'global-messageZindex',
-        // })
+        ElMessage({
+          message: '请先发布',
+          duration: 1000,
+          type: 'error',
+          customClass: 'global-messageZindex',
+        })
         this.$router.push('/')
       } else {
         this.$router.push({

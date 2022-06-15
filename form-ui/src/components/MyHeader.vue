@@ -82,7 +82,7 @@ export default defineComponent({
   border-bottom: 1px solid #e7e9eb;
   background-color: white;
   clear: both;
-  z-index: 9999;
+  z-index: 100;
 }
 .logo {
   line-height: 20px;
