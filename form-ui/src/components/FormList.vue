@@ -36,7 +36,6 @@
             type="warning"
             plain
             v-if="form.status === 3"
-            @click="goWrite"
             @click.stop
             >分享</el-button
           >
@@ -159,10 +158,6 @@ export default defineComponent({
         console.log(2)
         this.onStar()
       }
-    },
-    goWrite() {
-      console.log(this.form.id)
-      this.$router.push({ path: '/write', query: { id: this.form.id } })
     },
   },
 })

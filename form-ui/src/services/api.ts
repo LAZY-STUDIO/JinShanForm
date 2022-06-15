@@ -70,13 +70,13 @@ export function getPersonalInfo() {
 }
 // 获取表单
 export function getFormById(id: string) {
-  console.log(request.post<FormRes>('/api/form/get', { id }))
+  // console.log(request.post<FormRes>('/api/form/get', { id }))
   return request.post<FormRes>('/api/form/get', { id })
 }
 // 填写表单
 export function writeForm(formId: string, problems: IProblem[]) {
-  console.log('这是测试我发的参数')
-  console.log({ formId, problems })
+  // console.log('这是测试我发的参数')
+  // console.log({ formId, problems })
   return request.post<FormWriteRes>('/api/form/input', { formId, problems })
 }
 // 退出登录

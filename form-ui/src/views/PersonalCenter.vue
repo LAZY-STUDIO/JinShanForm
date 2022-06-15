@@ -128,6 +128,7 @@ export default defineComponent({
     logout: async function () {
       const res = await request.logout()
       if (res.stat === 'ok') {
+        sessionStorage.removeItem('token')
         ElMessage({
           message: '退出成功',
           customClass: 'msg-box-form-title-success',
@@ -146,7 +147,6 @@ export default defineComponent({
     },
     getPersonalInfo: async function () {
       this.user = JSON.parse(sessionStorage.user)
-      console.log(this.user)
     },
     handleCloseClick() {
       this.visible = false
