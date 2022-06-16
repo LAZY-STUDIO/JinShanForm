@@ -108,7 +108,7 @@
 >
 > - 整理后端API文档，测试每一个接口。记录所有可能的返回样例，保存结果至Postman
 >
->   <img src="mdImgs/image-20220615182600680.png" alt="image-20220615182600680" style="zoom:33%;" />
+>   ![postman](./mdImgs/image-20220615182600680.png)
 >
 > - 创建代码仓库、统一代码规范（`.editorconfig`、`.prettierrc`）
 
@@ -124,15 +124,15 @@
 >
 > - 编写数据分析表单整体结构，确定路由方式为嵌套路由，数据分析，表单问题，分享页面为子路由，利用`datanayse/子路由`的方式来跳转
 >
->   ![zwr1](.\mdImgs\zwr1.png)
+>   ![zwr1](./mdImgs/zwr1.png)
 >
 > - 封装获取表单详情接口，定义接口类型，以便获取数据
 >
->   ![zwr2](.\mdImgs\zwr2.png)
+>   ![zwr2](./mdImgs/zwr2.png)
 
 6月1日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 新建表单，表单描述的样式，设置为`textarea`
 > - 题目组件的设计、包括`ProblemBase`、`InputProblem`（对应填空、日期、时间、分数）、`SelectProblem`（对应单选、多选、下拉）
@@ -142,20 +142,20 @@
 >
 > - 编写数据统计页面内容，动态获取接口数据，并作相应判断后赋值到相应位置
 >
->  ![zwr3](.\mdImgs\zwr3.png)
+>  ![zwr3](./mdImgs/zwr3.png)
 >
 > * 查看`vue-qr`模块的用法，以及如何利用该模块生成二维码包含`url`信息
 
 6月2日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 修改填空题的样式
 > - 新建表单，表单标题的样式
 >
-> 周蔚然：
+> ​     周蔚然：
 >
-> * 编写分享页面，利用`vue-qr`生成二维码，以及下载二维码，复制链接的功能
+> - 编写分享页面，利用`vue-qr`生成二维码，以及下载二维码，复制链接的功能
 >
 >  ![zwr4](./mdImgs/zwr4.png)
 >
@@ -165,90 +165,246 @@
 
 6月3日
 
-> 雷步云
+> 雷步云：
 >
 > - 新建表单：表单标题内容校验，长度<=30
 > - 调整左侧操作栏滚动条的样式
 >
-> 周蔚然:
+> 周蔚然：
 >
 > * 利用填写表单的模块，编写填写详情-问题页面
 >
 > * 修改各种样式，完善数据分析整体页面，修改若干`bug`，修改路由，以便容易与其他页面配合，成为一个系统
 >
->  ![zwr6](.\mdImgs\zwr6.png)
+>  ![zwr6](./mdImgs/zwr6.png)
 
 6月4日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 新建表单：预览、保存草稿、完成创建按钮功能的实现
 
 6月5日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 新建表单：分数题、日期题组件
+>
+> ​    敖国贝：
+>
+> - 测试用户模块以及表单模块的接口，大致浏览相关的后台代码，了解接口规范以及相应的返回结果
+>
+> - 从代码仓库下载项目，查看编码规范。
 
 6月6日
 
-> 雷步云
+> 雷步云：
 >
 > - 新建表单：将左侧操作栏中的三项提取为一个组件、包括标题、按钮列表、折叠项。左侧操作栏（添加题目、题目模板、我的常用题）调用三次组件即可
+>
+> 易佳怡：
+>
+> - 完成登录注册页面的UI设计
+>
+> - 完成表单验证
+>
+>   ![okay1](./mdImgs/okay1.png)
+>
+> 敖国贝：
+>
+> - 新建表单填写页面整体的UI结构，分为头部组件，中间表单信息，左侧题目列表进度条
+> - 定义获取表单的接口返回值类型，封装填写表单的后台API接口
+
+6月7日
+
+> ​	敖国贝：
+>
+> - 通过获取表单的接口类型，编写获取表单的方法
+> - 获取表单信息后，在表单填写页面动态渲染组件，通过给子组件绑定方法实现动态给value赋值的效果
 
 6月8日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 重构`ProblemBase`, 设计为4个部分，题目标题栏、输入项(插槽)、输入项操作栏(插槽)、底部操作
 > - 修改`ProblemBase`基础样式、修改填空题、分数题、日期题
+>
+> ​     易佳怡：
+>
+> - 新增IUser和IForm类型，定义**UserRes**接口和**FormListRes**接口
+>
+>   ![okay2](./mdImgs/okay2.png)
+>
+> - 封装用户注册登录、处理登录逻辑
+>
+>   ```js
+>     async loginSub() {
+>         const res = await login(this.formData.account, this.formData.pwd)
+>         if (res.stat != 'ok') {
+>           ElMessage({
+>             message: res.msg,
+>             duration: 2000,
+>             type: 'error',
+>             customClass: 'msg-box-form-title',
+>           })
+>         } else {
+>           const user = await this.getUser()
+>           if (user.avatar === '') {
+>             user.avatar =
+>               '默认图片路径'
+>           }
+>           store.commit('setUser', user)
+>           sessionStorage.setItem('token', 'Bearer xxxx')
+>           sessionStorage.setItem('user', JSON.stringify(user))
+>           this.$router.push({
+>             name: 'HomeView',
+>           })
+>         }
+>       },
+>   ```
+>
+> ​	敖国贝
+>
+> - 新建个人中心的UI结构，包含头部，操作区域，个人信息展示区域，以及设置个人信息，设置密码两个模块
+> - 定义设置个人信息，设置密码的接口类型，编写设置个人信息，设置密码的方法
+> - 完成个人中心的数据渲染以及接口请求
 
 6月9日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 新建表单：添加题目时的动画效果
 > - 新建表单：添加题目时自动聚焦到最后一个题目
+>
+> ​      易佳怡：
+>
+> - 完成导航守卫
+>
+>   ```js
+>   router.beforeEach(function (to, from, next) {
+>     if (to.path === '/login' || to.path === '/register') {
+>       next()
+>     } else {
+>       const token = sessionStorage.getItem('token')
+>       if (token) {
+>         next()
+>       } else {
+>         ElMessage({
+>           message: '请先登录',
+>           duration: 2000,
+>           type: 'error',
+>           customClass: 'msg-box-form-title',
+>         })
+>         next('/login')
+>       }
+>     }
+>   })
+>   ```
+>
+> - 完成首页UI结构设计并渲染formList列表
+>
+> 敖国贝
+>
+> - 表单填写页面实现左侧进度条点击展开的列表导航效果
+> - 根据表单题目列表信息进行类型判断以及value判断，渲染出题目列表右侧小图标是否点亮的效果
 
 6月10日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 新建表单：时间题组件
 > - 新建表单：时间题选择时间，滚动条平滑的过渡效果
+>
+> ​    易佳怡：
+>
+> - 封装FormList组件
+>
+> - 完成表单标星，删除，开始发布，停止等，实现仅展示星标。
+>
+>   ![okay3](./mdImgs/okay3.png)
+>
+>   ![okay4](./mdImgs/okay4.png)
+>
+> 敖国贝
+>
+> - 表单填写进行移动适配
+> - 实现头部进度条，点击展开遮罩层以及底部渐进弹出题目列表的效果
+> - 实现题目列表中点击导航到页面中每题位置的效果
 
 6月11日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 合并`InputProblem`的事件与`props`，添加默认值
 > - 选择题组件的设计（单选、多选、下拉），包括编辑与展示时不同的样式
 > - 新建表单，题目聚焦时可编辑、blur时隐藏菜单
+>
+> ​	敖国贝
+>
+> - 封装模态弹窗组件
+> - 添加表单填写页面的弹窗效果，使用二维码或者链接分享表单
 
 6月12日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 创建表单时的表单校验
 > - 修改选择题组件的样式
+>
+> ​	敖国贝
+>
+> 测试表单填写，反馈题目信息没有id导致请求出错的bug
+>
+> 在题目组件修改后，修改表单填写页面中题目组件的绑定事件，解决bug
 
 6月13日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 解决日期题的Blur事件，失去焦点时隐藏菜单栏
 > - 创建表单添加保存草稿的功能
+>
+> ​     易佳怡：
+>
+> - 分离MyHeader
+>
+> - 处理草稿问题以及分页的功能
+>
+>   ![okay5](./mdImgs/okay5.png)
+>
+> 敖国贝
+>
+> - 测试草稿保存后打开表单的效果，部分题目value渲染不出来，反馈bug
+> - 在题目组件修改后，解决bug
+> - 个人中心用户信息由接口获取转变为从sessionStorage获取
 
 6月14日
 
-> ​	雷步云
+> ​	雷步云：
 >
 > - 创建表单添加常用题的功能
 > - 修改题目组件，绑定`result.value`，填写表单的草稿状态可展示数据
+>
+> ​    易佳怡：
+>
+> - 自定义回收站内容
+>
+>   ![okay6](./mdImgs/okay6.png)
+>
+> ​	敖国贝
+>
+> - 与组员探讨路由跳转问题，统一意见
+> - 测试整个项目，反馈bug
 
 6月15日
 
-> ​	开会、演示整个项目的操作步骤、对功能进行整体的测试、整体感知项目的效果、记录遇到的问题并进行修复。
+> ​	易佳怡：
+>
+> - 配置操作中的全部路由，美化css样式
+>
+>   ---
+>
+>   ​		开会、演示整个项目的操作步骤、对功能进行整体的测试、整体感知项目的效果、记录遇到的问题并进行修复。
 
 6月16日
 
@@ -504,8 +660,383 @@
   >
   > 第二是在管理界面单独选择添加常用题，这部分也需要`<component :is=""></component>`，在编辑的时候，由于我在兄弟通信时采用的是`provide/inject`的方式，孙组件需要爷组件的`problems`，因此在管理常用题的时候，也需要该数组，在点击管理的时候，显示模态框，同时通过push()添加一个题目，在切换当前编辑的题目的时候，pop(), 然后根据新添加的类型，push()新的题目，最后如果关闭模态框的时候，pop最后一个题，于是，就可以调用封装好的组件，在模态框中也展示对应样式的组件，最终实现添加常用题的功能
 
+- 注册组件中密码相等验证失效
+
+  > ​	解决方法：**element plu官网提供的自定义验证函数是放在data中**，然后在rules中进行引用
+  >
+  > 由于ts的影响导致类型出错，**将验证函数放在methods后**，验证生效
+  >
+  > ```js
+  > methods: {
+  >  validatePass2(rule: string, value: string, callback: any) {
+  >    if (value === '') {
+  >      callback(new Error('请再次输入密码'))
+  >    } else if (value !== this.formData.pwd) {
+  >      callback(new Error('两次输入密码不一致!'))
+  >    } else {
+  >      callback()
+  >    }
+  >  },
+  > },
+  > ```
+  >
+  > 
+
+- 取消滚动条
+
+  > ​	解决方法：将头部结构放入main中
+
+- 登录后如何保存用户状态的问题
+
+  > 问题说明：首先考虑的是用vuex保存用户信息，后期发现**Vuex刷新后数据会消失**
+  >
+  > ​                    随后考虑用localstorage保存，但是这样的话，用户信息一直存在浏览器且不安全
+  >
+  > ​					最后决定用session进行存储，这样用户信息可以随着窗口的关闭而消失	
+  >
+  > 解决方法：**利用session存储用户信息**
+  >
+  > 原代码：
+  >
+  > ```javascript
+  > import { createStore } from 'vuex'
+  > import { IUser } from '../types'
+  > 
+  > export default createStore({
+  > state: {
+  >  user: {} as IUser,
+  >  show: 0,
+  > },
+  > getters: {
+  >  user: (state) => state.user,
+  >  // show: (state) => state.show,
+  > },
+  > mutations: {
+  >  setUser(state, user) {
+  >    state.user = user
+  >  },
+  >  // showAction(state, params) {
+  >  //   state.show = params
+  >  // },
+  > },
+  > actions: {},
+  > modules: {},
+  > })
+  > ```
+  >
+  > 修改后
+  >
+  > ```javascript
+  > sessionStorage.setItem('user', JSON.stringify(user))
+  > ```
+
+- 限制用户未登录直接进入首页的情况
+
+  > 解决方法：**设置导航守卫**
+  >
+  > ```javascript
+  > //用户登录后，在session中自定义一个token
+  > sessionStorage.setItem('token', 'Bearer xxxx')
+  > 
+  > 
+  > //通过是否有session值判断用户是否登录
+  > const token = sessionStorage.getItem('token')
+  >  if (token) {
+  >    next()
+  >  }
+  > ```
+
+- 完成仅展示标星功能
+
+  > 解决方法：对formList数组进行遍历，对样式进行动态绑定
+  >
+  > ```javascript
+  > onlyShow() {
+  >    if (!this.showOnlyStar) {
+  >      this.showOnlyStar = true
+  >      for (let i = 0; i < this.formList.length; i++) {
+  >        if (!this.formList[i].isStar) {
+  >          this.formList.splice(i, 1)
+  >          i--
+  >        }
+  >      }
+  >    } else {
+  >      this.showOnlyStar = false
+  >      this.fun()
+  >    }
+  >  },
+  > ```
+  >
+  > ```html
+  > <div :class="showOnlyStar ? 'star onlyStar' : 'star'" @click="onlyShow">
+  >      <span :class="showOnlyStar ? 'fullStar' : ''">
+  >        <i class="iconfont icon-star-empty" v-show="!showOnlyStar"></i>
+  >        <i class="iconfont icon-star-full" v-show="showOnlyStar"></i>
+  >      </span>
+  >      仅展示星标
+  > </div>
+  > ```
+  >
+  > 
+
+- 表单分页功能
+
+  > 解决方法：**利用el-pagination**,新增currentForm数组，用来存储当前页面的数据，动态的赋值给formList
+  >
+  > ```html
+  > <div class="block">
+  >      <el-pagination
+  >        align="right"
+  >        @current-change="handleCurrentChange"
+  >        :current-page="currentPage"
+  >        :page-size="pageSize"
+  >        :total="formList.length"
+  >        layout="prev, pager, next,total"
+  >        background
+  >        v-show="formList.length !== 0"
+  >      />
+  >    </div>
+  > ```
+  >
+  > ```js
+  > this.currentForm = this.formList.slice(
+  >      (this.currentPage - 1) * this.pageSize,
+  >      this.currentPage * this.pageSize
+  >    )
+  > ```
+  >
+  > 
+
+- 头部右边插槽不一致的问题
+
+  > 解决方法：设置默认内容，右边没有元素的情况，则用空的div代替
+  >
+  > ```html
+  > <slot name="right">
+  >      <div
+  >        class="user"
+  >        tabindex="0"
+  >        @click="howshow = !howshow"
+  >        @blur="howshow = false"
+  >      >
+  >        <div class="user-img">
+  >          <img :src="user.avatar" width="30px" />
+  >        </div>
+  >        <p class="user-title">{{ user.account }}</p>
+  >        <div class="logout" v-show="howshow">
+  >          <div>{{ user.account }}</div>
+  >          <div @click="goPersonal" @click.stop>个人中心</div>
+  >          <div @click="goout">退出登录</div>
+  >        </div>
+  >      </div>
+  >    </slot>
+  > ```
+  >
+  > 
+
+- 处理草稿问题
+
+  > 解决方法：通过用户名+drafs从localStrorage读取草稿数据，并在初始化时将其与端口数据合并
+  >
+  > ```js
+  > let dLstStr = localStorage.getItem(account + 'DraftList')
+  >    let draftList = [] as IForm[]
+  >    if (dLstStr) {
+  >      draftList = JSON.parse(dLstStr)
+  >    }
+  >    this.drafts = draftList
+  >    const { data } = await getFormList(account)
+  >    this.formList = [...draftList, ...data.items]
+  > ```
+  >
+  > 
+
+- 解决回收站和列表切换问题
+
+  > 解决方法：设置两个数组，分别用来存储两份数据，在删除的时候记得过滤
+  >
+  > ```js
+  > async formDelete(id: string) {
+  >    if (this.noDeleteForm) this.noDeleteForm = []
+  >    for (let i = 0; i < this.formList.length; i++) {
+  >      if (this.formList[i].id === id) {
+  >        //判断是否为草稿
+  >        if (this.formList[i].status === 1) {
+  >          this.formList[i].status = 15
+  >        } else {
+  >          this.formList[i].status = 5
+  >        }
+  >        this.deleteForm.push(this.formList[i])
+  >      } else {
+  >        this.noDeleteForm.push(this.formList[i])
+  >      }
+  >    }
+  >    this.formList = this.noDeleteForm
+  >    this.currentForm = this.noDeleteForm.slice(
+  >      (this.currentPage - 1) * this.pageSize,
+  >      this.currentPage * this.pageSize
+  >    )
+  >    localStorage.setItem(
+  >      this.user.account + 'Delete',
+  >      JSON.stringify(this.deleteForm)
+  >    )
+  >  },
+  > ```
+  >
+  > 
+
+- 解决恢复表单后找不到原始状态问题
+
+  > 解决方法：在localStrorage存储一个由id和old（旧的状态）存储的对象数组
+  >
+  > ```js
+  > //存oldId
+  >        const oldStr = localStorage.getItem(this.user.account + 'oldId')
+  >        let oldList = [] as { id: string; old: number }[]
+  >        if (oldStr) {
+  >          oldList = JSON.parse(oldStr)
+  >        }
+  >        let idx = -1
+  >        for (let i = 0; i < oldList.length; i++) {
+  >          if (oldList[i].id === id) {
+  >            idx = i
+  >            break
+  >          }
+  >        }
+  >        if (idx === -1) {
+  >          oldList.push({
+  >            id: id,
+  >            old: this.formList[i].status,
+  >          })
+  >        } else {
+  >          oldList[idx].old = this.formList[i].status
+  >        }
+  >        localStorage.setItem(
+  >          this.user.account + 'oldId',
+  >          JSON.stringify(oldList)
+  >        )
+  > 
+  > //恢复
+  > const oldStr = localStorage.getItem(this.user.account + 'oldId')
+  >        let oldList = [] as { id: string; old: number }[]
+  >        if (oldStr) {
+  >          oldList = JSON.parse(oldStr)
+  >        }
+  >        for (let j = 0; j < oldList.length; j++) {
+  >          if (oldList[j].id === id) {
+  >            this.deleteForm[i].status = oldList[j].old
+  >            break
+  >          }
+  >        }
+  > ```
+  >
+  > 
+
+- 刷新后回收站消失问题
+
+  > 解决方法：在删除时将删除的数据保存在localStrorage中，初始化时过滤一下
+  >
+  > ```js
+  > localStorage.setItem(
+  >      this.user.account + 'Delete',
+  >      JSON.stringify(this.deleteForm)
+  >    )
+  > ```
+  >
+  > ```js
+  > let DeleteStr = localStorage.getItem(this.user.account + 'Delete')
+  >    if (DeleteStr) {
+  >      this.deleteForm = JSON.parse(DeleteStr)
+  >      this.formList = this.formList.filter(
+  >        (form) =>
+  >          this.deleteForm.filter((iform) => iform.id === form.id).length === 0
+  >      )
+  >    }
+  > ```
+
+
+- 表单填写题目列表小图标点亮效果：
+
+解决方法：由于题目的初始化result的value类型包括字符串，数字，对象，数组四种类型，因此value判空要根据题目类型和value值来分类进行判断。将初始值不为空的题目的index放入数组以及统计填写完成题目的总数以及百分比。最后通过IndexOf()函数来判断每题是否完成填写，进而点亮小图标。
+
+- 空数组的判断：
+
+解决方法：由于空数组里面含有空字符串，所以length为1，boolean也为true，因此要用其它方法判断
+
+```
+ if (this.problems[k].type === 'multiSelect') {
+          let arr = String(this.problems[k].result?.value).split(',')
+          // Boolean(arr[0])也可判断空数组
+          if (JSON.stringify(arr) != '[""]') {
+            this.num++
+            this.numArr.push(Number(k))
+          }
+```
+
+- 表单填写移动端题目列表底部弹出效果：
+
+解决方法：由于避免用js操作DOM结构，最后通过动态绑定样式的bottom定位，点击后改变bottom的值，通过transtion实现渐变效果
+
+- 初始化题目完成度百分比：
+
+解决方法：一开始把该函数放在mounted生命周期函数里一直不起作用，后来放在beforeUpdate生命周期函数里面、
+
+- 媒体查询中写子组件的样式不起作用：
+
+解决方法：
+
+```
+:deep(.modal-body) {
+    padding: 10px;
+  }
+  :deep(#vueqr) {
+    margin: 0px 3%;
+  }
+  :deep(.inputBtn) {
+    height: 25px;
+  }
+```
+
+- 表单填写导航栏点击列表中的题目滚动到相应区域:
+
+解决方法：
+
+```
+//分别截取片段
+<a :href="'#problem' + index"></a>
+```
+
+```
+<component
+        v-for="(item, index) in problems"
+        :id="'problem' + index"
+      >
+</component>
+```
+
+```
+//平滑滚动的效果
+#bg {
+  scroll-behavior: smooth;
+  height: 1000px;
+  overflow-y: scroll;
+}
+```
+
+- style中引入样式污染全局：
+
+解决方法：
+
+```
+<style src="../assets/css/style.css" scoped></style>
+```
+
 ## 个人总结与收获
 
 > ​	雷步云：本次项目是从零开发一个完整的项目，从5月29日开始着手准备开发，到6月15日内容基本完成，时间并不算长，但项目完成的那一刻，心里的一块石头终于落了地，成就感油然而生，我感受到了开发项目的不易，但我也充分享受着编程的快乐。这个项目的完成离不开我们小组成员每一个人的努力与付出，一开始的毫无方向，经过我们小组成员互相交流思考讨论，将问题细分开来，分而治之，逐一击破难题，最终完成整个项目，我知晓了合作的重要性。此外本次项目还巩固了之前所学习的知识，将知识应用于实践，只有实际开发了，实际去思考了，才会知道哪些内容是自己已经掌握、哪些还需要去学习加强，遇到了实际的问题，去寻找解决方法，我知晓了实践的重要性。不仅如此，一开始良好的设计也非常重要，题目组件是我本次开发遇到的最麻烦的一个内容环节，它是多个页面都会进行使用，但具体的展示效果是不同的，设计组件的时候，需要兼顾多个页面，此外不同题目之间的结构也是很类似的，这就需要对其公共部分进行抽取，找出相似点，由于一开始的设计不够合理，导致重构了很多次基础的代码，还是因为一开始的考虑不够周全，这个方面要更加努力才行！总而言之，本次项目的开发，提升了个人的能力、更加坚定了从事编程行业的决心，代码改变世界！
 >
 > ​	周蔚然：通过这次的学习，我学到许多前端知识，从`html5`到`css`在到`js，ts`对于基本的前端语言有了基础的掌握，同时对于移动端的适配学到了新的方法，可以利用`@media screen and (min-width: xpx)`就可以让页面适配不同的像素页面，还学到了`vue`的用法，让页面各个地方模块化，组件化，让页面的实现更加简洁，方便。最后参与了合作项目，学会了如何让多个人通过`git`来分工合作写代码，对以后的学习和工作又了很大的帮助。
+>
+> ​	易佳怡：本次项目主要负责注册，登录，首页和头部组件部分，对element plus的使用更加的熟练，例如表单验证，对session，localstrorage，token，cookie等了解更加透彻，对接口的使用和继承也有了部分了解，之前总是困惑接口的意义，总觉得是在徒增编码难度，但是发现在大型开发项目中，接口的复用性提高，也更加贴合后端的工作，维护起来也更加方便。导航守卫的使用使得整个项目更加安全，当然关于用户信息的安全问题还需要进行更多的处理。使用git进行团队开发，让我受益匪浅，对以后的工作也会有更多的帮助。当然还是有一些不足，对数据的处理有些冗余，对数组的一些方法filter,map等使用还不够熟练，有待加强。总之，经过这次的项目，收获满满，看着项目一点点搭建起来的过程非常的快乐且有成就感！对未来的编程之旅充满了信心！
+>
+> 敖国贝：在这次的项目中，虽然只负责部分模块，但是在与组员的紧密沟通中，对别的模块也加深了理解。就自己的部分而言，对一些数据进行赋值操作的时候，对于TS的类型定义掌握得更熟练了。另外在项目中对封装的二维码组件，题目组件，头部组件，模态框组件等的应用，也使我体会到了组件复用的重要性，大大降低代码冗余。由于可能在修改自身组件的同时会影响其它页面的运行效果，需要告诉其他人进行相应的修改，由此感受到了合作与沟通的重要性。另外在样式方面由于一开始没有设计好，导致做移动端适配的时候，甚至需要修改页面结构才能实现想要的效果，在今后的开发过程中需要全面考虑不同情况后再下手，尽量减少后期修修补补。同样，自己思考过后某个功能逻辑理不清的时候，可以和组员交流，一个新的思路可能就此展开。在开会的时候测试，团队统一提出的不好的效果，我都乐于吸取建议并着手修改，都是为了项目变得更好。言而总之，在组长的带领下以及组员的共同努力下，我们四个人共同完成了项目，最后在完成效果上达成了一致的意见，对于我来说是一次非常好的经历。
