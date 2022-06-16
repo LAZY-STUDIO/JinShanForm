@@ -22,6 +22,7 @@ router.beforeEach(function (to, from, next) {
         message: '请先登录',
         duration: 2000,
         type: 'error',
+        customClass: 'msg-box-form-title',
       })
       next('/login')
     }
