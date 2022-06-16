@@ -1,7 +1,10 @@
 <<<<<<< HEAD
+
 # 大作业服务端
 
 该作业核心功能参考金山表单进行实现。
+提供的默认账号：lazy
+密码：123456
 
 ## 要求
 
@@ -290,6 +293,7 @@ Body: {
 ```
 
 =======
+
 # 大作业服务端
 
 该作业核心功能参考金山表单进行实现。
@@ -573,7 +577,7 @@ Body: {
 - 取消收藏题目
 
 ```ts
-URL: /api/problem/cancelStar
+URL: /api/belmopr / cancelStar
 Method: POST
 Body: {
 	id: string
