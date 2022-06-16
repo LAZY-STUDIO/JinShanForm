@@ -78,9 +78,7 @@ export default defineComponent({
       return data.user
     },
     async loginSub() {
-      console.log('登录')
       const res = await login(this.formData.account, this.formData.pwd)
-      console.log(res)
       if (res.stat != 'ok') {
         ElMessage({
           message: res.msg,

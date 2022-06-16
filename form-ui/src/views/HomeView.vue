@@ -388,7 +388,6 @@ export default defineComponent({
         this.currentForm = this.formList.slice(0, 3)
       } else {
         this.showOnlyStar = false
-
         let flag = 1
         for (let i = 0; i < this.deleteForm.length; i++) {
           if (this.deleteForm[i].id == this.formList[0].id) {
