@@ -190,7 +190,6 @@ export default defineComponent({
     //开始收集表单
     async formStart(id: string) {
       await startForm(id)
-      // this.fun()
       for (let i = 0; i < this.formList.length; i++) {
         if (this.formList[i].id === id) {
           this.formList[i].status = 3
@@ -432,6 +431,12 @@ export default defineComponent({
     async showDetail(id: string) {
       let iform = this.formList.filter((form) => form.id === id)
       if (iform[0].status === 1) {
+        ElMessage({
+          message: '请先完成创建',
+          duration: 1000,
+          type: 'error',
+          customClass: 'msg-box-form-title',
+        })
         this.$router.push('/')
       } else if (iform[0].status === 2) {
         ElMessage({
