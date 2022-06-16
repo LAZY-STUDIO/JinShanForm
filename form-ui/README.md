@@ -293,3 +293,67 @@ this.currentForm = this.deleteForm
 
   >在vue.config.js中`devServer`里添加`port:8080,host:`本机所处`ip`，可以通过`win+r`，`cmd`，`ipconfig`查看ipv4地址，填写好后`npm run serve`，当local和Network显示的`url`一致的时候即配置成功，如果还是无法访问，尝试关闭防火墙
 
+
+
+### 表单填写页面
+
+表单填写功能：通过路由中的query的id，获取表单信息，动态生成表单。用户在题目上操作，将答案赋值给该题目的value。
+
+![postman](../mdImgs/image-20220616192017910.png)
+
+查看表单具体完成情况：根据题目的类型与value值进行判断每题的完成情况，点击题目可平滑滚动到该题目的位置
+
+![postman](../mdImgs/image-20220616192108039.png)
+
+保存草稿功能：首先根据表单ID判断是否存在此草稿，如果存在则只需修改localStorage里的problems,否则需要保存表单ID和表单状态和problems到localStorage。
+
+![postman](../mdImgs/image-20220616192449313.png)
+
+读取草稿功能：进入表单填写页面时，首先根据ID判断是否存在草稿，若存在则直接读取并渲染题目的value值，可以直接提交。否则通过接口请求表单数据，填写后提交表单。
+
+```
+// 判断是否是草稿
+   const ustr = sessionStorage.getItem('user')
+   if (ustr) {
+     const { account } = JSON.parse(ustr)
+     const editDLstStr = localStorage.getItem(account + 'editDraftList')
+     let editDraftList = [] as IForm[]
+     if (editDLstStr) {
+       editDraftList = JSON.parse(editDLstStr)
+     }
+     // 找到当前表单填写草稿
+     let idx = -1
+     for (let i = 0; i < editDraftList.length; ++i) {
+       if (editDraftList[i].id === this.id) {
+         idx = i
+         break
+       }
+     }
+     if (idx >= 0) {
+       this.problems = editDraftList[idx].problems
+       this.status = editDraftList[idx].status
+     } else {
+       this.problems = res.data.item.problems
+     }
+   }
+```
+
+移动适配样式：屏幕宽度>=1280px时，左侧导航栏展开后是固定定位；屏幕宽度>748px时，进度条在左边，点击可弹窗查看每题的完成信息；屏幕宽度<=748px时，进度条转到屏幕上方，点击后渐变显示遮罩层以及底部抽屉式弹窗展示题目完成信息。
+
+![postman](../mdImgs/image-20220616192800196.png)
+
+表单分享功能：点击页面右上方的二维码图标，可弹出模态弹窗显示二维码和复制链接按钮。用户可通过扫码或网页链接跳转该表单填写页面。
+
+![postman](../mdImgs/image-20220616192844268.png)
+
+### 个人中心
+
+退出功能：跳转登录页面。
+
+设置个人信息功能：可修改昵称与头像，另外支持头像预览，确认后会提示操作结果。
+
+![postman](../mdImgs/image-20220616193042246.png)
+
+设置密码：用户输入旧密码，新密码，确认密码进行修改密码操作。请求发送前会检查是否含空项，确认后会提示操作结果。
+
+![postman](../mdImgs/image-20220616193131192.png)
